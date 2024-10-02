@@ -105,7 +105,7 @@ touch .env
 ### 5. Add the following keys to the .env file
 
 ```sh
-poenr en env.example
+poner en env.example
 ```
 
 ### 6. Run the following command to start the server
