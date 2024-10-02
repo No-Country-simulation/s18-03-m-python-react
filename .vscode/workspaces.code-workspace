@@ -1,0 +1,25 @@
+{
+  "folders": [
+    {
+      "name": "✨ root",
+      "path": ".."
+    },
+    {
+      "name": "🧰 Config",
+      "path": "../.vscode"
+    },
+    {
+      "name": "🖼️ Design",
+      "path": "../Design"
+    },
+    {
+      "name": "📝 Frontend",
+      "path": "../Frontend"
+    },
+    {
+      "name": "🎛️ Backend",
+      "path": "../Backend"
+    }
+  ],
+  
+}
