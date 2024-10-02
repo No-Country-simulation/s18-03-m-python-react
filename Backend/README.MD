@@ -9,7 +9,6 @@
   - [📖 Table of Contents](#-table-of-contents)
   - [👀 Motivation 🔝](#-motivation-)
   - [🧰 Technology Stack 🔝](#-technology-stack-)
-    - [🧰 Back End 🔝](#-back-end-)
   - [🤵‍♂️ Team communication channels 🔝](#️-team-communication-channels-)
   - [🧑‍💻 Developer Teams 🔝](#-developer-teams-)
   - [🗃️ Project info 🔝](#️-project-info-)
@@ -38,8 +37,6 @@ Elegimos utilizar Python junto con PostgreSQL para el backend de nuestra aplicac
 
 ## 🧰 Technology Stack [🔝](#-backend-for-app)
 
-### 🧰 Back End [🔝](#-backend-for-app)
-
 [![Python Link](https://img.shields.io/badge/Python-%20%233776AB?style=for-the-badge&logo=Python&logoColor=%23FFFFFF 'Python Link')](https://www.python.org/)
 
 ## 🤵‍♂️ Team communication channels [🔝](#-backend-for-app)
@@ -52,7 +49,6 @@ Elegimos utilizar Python junto con PostgreSQL para el backend de nuestra aplicac
 |:-:|:-:|:-:|
 | **Anthony Bañon** | **Yuneido Chacin**  | **Juan Novas**  |
 | [![Github Link](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white 'Github Link')](https://github.com/anthonybanion)[![LinkedIn Link](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white 'LinkedIn Link')](https://www.linkedin.com/in/anthonybanion/) | [![Github Link](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white 'Github Link')](https://github.com/yjchf)[![LinkedIn Link](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white 'LinkedIn Link')](https://www.linkedin.com/in/yuneidochacin/) | [![Github Link](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white 'Github Link')](https://github.com/JuanNovas)[![LinkedIn Link](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white 'LinkedIn Link')](https://www.linkedin.com/in/juan-novas/) |
-
 
 ## 🗃️ Project info [🔝](#-backend-for-app)
 
