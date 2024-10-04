@@ -6,6 +6,7 @@ services:
       sh -c "
         python manage.py makemigrations &&
         python manage.py migrate &&
+        python manage.py createadmin &&
         python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/backend
@@ -18,6 +19,9 @@ services:
       - POSTGRES_USER=django_user
       - POSTGRES_PASSWORD=django_password
       - POSTGRES_HOST=db
+      - ADMIN_USER=admin_user
+      - ADMIN_EMAIL=admin@gmail.com
+      - ADMIN_PASSWORD=secure_password
 
   db:
     image: postgres:13
