@@ -7,13 +7,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         if not User.objects.filter(username=os.environ.get('ADMIN_USER')).exists():
-            user = User.objects.create_user(
+            user = User.objects.create_superuser(
                 username=os.environ.get('ADMIN_USER'),
                 email=os.environ.get('ADMIN_EMAIL'),
                 password = os.environ.get('ADMIN_PASSWORD')
             )
-            user.is_superuser = True
-            user.is_staff = True
             user.save()
             
             self.stdout.write(self.style.SUCCESS('Successfully created admin user'))
