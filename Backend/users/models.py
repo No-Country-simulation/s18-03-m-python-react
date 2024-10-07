@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
 from workgroups.models import Role, Department, Team
 # Create your models here.
@@ -23,9 +22,9 @@ class Person(AbstractUser):
     address = models.TextField(max_length=100, null=True, blank=True)
 
 class Employee(models.Model):
-    person = models.ForeignKey(User, on_delete=models.CASCADE)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE)
     start_date = models.DateField(null=True, blank=True)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
-    team = models.ManyToManyField(Team, null=True, blank=True)
-    role = models.ManyToManyField(Role, null=True, blank=True)
+    team = models.ManyToManyField(Team)
+    role = models.ManyToManyField(Role)
     salary = models.PositiveSmallIntegerField(null=True, blank=True)
