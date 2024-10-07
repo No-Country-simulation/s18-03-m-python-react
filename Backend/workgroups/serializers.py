@@ -3,19 +3,19 @@ from .models import Department, Role, Team
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
-    class meta:
+    class Meta:
         model = Department
         fields = ["title"]
         
 
 class RoleSerializer(serializers.ModelSerializer):
-    class meta:
+    class Meta:
         model = Role
         fields = ["title"]
         
         
 
 class TeamSerializer(serializers.ModelSerializer):
-    class meta:
+    class Meta:
         model = Team
         fields = ["title"]
