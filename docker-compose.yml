@@ -1,6 +1,6 @@
 services:
   web:
-    build: /Backend
+    build: ./Backend
     container_name: django_app
     command: >
       sh -c "
