@@ -20,6 +20,16 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y docker-compose  # Instalar Docker Compose
 
+    - name: List files in root directory
+      run: |
+        echo "Listing files in root directory:"
+        ls -la  # Lista todos los archivos y carpetas en la raíz
+
+    - name: List files in Backend directory
+      run: |
+        echo "Listing files in Backend directory:"
+        ls -la ./Backend  # Lista el contenido del directorio Backend, si existe
+
     - name: Build and Run Docker Compose
       run: |
         docker-compose -f docker-compose.yml up --build -d  # Levantar contenedores en segundo plano
