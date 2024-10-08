@@ -11,39 +11,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      db:
-        image: postgres:13
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_DB: django_db
-          POSTGRES_USER: django_user
-          POSTGRES_PASSWORD: django_password
-        options: >-
-          --health-cmd "pg_isready -U $POSTGRES_USER"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-      web:
-        build: ./backend
-        container_name: django_app
-        volumes:
-          - .:/backend
-        ports:
-          - "8000:8000"
-        depends_on:
-          - db
-        environment:
-          - POSTGRES_NAME=django_db
-          - POSTGRES_USER=django_user
-          - POSTGRES_PASSWORD=django_password
-          - POSTGRES_HOST=db
-          - ADMIN_USER=admin_user
-          - ADMIN_EMAIL=admin@gmail.com
-          - ADMIN_PASSWORD=secure_password
-
     steps:
     - name: Check out the repository
       uses: actions/checkout@v2
@@ -53,7 +20,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y docker-compose  # Instalar Docker Compose
 
-    - name: Set up Docker Compose
+    - name: Build and Run Docker Compose
       run: |
         docker-compose -f docker-compose.yml up --build -d  # Levantar contenedores en segundo plano
 
