@@ -1,0 +1,50 @@
+name: Run Django Tests with Docker Compose
+
+# Ejecutar en todos los pull requests y también en push a todas las ramas
+on:
+  pull_request:
+  push:
+    branches:
+      - "**"  # Esto incluye todas las ramas
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: postgres:13
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: django_db
+          POSTGRES_USER: django_user
+          POSTGRES_PASSWORD: django_password
+        options: >-
+          --health-cmd "pg_isready -U $POSTGRES_USER"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Compose
+      run: |
+        docker-compose -f docker-compose.yml up --build -d  # Levantar contenedores en segundo plano
+
+    - name: Wait for DB to be ready
+      run: |
+        # Espera hasta que PostgreSQL esté listo
+        docker-compose exec db bash -c "until pg_isready -h db -U $POSTGRES_USER; do sleep 1; done"
+
+    - name: Run Migrations and Tests
+      run: |
+        docker-compose exec web python manage.py migrate  # Aplica migraciones
+        docker-compose exec web python manage.py test --noinput  # Ejecuta los tests
+
+    - name: Tear down Docker Compose
+      if: always()
+      run: |
+        docker-compose down  # Derriba los contenedores cuando todo termine
