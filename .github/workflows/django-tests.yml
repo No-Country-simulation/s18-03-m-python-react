@@ -1,11 +1,10 @@
 name: Run Django Tests with Docker Compose
 
-# Ejecutar en todos los pull requests y también en push a todas las ramas
 on:
   pull_request:
   push:
     branches:
-      - "**"  # Esto incluye todas las ramas
+      - "**"
 
 jobs:
   test:
@@ -18,33 +17,23 @@ jobs:
     - name: Set up Docker
       run: |
         sudo apt-get update
-        sudo apt-get install -y docker-compose  # Instalar Docker Compose
-
-    - name: List files in root directory
-      run: |
-        echo "Listing files in root directory:"
-        ls -la  # Lista todos los archivos y carpetas en la raíz
-
-    - name: List files in Backend directory
-      run: |
-        echo "Listing files in Backend directory:"
-        ls -la ./Backend  # Lista el contenido del directorio Backend, si existe
+        sudo apt-get install -y docker-compose
 
     - name: Build and Run Docker Compose
+      working-directory: ${{ github.workspace }}  # Establecer el directorio de trabajo como la raíz del repo
       run: |
-        docker-compose -f docker-compose.yml up --build -d  # Levantar contenedores en segundo plano
+        docker-compose up --build -d  # Levantar contenedores en segundo plano
 
     - name: Wait for DB to be ready
       run: |
-        # Espera hasta que PostgreSQL esté listo
-        docker-compose exec db bash -c "until pg_isready -h db -U $POSTGRES_USER; do sleep 1; done"
+        docker-compose exec -T db bash -c "until pg_isready -h db -U $POSTGRES_USER; do sleep 1; done"  # -T para evitar TTY error
 
     - name: Run Migrations and Tests
       run: |
-        docker-compose exec web python manage.py migrate  # Aplica migraciones
-        docker-compose exec web python manage.py test --noinput  # Ejecuta los tests
+        docker-compose exec -T web python manage.py migrate  # -T para evitar TTY error
+        docker-compose exec -T web python manage.py test --noinput  # -T para evitar TTY error
 
     - name: Tear down Docker Compose
       if: always()
       run: |
-        docker-compose down  # Derriba los contenedores cuando todo termine
+        docker-compose down
