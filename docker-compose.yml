@@ -1,6 +1,6 @@
 services:
   web:
-    build: /backend
+    build: /Backend
     container_name: django_app
     command: >
       sh -c "
@@ -10,7 +10,7 @@ services:
         python manage.py createadmin &&
         python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - .:/backend
+      - .:/Backend
     ports:
       - "8000:8000"
     depends_on:
