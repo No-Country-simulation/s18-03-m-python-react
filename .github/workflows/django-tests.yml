@@ -26,6 +26,24 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
+      web:
+        build: ./backend
+        container_name: django_app
+        volumes:
+          - .:/backend
+        ports:
+          - "8000:8000"
+        depends_on:
+          - db
+        environment:
+          - POSTGRES_NAME=django_db
+          - POSTGRES_USER=django_user
+          - POSTGRES_PASSWORD=django_password
+          - POSTGRES_HOST=db
+          - ADMIN_USER=admin_user
+          - ADMIN_EMAIL=admin@gmail.com
+          - ADMIN_PASSWORD=secure_password
+
     steps:
     - name: Check out the repository
       uses: actions/checkout@v2
