@@ -30,6 +30,11 @@ jobs:
     - name: Check out the repository
       uses: actions/checkout@v2
 
+    - name: Set up Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y docker-compose  # Instalar Docker Compose
+
     - name: Set up Docker Compose
       run: |
         docker-compose -f docker-compose.yml up --build -d  # Levantar contenedores en segundo plano
