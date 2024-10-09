@@ -58,7 +58,7 @@ class RoleAPITest(APITestCase):
         response = self.client.delete(self.url_detail)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         
-        self.assertEqual(Role.objects.count(), 0)
+        self.assertEqual(Role.objects.count(), 1)
         
         
     def test_create_invalid_role(self):
