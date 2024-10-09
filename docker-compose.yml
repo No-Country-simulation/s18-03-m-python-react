@@ -7,8 +7,7 @@ services:
         python manage.py makemigrations &&
         python manage.py migrate &&
         python manage.py createadmin &&
-        python manage.py test --noinput &&
-        python manage.py runserver 0.0.0.0:8000
+        python manage.py test --noinput 
         "
     volumes:
       - .:/Backend
