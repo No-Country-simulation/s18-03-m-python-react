@@ -26,7 +26,7 @@ jobs:
 
     - name: Wait for DB to be ready
       run: |
-        docker-compose exec -T db bash -c "until pg_isready -h db -U postgres; do sleep 1; done"  # -T para evitar TTY error
+        docker-compose exec -T db bash -c "until pg_isready -h db -U django_user; do sleep 1; done"  # -T para evitar TTY error
 
     - name: Run Migrations and Tests
       run: |
