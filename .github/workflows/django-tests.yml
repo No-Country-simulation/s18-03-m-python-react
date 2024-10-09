@@ -37,12 +37,7 @@ jobs:
         docker-compose exec -T db bash -c "until pg_isready -h db -U django_user; do sleep 1; done"  # -T para evitar TTY error
 
     - name: Wait for MySQL to initialize
-      run: sleep 15
-
-    - name: Run Migrations
-      run: |
-        echo "Running migrations..."
-        docker-compose exec -T web bash -c "cd /backend && python manage.py migrate" || docker-compose logs web  # Navegar a /backend para ejecutar manage.py
+      run: sleep 15 # Adding a delay
 
     - name: Run Tests
       run: |
