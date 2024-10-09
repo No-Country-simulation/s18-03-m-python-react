@@ -17,7 +17,7 @@ jobs:
       ADMIN_USER: admin_user
       ADMIN_EMAIL: admin@gmail.com
       ADMIN_PASSWORD: secure_password
-      
+
     steps:
     - name: Check out the repository
       uses: actions/checkout@v2
@@ -35,6 +35,9 @@ jobs:
     - name: Wait for DB to be ready
       run: |
         docker-compose exec -T db bash -c "until pg_isready -h db -U django_user; do sleep 1; done"  # -T para evitar TTY error
+
+    - name: Wait for MySQL to initialize
+      run: sleep 15
 
     - name: Run Migrations
       run: |
