@@ -28,10 +28,15 @@ jobs:
       run: |
         docker-compose exec -T db bash -c "until pg_isready -h db -U django_user; do sleep 1; done"  # -T para evitar TTY error
 
-    - name: Run Migrations and Tests
+    - name: Run Migrations
       run: |
-        docker-compose exec -T web python manage.py migrate  # -T para evitar TTY error
-        docker-compose exec -T web python manage.py test --noinput  # -T para evitar TTY error
+        echo "Running migrations..."
+        docker-compose exec -T web bash -c "cd /backend && python manage.py migrate" || docker-compose logs web  # Navegar a /backend para ejecutar manage.py
+
+    - name: Run Tests
+      run: |
+        echo "Running tests..."
+        docker-compose exec -T web bash -c "cd /backend && python manage.py test --noinput" || docker-compose logs web  # Navegar a /backend para ejecutar manage.py
 
     - name: Tear down Docker Compose
       if: always()
