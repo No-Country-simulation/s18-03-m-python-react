@@ -18,7 +18,7 @@ class BankAccountType(models.Model):
     name = models.TextField(max_length=50)
 
 class Person(AbstractUser):
-    dni = models.PositiveIntegerField(null=True, blank=True)
+    dni = models.PositiveIntegerField(unique=True, null=True, blank=True)
     phone_number = models.TextField(max_length=20, null=True, blank=True)
     birth = models.DateField(null=True, blank=True)
     profile_picture = models.ImageField(upload_to="profile_pictures/", null=True, blank=True)
