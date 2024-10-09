@@ -37,4 +37,4 @@ class Employee(models.Model):
     team = models.ManyToManyField(Team)
     role = models.ManyToManyField(Role)
     salary = models.PositiveSmallIntegerField(null=True, blank=True)
-    working_dat = models.TextField(max_length=200, null=True, blank=True)
+    working_day = models.TextField(max_length=200, null=True, blank=True)
