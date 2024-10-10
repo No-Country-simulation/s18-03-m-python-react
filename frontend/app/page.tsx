@@ -1,12 +1,14 @@
-import CircularMenu from '@/components/CircularMenu/CircularMenu';
+import { DashboardContainer, PersonnelManagementContainer } from "@/components/pages";
+import { Toaster } from "@/components/ui";
 
 
 
 export default function Home() {
   return (
-    <section className='relative flex justify-center h-screen items-center'>
-
-      <CircularMenu />
+    <section className='relative'>
+      <PersonnelManagementContainer />
+      <DashboardContainer />
+      <Toaster />
     </section>
   );
 }
