@@ -5,17 +5,32 @@ from workgroups.models import Role, Department, Team
 class Country(models.Model):
     name = models.TextField(max_length=50)
     
+    def __str__(self):
+        return self.name
+    
 class Province(models.Model):
     name = models.TextField(max_length=50)
+    
+    def __str__(self):
+        return self.name
 
 class City(models.Model):
     name = models.TextField(max_length=50)
     
+    def __str__(self):
+        return self.name
+    
 class Bank(models.Model):
     name = models.TextField(max_length=50)
     
+    def __str__(self):
+        return self.name
+    
 class BankAccountType(models.Model):
     name = models.TextField(max_length=50)
+    
+    def __str__(self):
+        return self.name
 
 class Person(AbstractUser):
     dni = models.PositiveIntegerField(unique=True, null=True, blank=True)
@@ -36,5 +51,5 @@ class Employee(models.Model):
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
     team = models.ManyToManyField(Team)
     role = models.ManyToManyField(Role)
-    salary = models.PositiveSmallIntegerField(null=True, blank=True)
+    salary = models.PositiveIntegerField(null=True, blank=True)
     working_day = models.TextField(max_length=200, null=True, blank=True)
