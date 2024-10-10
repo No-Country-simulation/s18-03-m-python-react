@@ -1,7 +1,12 @@
+import React from 'react'
 
-
-export default function NavbarDesktop() {
+function NavbarDesktop() {
   return (
-    <div>NavbarDesktop</div>
+    <div>
+      nav desktop
+    </div>
   )
 }
+
+export default NavbarDesktop
+
