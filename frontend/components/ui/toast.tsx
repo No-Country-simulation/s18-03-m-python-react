@@ -10,7 +10,7 @@ import {
   Provider,
   Root,
   Title,
-  Viewport
+  Viewport,
 } from "@radix-ui/react-toast"
 import {
   ComponentPropsWithoutRef,

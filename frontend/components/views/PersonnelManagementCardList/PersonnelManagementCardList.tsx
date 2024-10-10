@@ -1,9 +1,9 @@
 'use client'
 import { useState, useMemo } from 'react';
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { UserCard } from '../UserCard/UserCard';
 import { LogoIcon } from '@/components/icons';
 import { Input } from '@/components/ui';
+import { PersonnelManagementCard } from '../PersonnelManagementCard/PersonnelManagementCard';
 
 
 interface User {
@@ -46,28 +46,28 @@ const SearchBar = ({ searchQuery, setSearchQuery }: { searchQuery: string, setSe
   </div>
 );
 
-export const UserList = () => {
+export const PersonnelManagementCardList = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredUsers = useMemo(() => filterUsers(users, searchQuery), [searchQuery]);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 shadow">
       <div className="flex flex-row justify-between px-5 items-center  space-x-4">
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <LogoIcon />
       </div>
       <div className="bg-white p-4 rounded-lg">
         {filteredUsers.length > 0 ? (
-          filteredUsers.map((user) => (
-            <UserCard
-              key={user.id}
-              name={user.name}
-              cargo={user.cargo}
-              email={user.email}
-              initialStatus={user.status}
-              imageSrc={user.imageSrc}
-              alt={user.alt}
+          filteredUsers.map(({ id, name, cargo, email, status, imageSrc, alt }) => (
+            <PersonnelManagementCard
+              key={id}
+              name={name}
+              cargo={cargo}
+              email={email}
+              initialStatus={status}
+              imageSrc={imageSrc}
+              alt={alt}
             />
           ))
         ) : (

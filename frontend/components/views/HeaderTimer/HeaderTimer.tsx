@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { PauseIcon, PlayIcon, StopIcon } from '@/components/icons';
 
-export const UserTimer = () => {
+export const HeaderTimer = () => {
   const [time, setTime] = useState(0); // Tiempo en segundos
   const [isRunning, setIsRunning] = useState(false);
 

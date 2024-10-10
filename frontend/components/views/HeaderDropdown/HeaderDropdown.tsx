@@ -11,7 +11,7 @@ import { ChevronDownIcon } from '@radix-ui/react-icons';
 import { ModeToggle } from '../ModeToggle/ModeToggle';
 import { ThemeSelector } from '../ThemeSelector/ThemeSelector';
 
-export const UserDropdown = () => {
+export const HeaderDropdown = () => {
   return (
     <div className="flex items-center">
       <Avatar className="w-10 h-10 rounded-full mr-2">

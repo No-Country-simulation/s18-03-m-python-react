@@ -17,6 +17,7 @@ import {
 } from "@/components/ui";
 import { useToast } from '@/hooks';
 import { PersonIcon } from "@radix-ui/react-icons";
+import { SuccessIcon } from '@/components/icons';
 
 interface Props {
   name: string;
@@ -27,7 +28,7 @@ interface Props {
   alt?: string;
 }
 
-export const UserCard = ({ name, cargo, email, initialStatus, imageSrc, alt }: Readonly<Props>) => {
+export const PersonnelManagementCard = ({ name, cargo, email, initialStatus, imageSrc, alt }: Readonly<Props>) => {
   const [status, setStatus] = useState(initialStatus)
   const [isLoading, setIsLoading] = useState(true)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
@@ -53,13 +54,14 @@ export const UserCard = ({ name, cargo, email, initialStatus, imageSrc, alt }: R
     toast({
       title: "Estado actualizado",
       description: `El usuario ${name} ahora está ${newStatus === 'active' ? 'activo' : 'inactivo'}.`,
-      className: "bg-green-500 text-white",
+      className: "bg-green-500 text-white"
     })
   }
 
   const cancelStatusChange = () => {
     setIsConfirmOpen(false)
     toast({
+      children: <SuccessIcon />,
       title: "Cambio cancelado",
       description: `El estado del usuario ${name} no ha sido modificado.`,
       className: "bg-yellow-500 text-white",

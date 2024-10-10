@@ -11,3 +11,4 @@ export * from './Person/Person';
 export * from './Play/PlayIcons';
 export * from './Stop/StopIcon';
 export * from './Success/Success';
+export * from './Warning/Warningcon';

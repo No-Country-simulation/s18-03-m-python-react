@@ -39,16 +39,16 @@ const MsnCard = () => (
   </Card>
 )
 
-export const CardList = () => {
+export const DashboardCardList = () => {
   return (
-    <>
-        <div className="grid grid-cols-3 gap-8 p-8">
+    <div className="flex-col justify-between items-center p-4 bg-white shadow">
+      <div className="grid grid-cols-3 gap-8 p-8">
         <WelcomeCard />
         {cardData.map(({ id, title, icon }) => (
           <DashboardCard key={id} title={title} icon={icon} />
         ))}
       </div>
         <MsnCard />
-    </>
+    </div>
   )
 }
