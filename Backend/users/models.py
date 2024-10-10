@@ -51,5 +51,5 @@ class Employee(models.Model):
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
     team = models.ManyToManyField(Team)
     role = models.ManyToManyField(Role)
-    salary = models.PositiveSmallIntegerField(null=True, blank=True)
+    salary = models.PositiveIntegerField(null=True, blank=True)
     working_day = models.TextField(max_length=200, null=True, blank=True)
