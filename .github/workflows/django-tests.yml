@@ -1,40 +1,49 @@
-name: Run Django Tests with Docker Compose
-
-# Ejecutar en todos los pull requests y también en push a todas las ramas
+name: Run Django Tests
 on:
   pull_request:
+    branches:
+      - "**"
   push:
     branches:
-      - "**"  # Esto incluye todas las ramas
-
+      - "**"
 jobs:
-  test:
+  test-django-app:
     runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10"]
+    services:
+      db:
+        image: postgres:14.2-alpine
+        env:
+          POSTGRES_DB: django_db
+          POSTGRES_USER: django_user
+          POSTGRES_PASSWORD: django_password
+        ports:
+        - 5432:5432
     steps:
-    - name: Check out the repository
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          cd Backend
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Run Django test
+        run: |
+          cd Backend
+          python manage.py makemigrations
+          python manage.py migrate
+          python manage.py test
+        env:
+          POSTGRES_NAME: django_db
+          POSTGRES_USER: django_user
+          POSTGRES_PASSWORD: django_password
+          POSTGRES_HOST: localhost
 
-    - name: Set up Docker
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y docker-compose  # Instalar Docker Compose
-
-    - name: Build and Run Docker Compose
-      run: |
-        docker-compose -f docker-compose.yml up --build -d  # Levantar contenedores en segundo plano
-
-    - name: Wait for DB to be ready
-      run: |
-        # Espera hasta que PostgreSQL esté listo
-        docker-compose exec db bash -c "until pg_isready -h db -U $POSTGRES_USER; do sleep 1; done"
-
-    - name: Run Migrations and Tests
-      run: |
-        docker-compose exec web python manage.py migrate  # Aplica migraciones
-        docker-compose exec web python manage.py test --noinput  # Ejecuta los tests
-
-    - name: Tear down Docker Compose
-      if: always()
-      run: |
-        docker-compose down  # Derriba los contenedores cuando todo termine
