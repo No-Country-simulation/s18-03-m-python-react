@@ -108,7 +108,7 @@ export const PersonnelManagementCard = ({ name, cargo, email, initialStatus, ima
 
             <Button
               onClick={handleStatusChange}
-              className={`ml-2 ${
+              className={`ml-2 w-24 h-10 text-white ${
                 status === 'active'
                   ? 'bg-green-500 hover:bg-green-600'
                   : 'bg-red-500 hover:bg-red-600'

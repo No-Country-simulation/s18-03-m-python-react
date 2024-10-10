@@ -38,13 +38,15 @@ export const HeaderTimer = () => {
         <p>{formatTime(time)}</p>
         <button onClick={handlePlayPause} className="ml-2">
           {isRunning ? (
-            <PauseIcon />
+            <span className="flex items-center">
+              <PauseIcon />
+              <StopIcon />
+            </span>
           ) : (
             <PlayIcon />
           )}
         </button>
         <button onClick={handleReset} className="ml-2">
-          <StopIcon />
         </button>
       </div>
     </div>

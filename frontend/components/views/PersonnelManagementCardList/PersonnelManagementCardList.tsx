@@ -1,10 +1,8 @@
 'use client'
-import { useState, useMemo } from 'react';
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { LogoIcon } from '@/components/icons';
+import { LogoIcon, SearchIcon } from '@/components/icons';
 import { Input } from '@/components/ui';
+import { useMemo, useState } from 'react';
 import { PersonnelManagementCard } from '../PersonnelManagementCard/PersonnelManagementCard';
-
 
 interface User {
   id: string;
@@ -42,7 +40,9 @@ const SearchBar = ({ searchQuery, setSearchQuery }: { searchQuery: string, setSe
       onChange={(e) => setSearchQuery(e.target.value)}
       className="pl-4 pr-10 py-2 w-full h-12 border-2 border-black-800 focus:border-base-primary text-xl rounded-xl"
     />
-    <MagnifyingGlassIcon className="absolute right-3 size-8 top-1/2 transform -translate-y-1/2 text-base-primary" />
+    <span className="absolute right-3 size-6 top-1/2 transform -translate-y-1/2 text-base-primary" >
+      <SearchIcon size={24} />
+    </span>
   </div>
 );
 
@@ -53,9 +53,9 @@ export const PersonnelManagementCardList = () => {
 
   return (
     <div className="container mx-auto p-4 shadow">
-      <div className="flex flex-row justify-between px-5 items-center  space-x-4">
+      <div className="flex flex-row justify-between px-4 items-center  space-x-4">
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <LogoIcon />
+        <span className="pr-12"><LogoIcon /></span>
       </div>
       <div className="bg-white p-4 rounded-lg">
         {filteredUsers.length > 0 ? (
