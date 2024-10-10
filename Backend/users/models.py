@@ -5,17 +5,32 @@ from workgroups.models import Role, Department, Team
 class Country(models.Model):
     name = models.TextField(max_length=50)
     
+    def __str__(self):
+        return self.name
+    
 class Province(models.Model):
     name = models.TextField(max_length=50)
+    
+    def __str__(self):
+        return self.name
 
 class City(models.Model):
     name = models.TextField(max_length=50)
     
+    def __str__(self):
+        return self.name
+    
 class Bank(models.Model):
     name = models.TextField(max_length=50)
     
+    def __str__(self):
+        return self.name
+    
 class BankAccountType(models.Model):
     name = models.TextField(max_length=50)
+    
+    def __str__(self):
+        return self.name
 
 class Person(AbstractUser):
     dni = models.PositiveIntegerField(unique=True, null=True, blank=True)
