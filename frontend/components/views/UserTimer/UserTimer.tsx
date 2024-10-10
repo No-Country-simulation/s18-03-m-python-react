@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { PlayIcon, PauseIcon, StopIcon } from "@radix-ui/react-icons";
+import { PauseIcon, PlayIcon, StopIcon } from '@/components/icons';
 
 export const UserTimer = () => {
   const [time, setTime] = useState(0); // Tiempo en segundos
@@ -38,13 +38,13 @@ export const UserTimer = () => {
         <p>{formatTime(time)}</p>
         <button onClick={handlePlayPause} className="ml-2">
           {isRunning ? (
-            <PauseIcon className="w-6 h-6 text-green-500" />
+            <PauseIcon />
           ) : (
-            <PlayIcon className="w-6 h-6 text-green-500" />
+            <PlayIcon />
           )}
         </button>
         <button onClick={handleReset} className="ml-2">
-          <StopIcon className="w-6 h-6 text-red-500" />
+          <StopIcon />
         </button>
       </div>
     </div>

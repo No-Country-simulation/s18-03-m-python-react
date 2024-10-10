@@ -6,11 +6,11 @@ import {
 
 interface Props { };
 
-export const PersonnelManagement = () => {
+export const PersonnelManagementContainer = () => {
   return (
     <div className="container">
-      <div className="flex flex-row justify-between items-center bg-white shadow p-4 px-20 border-b-4 border-x-base-primary-200">
-        <h1 className="text-2xl font-bold text-gray-800">Gestión de Personal</h1>
+      <div className="flex flex-row items-center justify-between bg-white shadow p-4 px-20 border-2 border-b-8 border-x-base-primary-200">
+        <h1 className="text-4xl font-bold text-gray-800">Gestión de Personal</h1>
         <span className="flex items-center shadow rounded-lg bg-white px-5">
         <UserTimer />
         <UserDropdown />

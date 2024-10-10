@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import {
   Skeleton,
   Button,
@@ -19,16 +18,16 @@ import {
 import { useToast } from '@/hooks';
 import { PersonIcon } from "@radix-ui/react-icons";
 
-
 interface Props {
   name: string;
   email: string;
   cargo: string;
   initialStatus: 'active' | 'inactive';
   imageSrc?: string;
+  alt?: string;
 }
 
-export const UserCard = ({ name, cargo, email, initialStatus, imageSrc }: Readonly<Props>) => {
+export const UserCard = ({ name, cargo, email, initialStatus, imageSrc, alt }: Readonly<Props>) => {
   const [status, setStatus] = useState(initialStatus)
   const [isLoading, setIsLoading] = useState(true)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
@@ -67,61 +66,57 @@ export const UserCard = ({ name, cargo, email, initialStatus, imageSrc }: Readon
     })
   }
 
-  if (isLoading) {
-    return (
-      <Card className="w-full mx-auto px-5 mb-4 overflow-hidden">
-        <CardContent className="flex items-center p-4">
-          <Skeleton className="h-12 w-12 rounded-full mr-4" />
-          <div className="flex-grow">
-            <Skeleton className="h-4 w-3/4 mb-2" />
-            <Skeleton className="h-3 w-1/2" />
-          </div>
-          <Skeleton className="h-8 w-20 ml-2" />
-        </CardContent>
-      </Card>
-    )
-  }
-
   return (
     <>
-      <Card className={`w-full mx-auto px-5 mb-4 overflow-hidden ${
-        status === 'active' ? 'border-l-8 border-l-green-500' : 'border-l-8 border-l-red-500'
-      } ${isConfirmOpen ? 'blur-sm' : ''}`}>
-        <CardContent className="flex items-center p-4">
-          {imageSrc ? (
-            <Image
-              src={imageSrc}
-              alt={`Profile picture of ${name}`}
-              width={50}
-              height={50}
-              className="rounded-full mr-4"
-            />
-          ) : (
-            <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center mr-4">
-              <PersonIcon className="w-8 h-8 text-gray-500" />
+      {isLoading? (
+        <Card className="w-full mx-auto px-5 mb-4 overflow-hidden">
+          <CardContent className="flex items-center p-4">
+            <Skeleton className="h-12 w-12 rounded-full mr-4" />
+            <div className="flex-grow">
+              <Skeleton className="h-4 w-3/4 mb-2" />
+              <Skeleton className="h-3 w-1/2" />
             </div>
-          )}
-          <div className="flex-grow">
-            <h3 className="font-semibold text-lg">{name}</h3>
-            <p className="text-sm text-gray-600">{cargo}</p>
-          </div>
-          <div className="flex-grow">
-            <p className="font-semibold text-lg">{email}</p>
-          </div>
+            <Skeleton className="h-8 w-20 ml-2" />
+          </CardContent>
+        </Card>
+      ):(
+        <Card className={`w-full mx-auto px-5 mb-4 overflow-hidden ${
+          status === 'active' ? 'border-l-8 border-l-green-500' : 'border-l-8 border-l-red-500'
+        } ${isConfirmOpen ? 'blur-sm' : ''}`}>
+          <CardContent className="flex items-center p-4">
+            {!imageSrc ?(
+                <div className="w-12 h-12 rounded-full bg-base-primary flex items-center justify-center mr-4">
+                  <PersonIcon className="w-8 h-8 text-base-secondary" />
+                </div>
+              ):(<img
+                className="rounded-full mr-4"
+                src={imageSrc}
+                alt={alt ?? `Profile picture of ${name}`}
+                width={50}
+                height={50}
+              />
+            )}
+            <div className="flex-grow">
+              <h3 className="font-semibold text-lg">{name}</h3>
+              <p className="text-sm text-gray-600">{cargo}</p>
+            </div>
+            <div className="flex-grow">
+              <p className="font-semibold text-lg">{email}</p>
+            </div>
 
-          <Button
-            onClick={handleStatusChange}
-            className={`ml-2 ${
-              status === 'active'
-                ? 'bg-green-500 hover:bg-green-600'
-                : 'bg-red-500 hover:bg-red-600'
-            }`}
-          >
-            {status === 'active' ? 'Activo' : 'Inactivo'}
-          </Button>
-        </CardContent>
-      </Card>
-
+            <Button
+              onClick={handleStatusChange}
+              className={`ml-2 ${
+                status === 'active'
+                  ? 'bg-green-500 hover:bg-green-600'
+                  : 'bg-red-500 hover:bg-red-600'
+              }`}
+            >
+              {status === 'active' ? 'Activo' : 'Inactivo'}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
       <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>

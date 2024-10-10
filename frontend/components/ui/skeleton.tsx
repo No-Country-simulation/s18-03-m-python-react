@@ -7,7 +7,7 @@ function Skeleton({
 }: Readonly<HTMLAttributes<HTMLDivElement>>) {
   return (
     <div
-      className={cn("animate-pulse bg-gray-50 ", className)}
+      className={cn("animate-pulse bg-gray-500 ", className)}
       {...props}
     />
   )
