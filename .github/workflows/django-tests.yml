@@ -17,6 +17,8 @@ jobs:
           POSTGRES_DB: django_db
           POSTGRES_USER: django_user
           POSTGRES_PASSWORD: django_password
+        ports:
+        - 5432:5432
     steps:
       - uses: actions/checkout@v3
         with:
@@ -38,4 +40,4 @@ jobs:
           POSTGRES_NAME: django_db
           POSTGRES_USER: django_user
           POSTGRES_PASSWORD: django_password
-          POSTGRES_HOST: db
+          POSTGRES_HOST: localhost
