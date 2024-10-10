@@ -35,6 +35,8 @@ jobs:
       - name: Run Django test
         run: |
           cd Backend
+          python manage.py makemigrations
+          python manage.py migrate
           python manage.py test
         env:
           POSTGRES_NAME: django_db
