@@ -1,15 +1,17 @@
-import type { Metadata } from 'next';
+import { ReactNode } from 'react';
 import localFont from 'next/font/local';
-import './globals.css';
-import Sidebar from "@/components/SideBar/SideBar";
+import type { Metadata } from 'next';
+
+import './styles/globals.css';
+import { ThemeProvider } from '@/components/providers';
 
 const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
+  src: './assets/fonts/GeistVF.woff',
   variable: '--font-geist-sans',
   weight: '100 900'
 });
 const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
+  src: './assets/fonts/GeistMonoVF.woff',
   variable: '--font-geist-mono',
   weight: '100 900'
 });
@@ -32,18 +34,22 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Sidebar />
-        <div className="flex-1">
-          
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          enableColorScheme
+          disableTransitionOnChange
+        >
           {children}
-        </div>
+        </ThemeProvider>
       </body>
     </html>
   );

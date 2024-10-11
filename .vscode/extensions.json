@@ -1,3 +1,7 @@
 {
-  "recommendations": ["hediet.vscode-drawio", "pomdtr.excalidraw-editor"]
+  "recommendations": [
+    "hediet.vscode-drawio",
+    "pomdtr.excalidraw-editor",
+    "inu1255.easy-snippet"
+  ]
 }

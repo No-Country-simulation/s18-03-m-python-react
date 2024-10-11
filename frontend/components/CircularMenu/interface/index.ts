@@ -1,30 +1,10 @@
-// constants/index.ts
+export interface Button {
+  id: number;
+  label: string; 
+  icon: string; 
+  bgColor: string; 
+}
 
-import { Button } from '../constant';
-
-export const buttons: Button[] = [
-  {
-    id: 1,
-    label: 'Mensajes',
-    icon: '/icons/message-icon.svg',
-    bgColor: 'bg-base-primary'
-  },
-  {
-    id: 2,
-    label: 'Perfil',
-    icon: '/icons/profil-icon.svg',
-    bgColor: 'bg-base-primary'
-  },
-  {
-    id: 3,
-    label: 'Calendario',
-    icon: '/icons/vacation-icon.svg',
-    bgColor: 'bg-base-primary'
-  },
-  {
-    id: 4,
-    label: 'Agregar Empleado',
-    icon: '/icons/gala-add.svg',
-    bgColor: 'bg-base-primary'
-  }
-];
+export interface CircularMenuProps {
+  isEmployeeSelected: boolean; // Prop para indicar si se seleccionó un empleado
+}
