@@ -1,11 +1,10 @@
-import React from 'react'
+import {  PersonnelManagementContainer } from "@/components/pages";
 
 function PageManagement() {
   return (
-    <div className='flex justify-center items-center h-screen'>
-      <h1>gestion personal</h1>
-      
-    </div>
+   <section>
+    <PersonnelManagementContainer />
+   </section>
   )
 }
 

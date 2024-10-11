@@ -6,9 +6,9 @@ import { Toaster } from "@/components/ui";
 export default function Home() {
   return (
     <section className='relative'>
-      <PersonnelManagementContainer />
+      {/* <PersonnelManagementContainer />
       <DashboardContainer />
-      <Toaster />
+      <Toaster /> */}
     </section>
   );
 }

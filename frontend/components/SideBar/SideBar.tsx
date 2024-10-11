@@ -11,7 +11,7 @@ const Sidebar: React.FC = () => {
 
   return (
     <nav
-      className={`shadow-md h-screen p-1 flex flex-col duration-500 bg-base-primary text-white ${
+      className={`shadow-md h-screen fixed p-1 flex flex-col duration-500 bg-base-primary text-white ${
         open ? "w-60" : "w-16"
       }`}
     >

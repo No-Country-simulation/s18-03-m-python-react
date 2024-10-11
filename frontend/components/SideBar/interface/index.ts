@@ -5,8 +5,8 @@ import { MenuItem } from "../constant";
 export const menuItems: MenuItem[] = [
     {
       iconSrc: "/icons/home-icon.svg", // Reemplaza con la ruta correcta a tu icono
-      label: "Home",
-      path: "/",
+      label: "Panel",
+      path: "/dashboard",
     },
     {
       iconSrc: "/icons/personal-icon.svg",

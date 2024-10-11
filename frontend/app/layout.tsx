@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 
 import './styles/globals.css';
 import { ThemeProvider } from '@/components/providers';
+import Sidebar from '@/components/SideBar/SideBar';
 
 const geistSans = localFont({
   src: './assets/fonts/GeistVF.woff',
@@ -48,7 +49,14 @@ export default function RootLayout({
           enableColorScheme
           disableTransitionOnChange
         >
-          {children}
+          <section className='flex h-screen flex-col md:flex-row md:overflow-hidden'>
+      <div className='w-full flex-none md:w-64'>
+        <Sidebar />
+      </div>
+      <div className='flex-grow p-6 md:overflow-y-auto md:p-12'>
+        {children}
+      </div>
+    </section>
         </ThemeProvider>
       </body>
     </html>
