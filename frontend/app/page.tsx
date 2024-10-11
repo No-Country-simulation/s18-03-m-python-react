@@ -4,10 +4,11 @@ import SideBar from '@/components/SideBar/SideBar';
 
 export default function Home() {
   return (
-    <section className='relative flex justify-center h-screen items-center'>
-
-      <CircularMenu />
-      
-    </section>
+    
+      <div className='flex justify-center items-center h-screen'>
+        <h1>Home</h1>
+      </div>
+    
+   
   );
 }

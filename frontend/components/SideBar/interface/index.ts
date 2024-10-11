@@ -11,41 +11,41 @@ export const menuItems: MenuItem[] = [
     {
       iconSrc: "/icons/personal-icon.svg",
       label: "Gestion de personal",
-      path: "/personal",
+      path: "/management",
     },
     {
       iconSrc: "/icons/vacation-icon.svg",
       label: "Vacaciones y Licencias",
-      path: "/vacaciones",
+      path: "/vacation",
     },
     {
       iconSrc: "/icons/attendance-icon.svg",
       label: "Control de asistencia",
-      path: "/asistencia",
+      path: "/assists",
     },
     {
       iconSrc: "/icons/payroll-icon.svg",
       label: "Gestion de nominas",
-      path: "/nominas",
+      path: "/payrolls",
     },
     {
       iconSrc: "/icons/message-icon.svg",
       label: "Mensaje y notificaciones",
-      path: "/notificaciones",
+      path: "/notifications",
     },
     {
       iconSrc: "/icons/profil-icon.svg",
       label: "Mi perfil",
-      path: "/perfil",
+      path: "/profile",
     },
     {
       iconSrc: "/icons/journal-icon.svg",
       label: "Registro de horas",
-      path: "/horas",
+      path: "/hours",
     },
     {
       iconSrc: "/icons/settings-icon.svg",
       label: "Configuracion",
-      path: "/config",
+      path: "/settings",
     },
   ];

@@ -1,3 +1,5 @@
+import Sidebar from "@/components/SideBar/SideBar";
+
 
 
 
@@ -12,6 +14,7 @@ export default function AuthLayout({
       <body
         className={``}
       >
+        <Sidebar />
         {children}
       </body>
     </html>
