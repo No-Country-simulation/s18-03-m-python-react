@@ -18,5 +18,15 @@ class Vacation(models.Model):
     
     
 class VacationRequest(Vacation):
-    status = models.CharField(choices=[("Accepted", "A"),("Denied", "D"),("Pending", "P")])
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    status = models.CharField(max_length=1, choices=[("Accepted", "A"),("Denied", "D"),("Pending", "P")], default="P")
     message = models.CharField(max_length=500, null=True)
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+    def clean(self):
+        super().clean()
+        if self.start_date > self.end_date:
+            raise ValidationError({
+                'end_date': "End date must be after start date."
+            })
