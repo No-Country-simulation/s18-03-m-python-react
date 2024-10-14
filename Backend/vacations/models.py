@@ -18,5 +18,5 @@ class Vacation(models.Model):
     
     
 class VacationRequest(Vacation):
-    status = models.CharField(choices=[("Accepted", "A"),("Denied", "D"),("Pending", "P")])
+    status = models.CharField(choices=[("A", "Accepted"),("D", "Denied"),("P", "Pending")], default="P", max_length=1)
     message = models.CharField(max_length=500, null=True)
