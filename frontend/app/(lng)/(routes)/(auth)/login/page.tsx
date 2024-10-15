@@ -1,6 +1,5 @@
+import { LoginPage } from "@/components/organisms";
 
 export default function Login() {
-  return (
-    <div>Login</div>
-  )
+  return <LoginPage />;
 }

@@ -1,7 +1,6 @@
+import Register from "@/components/organisms/Register/Register";
 
 
-export default function Register() {
-  return (
-    <div>Register</div>
-  )
+export default function page() {
+  return <Register />
 }
