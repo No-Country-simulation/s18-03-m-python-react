@@ -1,11 +1,11 @@
-import {  PersonnelManagementContainer } from "@/components/pages";
+import { PersonnelManagementContainer } from "@/components/organisms";
 
 function PageManagement() {
   return (
-   <section>
-    <PersonnelManagementContainer />
-   </section>
-  )
+    <section>
+      <PersonnelManagementContainer />
+    </section>
+  );
 }
 
-export default PageManagement
+export default PageManagement;

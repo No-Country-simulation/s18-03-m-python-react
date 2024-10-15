@@ -13,9 +13,9 @@
   "aliases": {
     "components": "@/components",
     "utils": "@/lib",
-    "ui": "@/components/ui",
-    "views": "@/components/views",
-    "pages": "@/components/pages",
+    "atoms": "@/components/atoms",
+    "molecules": "@/components/molecules",
+    "organisms": "@/components/organisms",
     "icons": "@/components/icons",
     "lib": "@/lib",
     "hooks": "@/hooks"

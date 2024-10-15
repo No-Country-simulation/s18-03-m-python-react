@@ -1,11 +1,7 @@
-import { DashboardContainer } from "@/components/pages";
+import { DashboardContainer } from "@/components/organisms";
 
-function PageDashboard
-() {
-  return (
-    <DashboardContainer />  
-  )
+function PageDashboard() {
+  return <DashboardContainer />;
 }
 
-export default PageDashboard
-
+export default PageDashboard;
