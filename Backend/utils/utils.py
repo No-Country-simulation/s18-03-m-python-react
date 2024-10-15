@@ -13,10 +13,6 @@ def get_id(Model : models.Model, field: str, value: str) -> int:
     """
     query = {f"{field}": value}
     
-    if Model.objects.get(**query).exists():
-        id = Model.objects.get(**query).first().id
-    else:
-        object = Model.objects.create(**query)
-        id = object.id
+    object, created = Model.objects.get_or_create(**query) 
         
-    return id
+    return object.id
