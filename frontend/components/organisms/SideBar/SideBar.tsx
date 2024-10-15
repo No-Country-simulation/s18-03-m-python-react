@@ -79,15 +79,15 @@ const Sidebar: React.FC = () => {
       <div className="flex items-center gap-2">
         <div>
           <Image
-            className={`${open ? "w-10" : "w-0"} duration-500`}
+            className={`${open ? "w-7" : "w-0"} duration-500`}
             src="/icons/uil_signout.svg"
-            width={15}
-            height={15}
+            width={7}
+            height={7}
             alt="Workwise Logo"
           />
 
-          {/* <MdMenuOpen size={25} />
         </div>
+          {/* <MdMenuOpen size={25} />
         <div
           className={`leading-5 ${
             !open && "w-0 translate-x-24"
@@ -95,7 +95,7 @@ const Sidebar: React.FC = () => {
         > */}
           <p>Cerrar sesión</p>
         </div>
-      </div>
+      
     </nav>
   );
 };
