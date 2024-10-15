@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     "users",
     "vacations",
     "workgroups",
+    "rest_framework",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
