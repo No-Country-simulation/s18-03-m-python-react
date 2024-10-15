@@ -1,6 +1,4 @@
-
-
-
+import Sidebar from "@/components/organisms/SideBar/SideBar";
 
 export default function AuthLayout({
   children,
@@ -9,9 +7,8 @@ export default function AuthLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={``}
-      >
+      <body className={``}>
+        <Sidebar />
         {children}
       </body>
     </html>

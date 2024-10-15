@@ -5,15 +5,18 @@
   "tsx": true,
   "tailwind": {
     "config": "tailwind.config.ts",
-    "css": "app/globals.css",
+    "css": "app/style/globals.css",
     "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
   },
   "aliases": {
     "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
+    "utils": "@/lib",
+    "atoms": "@/components/atoms",
+    "molecules": "@/components/molecules",
+    "organisms": "@/components/organisms",
+    "icons": "@/components/icons",
     "lib": "@/lib",
     "hooks": "@/hooks"
   }
