@@ -85,6 +85,8 @@ class PersonSerializer(serializers.ModelSerializer):
                 data["employee"]["department"] = get_id(Department, "title", data["employee"]["department"])
                 
             team_list = employee_data.get("team", [])
+            if not isinstance(team_list, list):
+                team_list = [team_list]
             for i, team in enumerate(team_list):
                 if isinstance(team, str):
                     team_list[i] = get_id(Team, "title", team)
