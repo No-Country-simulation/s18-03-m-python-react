@@ -7,7 +7,7 @@ class VacationRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VacationRequest
-        fields = ['start', 'end', 'status', 'message'] 
+        fields = ['employee', 'start', 'end', 'status', 'message'] 
 
     def create(self, validated_data):
         validated_data['employee'] = None  # For when you decide to implement user management and authentication in the future.
