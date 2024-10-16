@@ -94,7 +94,6 @@ class PersonSerializer(serializers.ModelSerializer):
         employee_data = validated_data.pop("employee") 
         
         employee_team = employee_data.pop("team")
-        employee_role = employee_data.pop("role")
          
         person = Person.objects.create(**validated_data)
         
@@ -102,8 +101,6 @@ class PersonSerializer(serializers.ModelSerializer):
         
         for team in employee_team:
             employee.team.add(team)
-        for role in employee_role:
-            employee.role.add(role)
         
         return person
     
@@ -122,17 +119,12 @@ class PersonSerializer(serializers.ModelSerializer):
             except Employee.DoesNotExist:
                 raise serializers.ValidationError({"employee": "Employee not found for this person"})
             employee_team = employee_data.pop("team", None)
-            employee_role = employee_data.pop("role", None)
             for attr, value in employee_data.items():
                 setattr(employee_instance, attr, value)
             if employee_team:
                 employee_instance.team.clear()
                 for team in employee_team:
                     employee_instance.team.add(team)
-            if employee_role:
-                employee_instance.role.clear()
-                for role in employee_role:
-                    employee_instance.role.add(role)
             employee_instance.save()
             
         return instance
@@ -145,7 +137,7 @@ class PersonSerializer(serializers.ModelSerializer):
                 "start_date": employee.start_date if employee.start_date else None,
                 "department": employee.department.title if employee.department else None,
                 "team": [team.title for team in employee.team.all()] if employee.team.exists() else None,
-                "role": [role.title for role in employee.role.all()] if employee.role.exists() else None,
+                "role": employee.role.id if employee.role else None,
                 "salary": employee.salary if employee.salary else None,
                 "working_day": employee.working_day if employee.working_day else None,
             }
