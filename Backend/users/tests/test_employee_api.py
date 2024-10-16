@@ -12,9 +12,8 @@ class EmployeeAPITest(APITestCase):
                 i.objects.create(id=(_ + 1), title="test")
                 
         self.person = Person.objects.create(dni="143242", email="emailperson@gmail.com")
-        self.employee = Employee.objects.create(start_date='2024-06-01', salary=45999, working_day="Only mondays", person=self.person)
+        self.employee = Employee.objects.create(start_date='2024-06-01', salary=45999, working_day="Only mondays", role=Role.objects.get(id=1), person=self.person)
         self.employee.team.add(Team.objects.get(id=1))
-        self.employee.role.add(Role.objects.get(id=1))
         self.valid_data = {
             "dni": 111,
             "email": "test@gmail.com",
@@ -22,7 +21,7 @@ class EmployeeAPITest(APITestCase):
             "start_date": "2021-06-15",
             "department": 1,
             "team": [1],
-            "role": [1],
+            "role": 1,
             "salary": 45000,
             "working_day": "Lunes de viernes de 8 a 17"
             }
@@ -34,7 +33,7 @@ class EmployeeAPITest(APITestCase):
                 "start_date": "15/06/2021",
                 "department": "",
                 "team": [2],
-                "role": [1],
+                "role": 1,
                 "salary": -5000, 
                 "working_day": "Full time"
                 }
@@ -44,7 +43,7 @@ class EmployeeAPITest(APITestCase):
                 "start_date": "2021-02-30",
                 "department": "HR",  
                 "team": [],
-                "role": [],
+                "role": "",
                 "salary": "fifty thousand",
                 "working_day": 40
                 }
@@ -54,7 +53,7 @@ class EmployeeAPITest(APITestCase):
                 "start_date": "",
                 "department": 0,
                 "team": [1, 2],
-                "role": [1],
+                "role": 1,
                 "salary": 30000,
                 "working_day": "Esta descripción del día laboral es demasiado larga y excede el límite máximo de caracteres permitidos para este campo, que es de 200 caracteres. Este texto se ha extendido deliberadamente para provocar un error de validación en la base de datos y comprobar cómo se maneja."
                 }
@@ -91,7 +90,7 @@ class EmployeeAPITest(APITestCase):
             "start_date": "2021-06-15",
             "department": 1,
             "team": [1],
-            "role": [1],
+            "role": 1,
             "salary": 45000,
             "working_day": "Weekend"
             }

@@ -18,7 +18,7 @@ class EmployeeSeriazlierTest(TestCase):
             "start_date": "2021-06-15",
             "department": Department.objects.get(id=1),
             "team": [Team.objects.get(id=1)],
-            "role": [Role.objects.get(id=1)],
+            "role": Role.objects.get(id=1),
             "salary": 45000,
             "working_day": "Lunes de viernes de 8 a 17"
         }
@@ -28,7 +28,7 @@ class EmployeeSeriazlierTest(TestCase):
                 "start_date": "15/06/2021",
                 "department": None,
                 "team": [Team.objects.get(id=2)],
-                "role": [Role.objects.get(id=1)],
+                "role": Role.objects.get(id=1),
                 "salary": -5000, 
                 "working_day": "Full time"
             },
@@ -36,7 +36,7 @@ class EmployeeSeriazlierTest(TestCase):
                 "start_date": "2021-02-30",
                 "department": "HR",  
                 "team": [],
-                "role": [],
+                "role": "",
                 "salary": "fifty thousand",
                 "working_day": 40  
             },
@@ -44,22 +44,19 @@ class EmployeeSeriazlierTest(TestCase):
                 "start_date": None,
                 "department": 0,
                 "team": [Team.objects.get(id=1), Team.objects.get(id=2)],
-                "role": [Role.objects.get(id=1)],
+                "role": Role.objects.get(id=1),
                 "salary": 30000,
                 "working_day": "Esta descripción del día laboral es demasiado larga y excede el límite máximo de caracteres permitidos para este campo, que es de 200 caracteres. Este texto se ha extendido deliberadamente para provocar un error de validación en la base de datos y comprobar cómo se maneja."
             }
         ]
         
     def create_employee(self, data):
-        employee_role = data.pop("role")
         employee_team = data.pop("team")
         
         employee = Employee.objects.create(**data)
         
         for team in employee_team:
             employee.team.add(team)
-        for role in employee_role:
-            employee.role.add(role)
             
         return employee
             
@@ -75,7 +72,7 @@ class EmployeeSeriazlierTest(TestCase):
         self.assertEqual(serializer.data["start_date"], self.valid_data["start_date"])
         self.assertEqual(serializer.data["department"], self.valid_data["department"].id)
         self.assertEqual(serializer.data["team"], [team.id for team in self.valid_data["team"]])
-        self.assertEqual(serializer.data["role"], [role.id for role in self.valid_data["team"]])
+        self.assertEqual(serializer.data["role"], self.valid_data["role"].id)
         self.assertEqual(serializer.data["salary"], self.valid_data["salary"])
         self.assertEqual(serializer.data["working_day"], self.valid_data["working_day"])
         

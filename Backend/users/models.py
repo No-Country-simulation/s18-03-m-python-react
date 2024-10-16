@@ -50,6 +50,6 @@ class Employee(models.Model):
     start_date = models.DateField(null=True, blank=True)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
     team = models.ManyToManyField(Team, null=True, blank=True)
-    role = models.ManyToManyField(Role, null=True, blank=True)
+    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, blank=True)
     salary = models.PositiveIntegerField(null=True, blank=True)
     working_day = models.TextField(max_length=200, null=True, blank=True)
