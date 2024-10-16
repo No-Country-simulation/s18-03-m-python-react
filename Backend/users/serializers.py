@@ -65,15 +65,7 @@ class PersonSerializer(serializers.ModelSerializer):
         team_value = data.get("value")
         if isinstance(team_value, str):
             data["team"] = get_id(Team, "title", data["team"])
-            
-        role_value = data.get("role")
-        if isinstance(role_value, str):
-            data["role"] = get_id(Role, "title", data["role"])
-            
-        department_value = data.get("departmente")
-        if isinstance(department_value, str):
-            data["department"] = get_id(Department, "title", data["department"])
-            
+           
         bank_value = data.get("bank")
         if isinstance(bank_value, str):
             data["bank"] = get_id(Bank, "name", data["bank"])
@@ -81,7 +73,24 @@ class PersonSerializer(serializers.ModelSerializer):
         bankaccounttype_value = data.get("bank_account_type")
         if isinstance(bankaccounttype_value, str):
             data["bank_account_type"] = get_id(BankAccountType, "name", data["bank_account_type"])
+        
+        employee_data = data.get("employee")
+        if employee_data:
+            role_value = employee_data.get("role")
+            if isinstance(role_value, str):
+                data["employee"]["role"] = get_id(Role, "title", data["employee"]["role"])
+                
+            department_value = employee_data.get("department")
+            if isinstance(department_value, str):
+                data["employee"]["department"] = get_id(Department, "title", data["employee"]["department"])
+                
+            team_list = employee_data.get("team", [])
+            for i, team in enumerate(team_list):
+                if isinstance(team, str):
+                    team_list[i] = get_id(Team, "title", team)
+                
         return super().to_internal_value(data)
+          
  
     @transaction.atomic       
     def create(self, validated_data):

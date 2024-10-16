@@ -9,19 +9,18 @@ class EmployeeAPITest(APITestCase):
     def setUp(self):
         for i in [Department, Role, Team]:
             for _ in range(3):
-                i.objects.create(id=(_ + 1), title="test")
-                
+                i.objects.create(title=f"test{_}") # DO NOT change this name, pk references depends on this
         self.person = Person.objects.create(dni="143242", email="emailperson@gmail.com")
-        self.employee = Employee.objects.create(start_date='2024-06-01', salary=45999, working_day="Only mondays", role=Role.objects.get(id=1), person=self.person)
-        self.employee.team.add(Team.objects.get(id=1))
+        self.employee = Employee.objects.create(start_date='2024-06-01', salary=45999, working_day="Only mondays", role=Role.objects.get(title="test1"), person=self.person)
+        self.employee.team.add(Team.objects.get(title="test1"))
         self.valid_data = {
             "dni": 111,
             "email": "test@gmail.com",
             "employee" : {
             "start_date": "2021-06-15",
-            "department": 1,
+            "department": Department.objects.get(title="test1").id,
             "team": [1],
-            "role": 1,
+            "role": Role.objects.get(title="test1").id,
             "salary": 45000,
             "working_day": "Lunes de viernes de 8 a 17"
             }
@@ -31,9 +30,9 @@ class EmployeeAPITest(APITestCase):
             {
                 "employee": {
                 "start_date": "15/06/2021",
-                "department": "",
-                "team": [2],
-                "role": 1,
+                "department": "sss",
+                "team": [Team.objects.get(title="test2").id],
+                "role": Role.objects.get(title="test1").id,
                 "salary": -5000, 
                 "working_day": "Full time"
                 }
@@ -51,9 +50,9 @@ class EmployeeAPITest(APITestCase):
             {
                 "employee": {
                 "start_date": "",
-                "department": 0,
-                "team": [1, 2],
-                "role": 1,
+                "department": Department.objects.get(title="test2").id,
+                "team": [Team.objects.get(title="test1").id, Team.objects.get(title="test2").id],
+                "role": Role.objects.get(title="test1").id,
                 "salary": 30000,
                 "working_day": "Esta descripción del día laboral es demasiado larga y excede el límite máximo de caracteres permitidos para este campo, que es de 200 caracteres. Este texto se ha extendido deliberadamente para provocar un error de validación en la base de datos y comprobar cómo se maneja."
                 }
@@ -88,9 +87,9 @@ class EmployeeAPITest(APITestCase):
         update_data = {
             "employee": {
             "start_date": "2021-06-15",
-            "department": 1,
-            "team": [1],
-            "role": 1,
+            "department": "department",
+            "team": ["team"],
+            "role": "role",
             "salary": 45000,
             "working_day": "Weekend"
             }
