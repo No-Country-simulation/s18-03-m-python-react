@@ -12,7 +12,6 @@ def get_id(Model : models.Model, field: str, value: str) -> int:
         int: The id of the object
     """
     query = {f"{field}": value}
-    
-    object, created = Model.objects.get_or_create(**query) 
+    object, _ = Model.objects.get_or_create(**query) 
         
     return object.id
