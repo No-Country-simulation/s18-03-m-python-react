@@ -2,7 +2,8 @@ from rest_framework import serializers
 from django.db import transaction
 from django.contrib.auth.hashers import make_password
 from .models import Person, Employee, Country, Province, City, Bank, BankAccountType
-from workgroups.models import Team, Role
+from workgroups.models import Team, Role, Department
+from utils.utils import get_id
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,6 +48,40 @@ class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
         fields = ["pk", "dni", "phone_number", "birth", "profile_picture", "country", "province", "city", "address", "bank", "bank_account_type", "bank_account_number", "email", "first_name", "last_name", "employee"]
+ 
+    def to_internal_value(self, data):
+        city_value = data.get("city")
+        if isinstance(city_value, str):
+            data["city"] = get_id(City, "name", data["city"])
+            
+        province_value = data.get("province")
+        if isinstance(province_value, str):
+            data["province"] = get_id(Province, "name", data["province"])
+            
+        country_value = data.get("country")
+        if isinstance(country_value, str):
+            data["country"] = get_id(Country, "name", data["country"])
+            
+        team_value = data.get("value")
+        if isinstance(team_value, str):
+            data["team"] = get_id(Team, "title", data["team"])
+            
+        role_value = data.get("role")
+        if isinstance(role_value, str):
+            data["role"] = get_id(Role, "title", data["role"])
+            
+        department_value = data.get("departmente")
+        if isinstance(department_value, str):
+            data["department"] = get_id(Department, "title", data["department"])
+            
+        bank_value = data.get("bank")
+        if isinstance(bank_value, str):
+            data["bank"] = get_id(Bank, "name", data["bank"])
+            
+        bankaccounttype_value = data.get("bank_account_type")
+        if isinstance(bankaccounttype_value, str):
+            data["bank_account_type"] = get_id(BankAccountType, "name", data["bank_account_type"])
+        return super().to_internal_value(data)
  
     @transaction.atomic       
     def create(self, validated_data):

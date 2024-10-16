@@ -30,28 +30,34 @@ class EmployeeAPITest(APITestCase):
          
         self.invalid_data_list = [
             {
+                "employee": {
                 "start_date": "15/06/2021",
                 "department": "",
                 "team": [2],
                 "role": [1],
                 "salary": -5000, 
                 "working_day": "Full time"
+                }
             },
             {
+                "employee": {
                 "start_date": "2021-02-30",
                 "department": "HR",  
                 "team": [],
                 "role": [],
                 "salary": "fifty thousand",
-                "working_day": 40  
+                "working_day": 40
+                }
             },
             {
+                "employee": {
                 "start_date": "",
                 "department": 0,
                 "team": [1, 2],
                 "role": [1],
                 "salary": 30000,
                 "working_day": "Esta descripción del día laboral es demasiado larga y excede el límite máximo de caracteres permitidos para este campo, que es de 200 caracteres. Este texto se ha extendido deliberadamente para provocar un error de validación en la base de datos y comprobar cómo se maneja."
+                }
             }
         ]
         
@@ -121,7 +127,7 @@ class EmployeeAPITest(APITestCase):
         
     def test_create_invalid_employees(self):
         for invalid_data in self.invalid_data_list:
-            response = self.client.post(self.url_list, invalid_data, form="json")
+            response = self.client.post(self.url_list, invalid_data, format="json")
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
             self.assertEqual(Employee.objects.count(), 1)
         
