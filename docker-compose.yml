@@ -8,6 +8,7 @@ services:
         python manage.py migrate &&
         python manage.py test --noinput &&
         python manage.py createadmin &&
+        python manage.py loadexampledata &&
         python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./Backend/media:/media
