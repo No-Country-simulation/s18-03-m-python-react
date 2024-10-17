@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "users",
     "vacations",
     "workgroups",
+    "core",
     "rest_framework",
     "drf_yasg",
 ]
