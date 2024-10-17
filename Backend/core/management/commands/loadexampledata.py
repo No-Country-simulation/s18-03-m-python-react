@@ -1,4 +1,5 @@
 from json import load
+from django.db import IntegrityError
 from django.core.management.base import BaseCommand
 from users.models import Bank, BankAccountType, Country, Province, City, Employee, Person
 from workgroups.models import Department, Role
@@ -58,40 +59,43 @@ class Command(BaseCommand):
             data = load(file)
 
             for employee_data in data:
-                country = Country.objects.get(id=employee_data['country'])
-                province = Province.objects.get(id=employee_data['province'])
-                city = City.objects.get(id=employee_data['city'])
-                bank = Bank.objects.get(id=employee_data['bank'])
-                bank_account_type = BankAccountType.objects.get(id=employee_data['bank_account_type'])
-                department = Department.objects.get(id=employee_data['employee']['department'])
-                role = Role.objects.get(id=employee_data['employee']['role'])
-                
-                person = Person.objects.create(
-                    dni=employee_data['dni'],
-                    phone_number=employee_data['phone_number'],
-                    birth=employee_data['birth'],
-                    profile_picture=employee_data['profile_picture'],
-                    country=country,
-                    province=province,
-                    city=city,
-                    address=employee_data['address'],
-                    bank=bank,
-                    bank_account_type=bank_account_type,
-                    bank_account_number=employee_data['bank_account_number'],
-                    email=employee_data['email'],
-                    first_name=employee_data['first_name'],
-                    last_name=employee_data['last_name'],
-                    username=employee_data["email"]
-                )
-                
-                # Crear la instancia del empleado
-                employee = Employee.objects.create(
-                    person=person,
-                    start_date=employee_data['employee']['start_date'],
-                    department=department,
-                    role=role,
-                    salary=employee_data['employee']['salary'],
-                    working_day=employee_data['employee']['working_day'],
-                )
+                try:
+                    country = Country.objects.get(id=employee_data['country'])
+                    province = Province.objects.get(id=employee_data['province'])
+                    city = City.objects.get(id=employee_data['city'])
+                    bank = Bank.objects.get(id=employee_data['bank'])
+                    bank_account_type = BankAccountType.objects.get(id=employee_data['bank_account_type'])
+                    department = Department.objects.get(id=employee_data['employee']['department'])
+                    role = Role.objects.get(id=employee_data['employee']['role'])
+                    
+                    person, _ = Person.objects.get_or_create(
+                        dni=employee_data['dni'],
+                        phone_number=employee_data['phone_number'],
+                        birth=employee_data['birth'],
+                        profile_picture=employee_data['profile_picture'],
+                        country=country,
+                        province=province,
+                        city=city,
+                        address=employee_data['address'],
+                        bank=bank,
+                        bank_account_type=bank_account_type,
+                        bank_account_number=employee_data['bank_account_number'],
+                        email=employee_data['email'],
+                        first_name=employee_data['first_name'],
+                        last_name=employee_data['last_name'],
+                        username=employee_data["email"]
+                    )
+                    
+                    # Crear la instancia del empleado
+                    employee, _ = Employee.objects.get_or_create(
+                        person=person,
+                        start_date=employee_data['employee']['start_date'],
+                        department=department,
+                        role=role,
+                        salary=employee_data['employee']['salary'],
+                        working_day=employee_data['employee']['working_day'],
+                    )
+                except IntegrityError:
+                    pass
             
         self.stdout.write(self.style.SUCCESS("Example data created succesfully"))    
