@@ -1,9 +1,11 @@
 "use client";
 import { LogoIcon, SearchIcon } from "@/components/icons";
 import { Input } from "@/components/atoms";
-import { useEffect, useMemo, useState } from "react";
+import { useState, useMemo } from "react";
 import { PersonnelManagementCard } from "../PersonnelManagementCard/PersonnelManagementCard";
 import CircularMenu from "../CirucularMenu/CircularMenu";
+import Register from "@/components/organisms/Register/Register";
+
 
 interface User {
   id: string;
@@ -104,10 +106,8 @@ const SearchBar = ({
 
 export const PersonnelManagementCardList = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [ isMenuVisible, setIsMenuVisible ] = useState(false);
-  const [isMousePressed, setIsMousePressed] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const menuSize=160;
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false); // Estado para el modal de registro
 
   const filteredUsers = useMemo(
     () => filterUsers(users, searchQuery),
@@ -118,68 +118,16 @@ export const PersonnelManagementCardList = () => {
     setIsMenuVisible((prev) => !prev); // Alternar visibilidad del menú
   };
 
-   // Manejar el evento de movimiento del mouse
-   useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      if (!isMousePressed) {
-        // Solo seguir al mouse si no está presionado
-        setMousePosition({
-          x: event.clientX,
-          y: event.clientY,
-        });
-      }
-    };
-
-    if (isMenuVisible) {
-      window.addEventListener("mousemove", handleMouseMove);
-    } else {
-      window.removeEventListener("mousemove", handleMouseMove);
-    }
-
-    // Limpieza del listener cuando el componente se desmonta o el menú deja de estar visible
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [isMenuVisible, isMousePressed]);
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsMenuVisible(false); // Cerrar el menú si se presiona "Esc"
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    // Limpieza del listener cuando el componente se desmonta
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
-    // Manejar el evento del mouse down (presionar el botón izquierdo)
-    useEffect(() => {
-      const handleMouseDown = (event: MouseEvent) => {
-        if (event.button === 0) {
-          // Si se presiona el botón izquierdo del mouse
-          setIsMousePressed(true); // Detener el seguimiento del mouse
-        }
-      };
-  
-      const handleMouseUp = () => {
-        setIsMousePressed(false); // Reanudar el seguimiento del mouse cuando se suelte el botón
-      };
-  
-      window.addEventListener("mousedown", handleMouseDown);
-      window.addEventListener("mouseup", handleMouseUp);
-  
-      return () => {
-        window.removeEventListener("mousedown", handleMouseDown);
-        window.removeEventListener("mouseup", handleMouseUp);
-      };
-    }, []);
-  
+  const handleAddEmployee = () => {
+    setIsRegisterOpen(true); // Abrir el modal al agregar empleado
+    toggleMenu();
+  };
 
   return (
     <div className="container mx-auto p-4 shadow">
-      <div className="flex flex-row justify-between px-4 items-center  space-x-4">
+      <div className="flex flex-row justify-between px-4 items-center space-x-4">
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <span className="pr-12 cursor-pointer" onClick={toggleMenu} >
+        <span className="pr-12 cursor-pointer" onClick={toggleMenu}>
           <LogoIcon />
         </span>
       </div>
@@ -204,22 +152,24 @@ export const PersonnelManagementCardList = () => {
           </div>
         )}
 
-  
-    {/* Menú Circular flotante que sigue al mouse */}
-    {isMenuVisible && (
-        <div
-          className="absolute cursor-none"
-          style={{
-            top: `${mousePosition.y - menuSize / 2}px`,
-            left: `${mousePosition.x - menuSize / 2}px`,
-            width: `${menuSize}px`,
-            height: `${menuSize}px`,
-          }}
-        >
-          <CircularMenu isEmployeeSelected = {false}  />
-        </div>
-      )}
+        {/* Menú Circular en posición fija en la esquina superior derecha */}
+        {isMenuVisible && (
+          <div
+            className="absolute top-0 right-0 m-4"
+            style={{
+              width: "160px",
+              height: "160px",
+            }}
+          >
+            <CircularMenu isEmployeeSelected={false} onAddEmployee={handleAddEmployee} />
+          </div>
+        )}
       </div>
+
+      {/* Componente Modal para agregar empleado */}
+      {isRegisterOpen && (
+        <Register isOpen={isRegisterOpen} setOpen={setIsRegisterOpen} />
+      )}
     </div>
   );
 };
