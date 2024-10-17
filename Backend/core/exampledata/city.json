@@ -1,0 +1,113 @@
+[
+    {"name": "Kabul"},
+    {"name": "Kabul Ghar"},
+    {"name": "Shahr-e Naw"},
+    
+    {"name": "Mazar-i-Sharif"},
+    {"name": "Darya-i-Balkh"},
+    {"name": "Charkint"},
+    
+    {"name": "Herat"},
+    {"name": "Ghazni"},
+    {"name": "Zaranj"},
+    
+    {"name": "Kandahar"},
+    {"name": "Spin Boldak"},
+    {"name": "Dand"},
+    
+    {"name": "Jalalabad"},
+    {"name": "Behsud"},
+    {"name": "Surkh Rod"},
+    
+    {"name": "Taloqan"},
+    {"name": "Yangi Qala"},
+    {"name": "Baharak"},
+    
+    {"name": "Faizabad"},
+    {"name": "Khanabad"},
+    {"name": "Baharak"},
+    
+    {"name": "Benguela"},
+    {"name": "Lobito"},
+    {"name": "Catumbela"},
+    
+    {"name": "Buenos Aires"},
+    {"name": "Córdoba"},
+    {"name": "Mendoza"},
+    
+    {"name": "Tirana"},
+    {"name": "Durrës"},
+    {"name": "Vlorë"},
+    
+    {"name": "Berlín"},
+    {"name": "Múnich"},
+    {"name": "Hamburgo"},
+    
+    {"name": "Andorra la Vieja"},
+    {"name": "Escaldes-Engordany"},
+    {"name": "Encamp"},
+    
+    {"name": "Luanda"},
+    {"name": "Namibe"},
+    {"name": "Bengo"},
+    
+    {"name": "San Miguel"},
+    {"name": "Santa Ana"},
+    {"name": "San Salvador"},
+    
+    {"name": "Ereván"},
+    {"name": "Vanadzor"},
+    {"name": "Gyumri"},
+    
+    {"name": "Sydney"},
+    {"name": "Melbourne"},
+    {"name": "Brisbane"},
+    
+    {"name": "Viena"},
+    {"name": "Graz"},
+    {"name": "Linz"},
+    
+    {"name": "Bakú"},
+    {"name": "Ganja"},
+    {"name": "Lankaran"},
+    
+    {"name": "Bruselas"},
+    {"name": "Antwerpen"},
+    {"name": "Namur"},
+    
+    {"name": "Santiago"},
+    {"name": "Valparaíso"},
+    {"name": "Concepción"},
+    
+    {"name": "Beijing"},
+    {"name": "Shanghái"},
+    {"name": "Guangzhou"},
+    
+    {"name": "Bogotá"},
+    {"name": "Medellín"},
+    {"name": "Cali"},
+    
+    {"name": "San José"},
+    {"name": "Alajuela"},
+    {"name": "Cartago"},
+    
+    {"name": "La Habana"},
+    {"name": "Santiago de Cuba"},
+    {"name": "Camagüey"},
+    
+    {"name": "Copenhague"},
+    {"name": "Aarhus"},
+    {"name": "Odense"},
+    
+    {"name": "Madrid"},
+    {"name": "Barcelona"},
+    {"name": "Valencia"},
+    
+    {"name": "California"},
+    {"name": "Texas"},
+    {"name": "Florida"},
+    
+    {"name": "Marsella"},
+    {"name": "Lyon"},
+    {"name": "Niza"}
+]
