@@ -7,5 +7,6 @@ export const getCityList = async () => {
     return data;
   } catch (error) {
     console.error(error);
+    throw new Error('Error al obtener la lista de paises');
   }
 };

@@ -11,20 +11,20 @@ import {
   SelectLabel,
 } from "@/components/atoms/select";
 import { Label } from "@/components/atoms/label";
-import useFormStore from "@/store/useFormStore"; 
-import { useEffect } from "react";
+import useFormStore from "@/store/useFormStore";
+import { useEffect, useState } from "react";
 
 // Definir el esquema de validación
 const schema = z.object({
-  country: z.string().min(1, "El país es obligatorio"), 
-  province: z.string().min(1, "La provincia es obligatoria"), 
-  city: z.string().min(1, "La ciudad es obligatoria"), 
-  address: z.string().min(1, "La dirección es obligatoria"), 
+  country: z.string().min(1, "El país es obligatorio"),
+  province: z.string().min(1, "La provincia es obligatoria"),
+  city: z.string().min(1, "La ciudad es obligatoria"),
+  address: z.string().min(1, "La dirección es obligatoria"),
 });
 
 interface LocationFormProps {
   onBack: () => void;
-  onNext: () => void; 
+  onNext: () => void;
 }
 
 const LocationForm = ({ onBack, onNext }: LocationFormProps) => {
@@ -33,7 +33,12 @@ const LocationForm = ({ onBack, onNext }: LocationFormProps) => {
     mode: "onChange",
   });
 
-  const { formData, setFormData } = useFormStore(); 
+  const { formData, setFormData } = useFormStore();
+
+  // Estado para los datos de ubicación
+  const [countries, setCountries] = useState<{ pk: number; name: string }[]>([]);
+  const [provinces, setProvinces] = useState<{ pk: number; name: string }[]>([]);
+  const [cities, setCities] = useState<{ pk: number; name: string }[]>([]);
 
   // Cargar datos del store de Zustand al iniciar
   useEffect(() => {
@@ -42,8 +47,27 @@ const LocationForm = ({ onBack, onNext }: LocationFormProps) => {
     });
   }, [formData, setValue]);
 
+  // Cargar los datos del sessionStorage
+  useEffect(() => {
+    const storedCountriesResponse = JSON.parse(sessionStorage.getItem("countryList") || "null");
+    const storedProvincesResponse = JSON.parse(sessionStorage.getItem("provincelist") || "null");
+    const storedCitiesResponse = JSON.parse(sessionStorage.getItem("cityList") || "null");
+console.log('provinces', storedProvincesResponse)
+    // Verificar que la respuesta no sea null
+    if (storedCountriesResponse && Array.isArray(storedCountriesResponse.data)) {
+      setCountries(storedCountriesResponse.data);
+    }
+
+    if (storedProvincesResponse && Array.isArray(storedProvincesResponse)) {
+      setProvinces(storedProvincesResponse); // Establece directamente el array de provincias
+    }
+
+    if (storedCitiesResponse && Array.isArray(storedCitiesResponse.data)) {
+      setCities(storedCitiesResponse.data);
+    }
+  }, []);
+
   const onSubmit = (data: typeof formData) => {
-    console.log(data);
     setFormData(data); // Almacena los datos en el store de Zustand
     onNext(); // Pasar los datos al siguiente paso
   };
@@ -54,10 +78,6 @@ const LocationForm = ({ onBack, onNext }: LocationFormProps) => {
     ) : null;
   };
 
-  // Agregar console.log para depurar
-  console.log("isValid:", isValid);
-  console.log("errors:", errors);
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 m-1 p-1">
       <h2 className="text-lg font-semibold mb-4">Información de Ubicación</h2>
@@ -65,9 +85,9 @@ const LocationForm = ({ onBack, onNext }: LocationFormProps) => {
       {/* País */}
       <div className="flex flex-col">
         <Label htmlFor="country">País</Label>
-        <Select 
-          id="country" 
-          onValueChange={(value) => setValue("country", value)} // Actualiza el valor al seleccionar
+        <Select
+          id="country"
+          onValueChange={(value) => setValue("country", value)}
         >
           <SelectTrigger className="w-full text-actions-disable">
             <SelectValue placeholder="Selecciona país" />
@@ -75,9 +95,15 @@ const LocationForm = ({ onBack, onNext }: LocationFormProps) => {
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Países</SelectLabel>
-              <SelectItem value="Argentina">Argentina</SelectItem>
-              <SelectItem value="Brasil">Brasil</SelectItem>
-              <SelectItem value="Chile">Chile</SelectItem>
+              {countries.length > 0 ? (
+                countries.map((country) => (
+                  <SelectItem key={country.pk} value={country.name}>
+                    {country.name}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem value="" disabled>No hay países disponibles</SelectItem>
+              )}
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -87,9 +113,9 @@ const LocationForm = ({ onBack, onNext }: LocationFormProps) => {
       {/* Provincias */}
       <div className="flex flex-col">
         <Label htmlFor="province">Provincia</Label>
-        <Select 
-          id="province" 
-          onValueChange={(value) => setValue("province", value)} // Actualiza el valor al seleccionar
+        <Select
+          id="province"
+          onValueChange={(value) => setValue("province", value)}
         >
           <SelectTrigger className="w-full text-actions-disable">
             <SelectValue placeholder="Selecciona provincia" />
@@ -97,11 +123,15 @@ const LocationForm = ({ onBack, onNext }: LocationFormProps) => {
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Provincias</SelectLabel>
-              <SelectItem value="Buenos Aires">Buenos Aires</SelectItem>
-              <SelectItem value="Córdoba">Córdoba</SelectItem>
-              <SelectItem value="Mendoza">Mendoza</SelectItem>
-              <SelectItem value="Santa Fe">Santa Fe</SelectItem>
-              <SelectItem value="Tucumán">Tucumán</SelectItem>
+              {provinces.length > 0 ? (
+                provinces.map((province) => (
+                  <SelectItem key={province.pk} value={province.name}>
+                    {province.name}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem value="" disabled>No hay provincias disponibles</SelectItem>
+              )}
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -111,12 +141,28 @@ const LocationForm = ({ onBack, onNext }: LocationFormProps) => {
       {/* Ciudad */}
       <div className="flex flex-col">
         <Label htmlFor="city">Ciudad</Label>
-        <input
+        <Select
           id="city"
-          {...register("city")}
-          className={`border rounded-md p-2 ${errors.ciudad ? "border-red-500" : "border-gray-300"}`}
-          placeholder="Ingresa la ciudad"
-        />
+          onValueChange={(value) => setValue("city", value)}
+        >
+          <SelectTrigger className="w-full text-actions-disable">
+            <SelectValue placeholder="Selecciona ciudad" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Ciudades</SelectLabel>
+              {cities.length > 0 ? (
+                cities.map((city) => (
+                  <SelectItem key={city.pk} value={city.name}>
+                    {city.name}
+                  </SelectItem>
+                ))
+              ) : (
+                <SelectItem value="" disabled>No hay ciudades disponibles</SelectItem>
+              )}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
         {renderError("city")}
       </div>
 
@@ -126,7 +172,7 @@ const LocationForm = ({ onBack, onNext }: LocationFormProps) => {
         <input
           id="address"
           {...register("address")}
-          className={`border rounded-md p-2 ${errors.direccion ? "border-red-500" : "border-gray-300"}`}
+          className={`border rounded-md p-2 ${errors.address ? "border-red-500" : "border-gray-300"}`}
           placeholder="Ingresa la dirección"
         />
         {renderError("address")}
@@ -144,7 +190,7 @@ const LocationForm = ({ onBack, onNext }: LocationFormProps) => {
         <button
           type="submit"
           className={`px-4 py-2 h-10 flex items-center bg-blue-500 text-white rounded-md ${!isValid ? "opacity-50 cursor-not-allowed" : ""}`}
-          disabled={!isValid} // Habilitar/deshabilitar el botón según el estado de isValid
+          disabled={!isValid}
         >
           Siguiente
         </button>

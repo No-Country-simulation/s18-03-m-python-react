@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -6,8 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { z } from "zod";
-
-import { laborales } from "@/mocks";
+import { format } from "date-fns";
+import { laborales } from "@/mocks"; // Asegúrate de que esta importación no sea necesaria
 import { LaboralesValidations } from "@/validations/auth/register/laboralesValidations";
 import useFormStore from "@/store/useFormStore";
 
@@ -20,6 +19,8 @@ interface FormularioLaboralesProps {
 
 export function FormularioLaborales({ onBack, onNext }: FormularioLaboralesProps) {
   const [isStepValid, setIsStepValid] = useState(false);
+  const [departmentList, setDepartmentList] = useState<{ pk: number; title: string }[]>([]);
+  const [roleList, setRoleList] = useState<{ pk: number; title: string }[]>([]);
   const {
     register,
     formState: { errors, isValid },
@@ -31,15 +32,34 @@ export function FormularioLaborales({ onBack, onNext }: FormularioLaboralesProps
   });
 
   const [fechaIngreso, setFechaIngreso] = useState<Date | null>(null);
-  const { formData, setFormData } = useFormStore(); 
+  const { formData, setFormData } = useFormStore();
+
+  useEffect(() => {
+    // Cargar datos de sessionStorage
+    const departments = sessionStorage.getItem('departmentList');
+    const roles = sessionStorage.getItem('roleList');
+
+    if (departments) {
+      setDepartmentList(JSON.parse(departments));
+    }
+
+    if (roles) {
+      setRoleList(JSON.parse(roles));
+    }
+  }, []);
 
   useEffect(() => {
     setIsStepValid(isValid);
   }, [isValid]);
 
-  const onSubmit = (data: FormData) => { // Cambia esto
-    console.log(data);
-    setFormData(data); // Almacena los datos en el store de Zustand
+  const onSubmit = (data: FormData) => {
+    // Asegúrate de formatear la fecha aquí antes de guardar en el store
+    const formattedData = {
+      ...data,
+      start_date: format(fechaIngreso!, 'yyyy-MM-dd'), // Formato YYYY-MM-DD
+    };
+    
+    setFormData(formattedData); // Almacena los datos en el store de Zustand
     onNext(); // Pasar los datos al siguiente paso
   };
 
@@ -76,9 +96,9 @@ export function FormularioLaborales({ onBack, onNext }: FormularioLaboralesProps
             className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
           >
             <option value="">Seleccione un cargo</option>
-            {laborales.cargos.map((cargo) => (
-              <option key={cargo.id} value={cargo.nombre}>
-                {cargo.nombre}
+            {roleList.map((role) => (
+              <option key={role.pk} value={role.title}>
+                {role.title}
               </option>
             ))}
           </select>
@@ -98,9 +118,9 @@ export function FormularioLaborales({ onBack, onNext }: FormularioLaboralesProps
             className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
           >
             <option value="">Seleccione un departamento</option>
-            {laborales.departamentos.map((departamento) => (
-              <option key={departamento.id} value={departamento.nombre}>
-                {departamento.nombre}
+            {departmentList.map((department) => (
+              <option key={department.pk} value={department.title}>
+                {department.title}
               </option>
             ))}
           </select>

@@ -5,7 +5,8 @@ import { useState, useMemo,useEffect } from "react";
 import { PersonnelManagementCard } from "../PersonnelManagementCard/PersonnelManagementCard";
 import CircularMenu from "../CirucularMenu/CircularMenu";
 import Register from "@/components/organisms/Register/Register";
-import { getCityList,getDepartmentList, getProvinceList,getAllRoles,getCountryList,getBankList } from "@/api";
+import { getCityList,getDepartmentList, getProvinceList,getAllRoles,getCountryList,getBankList,getAccountTypes } from "@/api";
+import { get } from "http";
 
 
 interface User {
@@ -118,31 +119,44 @@ export const PersonnelManagementCardList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [cities, countries, departments] = await Promise.all([
-          getCityList(),
-          getCountryList(),
-          getDepartmentList(),
-          getProvinceList(),
-          getAllRoles(),
-          getBankList(),
-    
+        // Obtener lista de ciudades
+        const cityList = await getCityList();
+        sessionStorage.setItem("cityList", JSON.stringify(cityList));
   
-        ]);
+        // Obtener lista de países
+        const countryList = await getCountryList();
+        sessionStorage.setItem("countryList", JSON.stringify(countryList));
 
-        // Guardar los datos en sessionStorage
-        sessionStorage.setItem("cities", JSON.stringify(cities));
-        sessionStorage.setItem("countries", JSON.stringify(countries));
-        sessionStorage.setItem("departments", JSON.stringify(departments));
-        sessionStorage.setItem("roles", JSON.stringify(getAllRoles()));
-        sessionStorage.setItem("banks", JSON.stringify(getBankList()));
-        sessionStorage.setItem("provinces", JSON.stringify(getProvinceList()));
+        // Obtener lista de bancos
+        const bankList = await getBankList();
+        sessionStorage.setItem("bankList", JSON.stringify(bankList));
+
+        // Obtener lista de tipos de cuenta
+        const accountTypeList = await getAccountTypes();
+        sessionStorage.setItem("accountTypeList", JSON.stringify(accountTypeList));
+
+        // Obtener lista de departamentos
+        const departmentList = await getDepartmentList();
+        sessionStorage.setItem("departmentList", JSON.stringify(departmentList));
+
+        // Obtener lista de roles
+        const roleList = await getAllRoles();
+        sessionStorage.setItem("roleList", JSON.stringify(roleList));
+
+        // Obtener lista de provincias
+        const provinceList = await getProvinceList();
+        sessionStorage.setItem("provincelist", JSON.stringify(provinceList));
+
+        
+  
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
     };
-
-    fetchData(); // Llamar a la función para obtener datos
-  }, []); 
+  
+    fetchData(); // Llamar a la función para obtener los datos
+  }, []);
+  
 
   const toggleMenu = () => {
     setIsMenuVisible((prev) => !prev); // Alternar visibilidad del menú

@@ -8,7 +8,8 @@ import { z } from "zod";
 
 import useFormStore from "@/store/useFormStore";
 import { BancariosValidations } from "@/validations/auth/register/bancariosValidations";
-import { profile } from "console";
+import { registerEmployee } from "@/api";
+
 
 type FormData = z.infer<typeof BancariosValidations>;
 
@@ -17,30 +18,25 @@ interface BancariosProps {
   onFinalize: (data: Partial<FormData>) => void;
 }
 
-// Lista de bancos
-const bancos = [
-  "Banco de Bogotá",
-  "Bancolombia",
-  "Davivienda",
-  "BBVA",
-  "Banco Popular",
-];
 
-// Lista de tipos de cuenta
-const tiposCuenta = [
-  "Cuenta Corriente",
-  "Cuenta de Ahorros",
-  "Cuenta Nómina",
-];
 
 export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
   const [isStepValid, setIsStepValid] = useState(false);
+  const [bankList, setBankList] = useState<{ pk: number; name: string }[]>([]);
+  const [bankAccountTypeList, setBankAccountTypeList] = useState<{ pk: number; name: string }[]>([]);
   const { register, handleSubmit, formState: { errors, isValid } } = useForm<FormData>({
     resolver: zodResolver(BancariosValidations),
     mode: "onChange",
   });
 
-  const { formData, setFormData } = useFormStore(); 
+  const { formData, setFormData } = useFormStore();
+  
+  useEffect(() => {
+    const storeBankList = JSON.parse(sessionStorage.getItem("bankList") || "[]");
+    setBankList(storeBankList);
+    const storeBankAccountTypeList = JSON.parse(sessionStorage.getItem("accountTypeList") || "[]");
+    setBankAccountTypeList(storeBankAccountTypeList);
+  }, []);
 
   useEffect(() => {
     setIsStepValid(isValid);
@@ -49,32 +45,32 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
   const onSubmit = (data: FormData) => {
     // Combina los datos del store con los nuevos datos
     const finalData = {
-      dni: formData.dni, // ya está en el formato correcto
-      phone_number: formData.phone_number, // ya está en el formato correcto
-      birth: formData.birth, // formatear fecha como YYYY-MM-DD
-      country: formData.country, // debe ser un ID, asegúrate de que este dato sea correcto
-      province: formData.province, // debe ser un ID, asegúrate de que este dato sea correcto
-      city: formData.city, // debe ser un ID, asegúrate de que este dato sea correcto
-      address: formData.address, // ya está en el formato correcto
-      bank: data.bank, // del formulario
-      bank_account_type: data.bank_account_type, // del formulario
-      bank_account_number: data.bank_account_number, // del formulario
-      email: formData.email, // ya está en el formato correcto
-      first_name: formData.first_name, // ya está en el formato correcto
-      last_name: formData.last_name, // ya está en el formato correcto
-      employee: {
-        start_date: formData.start_date, // formatear fecha como YYYY-MM-DD
-        department: formData.departament, // debe ser un ID, asegúrate de que este dato sea correcto
-        team: formData.role, // asumiendo que es un array de IDs
-        salary: String(formData.salary), // convertir a string
-        working_day: formData.working_day, // ya está en el formato correcto
+        dni: formData.dni, // ya está en el formato correcto
+        phone_number: formData.phone_number, // ya está en el formato correcto
+        birth: formData.birth, // formatear fecha como YYYY-MM-DD
+        country: formData.country, // debe ser un ID, asegúrate de que este dato sea correcto
+        province: formData.province, // debe ser un ID, asegúrate de que este dato sea correcto
+        city: formData.city, // debe ser un ID, asegúrate de que este dato sea correcto
+        address: formData.address, // ya está en el formato correcto
+        bank: data.bank, // del formulario
+        bank_account_type: data.bank_account_type, // del formulario
+        bank_account_number: data.bank_account_number, // del formulario
+        email: formData.email, // ya está en el formato correcto
+        first_name: formData.first_name, // ya está en el formato correcto
+        last_name: formData.last_name, // ya está en el formato correcto
+        employee: {
+          start_date: formData.start_date, // formatear fecha como YYYY-MM-DD
+          department: formData.departament, // debe ser un ID, asegúrate de que este dato sea correcto
+          role: formData.role, // asumiendo que es un array de IDs
+          salary: String(formData.salary), // convertir a string
+          working_day: formData.working_day, // ya está en el formato correcto
       },
-      profile_picture: formData.profile_picture, // ya está en el formato correcto
+// ya está en el formato correcto
     };
 
     // Agrega el console.log aquí para ver los datos que se van a enviar
     console.log("Datos a enviar al backend:", finalData);
-
+    registerEmployee(finalData);
     // Aquí puedes hacer la llamada al backend para enviar el JSON
     onFinalize(finalData); // Enviar los datos al siguiente paso
   };
@@ -88,14 +84,14 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
             Banco
           </label>
           <select
-            id="banco"
+            id="bank"
             {...register("bank")}
-            className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-3/4 px-3 py-2 border text-black rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
           >
             <option value="">Selecciona un banco</option>
-            {bancos.map((banco, index) => (
-              <option key={index} value={banco}>
-                {banco}
+            {bankList.map((banco) => (
+              <option key={banco.pk} value={banco.name}>
+                {banco.name}
               </option>
             ))}
           </select>
@@ -110,14 +106,14 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
             Tipo de Cuenta
           </label>
           <select
-            id="tipoCuenta"
+            id="bank_account_type"
             {...register("bank_account_type")}
             className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
           >
             <option value="">Selecciona el tipo de cuenta</option>
-            {tiposCuenta.map((tipo, index) => (
-              <option key={index} value={tipo}>
-                {tipo}
+            {bankAccountTypeList.map((tipo) => (
+              <option key={tipo.pk} value={tipo.name}>
+                {tipo.name}
               </option>
             ))}
           </select>

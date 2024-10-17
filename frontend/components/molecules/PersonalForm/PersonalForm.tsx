@@ -123,10 +123,13 @@ export function PersonalForm({ onCancel, onNext }: PersonalFormProps) {
   );
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log("Form Data:", data);
-    
+   
+    const formattedData = {
+      ...data,
+      birth: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : undefined, // Formatea la fecha sin la hora
+    };
     // Almacena el archivo en el store
-    const { ...rest } = data; // Desestructurar para obtener el archivo y el resto de los datos
+    const { ...rest } = formattedData; // Desestructurar para obtener el archivo y el resto de los datos
     
     // Asegúrate de que estás guardando el archivo correctamente
     setFormData({
