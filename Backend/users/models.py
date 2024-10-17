@@ -36,7 +36,7 @@ class Person(AbstractUser):
     dni = models.PositiveIntegerField(unique=True, null=True, blank=True)
     phone_number = models.TextField(max_length=20, null=True, blank=True)
     birth = models.DateField(null=True, blank=True)
-    profile_picture = models.ImageField(upload_to="profile_pictures/", null=True, blank=True)
+    profile_picture = models.ImageField(upload_to="", null=True, blank=True)
     country = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True, blank=True) 
     province = models.ForeignKey(Province, on_delete=models.SET_NULL, null=True, blank=True)
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True, blank=True)
