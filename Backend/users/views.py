@@ -1,6 +1,9 @@
-from rest_framework import generics, viewsets
+from rest_framework import generics, viewsets, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
 from .models import Country, Province, City, Bank, BankAccountType, Employee, Person
-from .serializers import CountrySerializer, ProvinceSerializer, CitySerializer, BankSerializer, BankAccountTypeSerializer, EmployeeSerializer, PersonSerializer
+from .serializers import CountrySerializer, ProvinceSerializer, CitySerializer, BankSerializer, BankAccountTypeSerializer, ProfilePictureSerializer, PersonSerializer
 
 # Create your views here.
 ## Country apis
@@ -62,3 +65,20 @@ class BankAccountTypeDetailView(generics.RetrieveUpdateDestroyAPIView):
 class PersonViewSet(viewsets.ModelViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
+    
+
+class ProfilePictureView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    
+    def post(self, request, pk):
+        try:
+            obj = Person.objects.get(pk=pk)
+        except Person.DoesNotExist:
+            return Response({'error': 'Person not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ProfilePictureSerializer(obj, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'Image update correctly'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
