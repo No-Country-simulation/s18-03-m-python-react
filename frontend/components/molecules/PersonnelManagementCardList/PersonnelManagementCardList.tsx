@@ -1,10 +1,11 @@
 "use client";
 import { LogoIcon, SearchIcon } from "@/components/icons";
 import { Input } from "@/components/atoms";
-import { useState, useMemo } from "react";
+import { useState, useMemo,useEffect } from "react";
 import { PersonnelManagementCard } from "../PersonnelManagementCard/PersonnelManagementCard";
 import CircularMenu from "../CirucularMenu/CircularMenu";
 import Register from "@/components/organisms/Register/Register";
+import { getCityList,getDepartmentList, getProvinceList,getAllRoles,getCountryList,getBankList } from "@/api";
 
 
 interface User {
@@ -113,6 +114,35 @@ export const PersonnelManagementCardList = () => {
     () => filterUsers(users, searchQuery),
     [searchQuery]
   );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [cities, countries, departments] = await Promise.all([
+          getCityList(),
+          getCountryList(),
+          getDepartmentList(),
+          getProvinceList(),
+          getAllRoles(),
+          getBankList(),
+    
+  
+        ]);
+
+        // Guardar los datos en sessionStorage
+        sessionStorage.setItem("cities", JSON.stringify(cities));
+        sessionStorage.setItem("countries", JSON.stringify(countries));
+        sessionStorage.setItem("departments", JSON.stringify(departments));
+        sessionStorage.setItem("roles", JSON.stringify(getAllRoles()));
+        sessionStorage.setItem("banks", JSON.stringify(getBankList()));
+        sessionStorage.setItem("provinces", JSON.stringify(getProvinceList()));
+      } catch (error) {
+        console.error("Error al cargar los datos:", error);
+      }
+    };
+
+    fetchData(); // Llamar a la función para obtener datos
+  }, []); 
 
   const toggleMenu = () => {
     setIsMenuVisible((prev) => !prev); // Alternar visibilidad del menú
