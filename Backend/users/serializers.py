@@ -104,14 +104,14 @@ class PersonSerializer(serializers.ModelSerializer):
         
         employee_data = validated_data.pop("employee") 
         
-        employee_team = employee_data.pop("team")
+        employee_team = employee_data.pop("team", None)
          
         person = Person.objects.create(**validated_data)
         
         employee = Employee.objects.create(person=person, **employee_data)
-        
-        for team in employee_team:
-            employee.team.add(team)
+        if employee_team:
+            for team in employee_team:
+                employee.team.add(team)
         
         return person
     
