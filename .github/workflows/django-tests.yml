@@ -1,0 +1,49 @@
+name: Run Django Tests
+on:
+  pull_request:
+    branches:
+      - "**"
+  push:
+    branches:
+      - "**"
+jobs:
+  test-django-app:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10"]
+    services:
+      db:
+        image: postgres:14.2-alpine
+        env:
+          POSTGRES_DB: django_db
+          POSTGRES_USER: django_user
+          POSTGRES_PASSWORD: django_password
+        ports:
+        - 5432:5432
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          cd Backend
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Run Django test
+        run: |
+          cd Backend
+          python manage.py makemigrations
+          python manage.py migrate
+          python manage.py test
+        env:
+          POSTGRES_NAME: django_db
+          POSTGRES_USER: django_user
+          POSTGRES_PASSWORD: django_password
+          POSTGRES_HOST: localhost
+
