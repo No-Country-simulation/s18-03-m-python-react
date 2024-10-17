@@ -1,5 +1,6 @@
-from .views import CountryListCreateView, CountryDetailView, ProvinceListCreateView, ProvinceDetailView, CityListCreateView, CityDetailView, BankListCreateView, BankDetailView, BankAccountTypeListCreateView, BankAccountTypeDetailView, PersonViewSet
+from .views import CountryListCreateView, CountryDetailView, ProvinceListCreateView, ProvinceDetailView, CityListCreateView, CityDetailView, BankListCreateView, BankDetailView, BankAccountTypeListCreateView, BankAccountTypeDetailView, PersonViewSet, ProfilePictureView
 from django.urls import path
+
 
 employee_list = PersonViewSet.as_view({
     'get': 'list',       
@@ -30,5 +31,7 @@ urlpatterns = [
     path("bankaccounttype/<int:pk>", BankAccountTypeDetailView.as_view(), name="bankaccounttype-detail"),
     
     path("employee/", employee_list, name="employee-list-create"),
-    path("employee/<int:pk>", employee_detail, name="employee-detail")
+    path("employee/<int:pk>", employee_detail, name="employee-detail"),
+    
+    path("profilepicture/<int:pk>/", ProfilePictureView.as_view(), name="profilepicture")
 ]

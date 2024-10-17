@@ -175,3 +175,9 @@ class PersonSerializer(serializers.ModelSerializer):
         }
 
         return representation
+
+
+class ProfilePictureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Person
+        fields = ["profile_picture"]

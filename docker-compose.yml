@@ -8,9 +8,10 @@ services:
         python manage.py migrate &&
         python manage.py test --noinput &&
         python manage.py createadmin &&
+        python manage.py loadexampledata &&
         python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - .:/Backend
+      - ./Backend/media:/media
     ports:
       - "8000:8000"
     depends_on:
