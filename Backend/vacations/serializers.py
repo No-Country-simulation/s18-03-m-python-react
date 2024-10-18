@@ -18,7 +18,7 @@ class VacationRequestSerializer(serializers.ModelSerializer):
 class VacationResponseSerializer(serializers.Serializer):
     vacation = serializers.IntegerField()
     status = serializers.BooleanField()
-    note = serializers.CharField(max_length=500, required=False, allow_null=True)
+    message = serializers.CharField(max_length=500, required=False, allow_null=True)
     
     def validate_vacation(self, value):
         try:
@@ -30,3 +30,9 @@ class VacationResponseSerializer(serializers.Serializer):
             raise serializers.ValidationError(f"Vacation alredy {vacation_request.get_status_display()}")
         
         return value
+    
+
+class VacationAnsweredSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VacationRequest
+        fields = ["employee", "start", "end", "status", "message"]
