@@ -1,0 +1,41 @@
+[
+    {"name": "Banco Nacional de Afganistán"},
+    {"name": "Bank-e-Millie Afghan"},
+    {"name": "Bafghan Bank"},
+    
+    {"name": "Banco de la Nación Argentina"},
+    {"name": "Banco Galicia"},
+    {"name": "Banco Santander Río"},
+    
+    {"name": "Banca Comerciala Romana"},
+    {"name": "Raiffeisen Bank"},
+    {"name": "BRD - Groupe Société Générale"},
+    
+    {"name": "Bank of Australia"},
+    {"name": "Commonwealth Bank"},
+    {"name": "Westpac Banking Corporation"},
+    
+    {"name": "Banco de Chile"},
+    {"name": "BancoEstado"},
+    {"name": "Banco BCI"},
+    
+    {"name": "Banca d'Italia"},
+    {"name": "Intesa Sanpaolo"},
+    {"name": "UniCredit"},
+    
+    {"name": "Royal Bank of Canada"},
+    {"name": "Toronto-Dominion Bank"},
+    {"name": "Bank of Nova Scotia"},
+    
+    {"name": "Banco do Brasil"},
+    {"name": "Itaú Unibanco"},
+    {"name": "Bradesco"},
+    
+    {"name": "HSBC Bank"},
+    {"name": "Barclays Bank"},
+    {"name": "Lloyds Banking Group"},
+    
+    {"name": "Sberbank"},
+    {"name": "VTB Bank"},
+    {"name": "Gazprombank"}
+]

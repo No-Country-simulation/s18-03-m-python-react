@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import "./styles/globals.css";
 import { ThemeProvider } from "@/components/providers";
 import Sidebar from "@/components/organisms/SideBar/SideBar";
+import { Toaster } from "@/components/atoms";
 
 const geistSans = localFont({
   src: "./assets/fonts/GeistVF.woff",
@@ -42,13 +43,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
+        {/* <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           enableColorScheme
           disableTransitionOnChange
-        >
+        > */}
           <section className="flex h-screen flex-col md:flex-row md:overflow-hidden">
             <div className="w-full flex-none md:w-64">
               <Sidebar />
@@ -57,7 +58,8 @@ export default function RootLayout({
               {children}
             </div>
           </section>
-        </ThemeProvider>
+          <Toaster />
+        {/* </ThemeProvider> */}
       </body>
     </html>
   );

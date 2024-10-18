@@ -1,9 +1,22 @@
 "use client";
 import { LogoIcon, SearchIcon } from "@/components/icons";
 import { Input } from "@/components/atoms";
-import { useEffect, useMemo, useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { PersonnelManagementCard } from "../PersonnelManagementCard/PersonnelManagementCard";
 import CircularMenu from "../CirucularMenu/CircularMenu";
+import Register from "@/components/organisms/Register/Register";
+import {
+  getCityList,
+  getDepartmentList,
+  getProvinceList,
+  getAllRoles,
+  getCountryList,
+  getBankList,
+  getAccountTypes,
+  getEmployees,
+} from "@/api";
+import { get } from "http";
+import { Person } from "@/interface/Person/Person";
 
 interface User {
   id: string;
@@ -72,11 +85,11 @@ const users: User[] = [
   },
 ];
 
-const filterUsers = (users: User[], query: string) => {
+const filterUsers = (users: Person[], query: string) => {
   if (!query) return users;
   return users.filter(
     (user) =>
-      user.name.toLowerCase().includes(query.toLowerCase()) ||
+      user.first_name.toLowerCase().includes(query.toLowerCase()) ||
       user.email.toLowerCase().includes(query.toLowerCase())
   );
 };
@@ -104,97 +117,116 @@ const SearchBar = ({
 
 export const PersonnelManagementCardList = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [ isMenuVisible, setIsMenuVisible ] = useState(false);
-  const [isMousePressed, setIsMousePressed] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const menuSize=160;
-
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false); // Estado para el modal de registro
+  const [employeesList, setEmployeesList] = useState<Person[]>([]);
   const filteredUsers = useMemo(
-    () => filterUsers(users, searchQuery),
+    () => filterUsers(employeesList, searchQuery),
     [searchQuery]
   );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Obtener lista de ciudades
+        const cityList = await getCityList();
+        if (Array.isArray(cityList)) {
+          sessionStorage.setItem("cityList", JSON.stringify(cityList));
+        }
+
+        // Obtener lista de países
+        const countryList = await getCountryList();
+        if (Array.isArray(countryList)) {
+          sessionStorage.setItem("countryList", JSON.stringify(countryList));
+        }
+
+        // Obtener lista de bancos
+        const bankList = await getBankList();
+        if (Array.isArray(bankList)) {
+          sessionStorage.setItem("bankList", JSON.stringify(bankList));
+        }
+
+        // Obtener lista de tipos de cuenta
+        const accountTypeList = await getAccountTypes();
+        if (Array.isArray(accountTypeList)) {
+          sessionStorage.setItem(
+            "accountTypeList",
+            JSON.stringify(accountTypeList)
+          );
+        }
+
+        // Obtener lista de departamentos
+        const departmentList = await getDepartmentList();
+        if (Array.isArray(departmentList)) {
+          sessionStorage.setItem(
+            "departmentList",
+            JSON.stringify(departmentList)
+          );
+        }
+
+        // Obtener lista de roles
+        const roleList = await getAllRoles();
+        if (Array.isArray(roleList)) {
+          sessionStorage.setItem("roleList", JSON.stringify(roleList));
+        }
+
+        // Obtener lista de provincias
+        const provinceList = await getProvinceList();
+        if (Array.isArray(provinceList)) {
+          sessionStorage.setItem("provinceList", JSON.stringify(provinceList));
+        }
+
+        // Obtener lista de empleados
+        const empList = await getEmployees();
+        if (Array.isArray(empList) && empList.length > 0) {
+          // Eliminar el primer elemento usando slice()
+          const filteredEmpList = empList.slice(1); // Elimina el primer elemento
+
+          console.log(filteredEmpList);
+          setEmployeesList(filteredEmpList); // Actualizar el estado con la lista filtrada
+          sessionStorage.setItem("employees", JSON.stringify(filteredEmpList)); // Guardar en el sessionStorage
+        }
+      } catch (error) {
+        console.error("Error al cargar los datos:", error);
+      }
+    };
+
+    fetchData(); // Llamar a la función para obtener los datos
+  }, []); // El array vacío asegura que se ejecuta solo una vez al montarse
 
   const toggleMenu = () => {
     setIsMenuVisible((prev) => !prev); // Alternar visibilidad del menú
   };
 
-   // Manejar el evento de movimiento del mouse
-   useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      if (!isMousePressed) {
-        // Solo seguir al mouse si no está presionado
-        setMousePosition({
-          x: event.clientX,
-          y: event.clientY,
-        });
-      }
-    };
-
-    if (isMenuVisible) {
-      window.addEventListener("mousemove", handleMouseMove);
-    } else {
-      window.removeEventListener("mousemove", handleMouseMove);
-    }
-
-    // Limpieza del listener cuando el componente se desmonta o el menú deja de estar visible
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [isMenuVisible, isMousePressed]);
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsMenuVisible(false); // Cerrar el menú si se presiona "Esc"
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    // Limpieza del listener cuando el componente se desmonta
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
-    // Manejar el evento del mouse down (presionar el botón izquierdo)
-    useEffect(() => {
-      const handleMouseDown = (event: MouseEvent) => {
-        if (event.button === 0) {
-          // Si se presiona el botón izquierdo del mouse
-          setIsMousePressed(true); // Detener el seguimiento del mouse
-        }
-      };
-  
-      const handleMouseUp = () => {
-        setIsMousePressed(false); // Reanudar el seguimiento del mouse cuando se suelte el botón
-      };
-  
-      window.addEventListener("mousedown", handleMouseDown);
-      window.addEventListener("mouseup", handleMouseUp);
-  
-      return () => {
-        window.removeEventListener("mousedown", handleMouseDown);
-        window.removeEventListener("mouseup", handleMouseUp);
-      };
-    }, []);
-  
+  const handleAddEmployee = () => {
+    setIsRegisterOpen(true); // Abrir el modal al agregar empleado
+    toggleMenu();
+  };
 
   return (
     <div className="container mx-auto p-4 shadow">
-      <div className="flex flex-row justify-between px-4 items-center  space-x-4">
+      <div className="flex flex-row justify-between px-4 items-center space-x-4">
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <span className="pr-12 cursor-pointer" onClick={toggleMenu} >
+        <span className="pr-12 cursor-pointer" onClick={toggleMenu}>
           <LogoIcon />
         </span>
       </div>
       <div className="bg-white p-4 rounded-lg">
-        {filteredUsers.length > 0 ? (
-          filteredUsers.map(
-            ({ id, name, cargo, email, status, imageSrc, alt }) => (
+        {employeesList.length > 0 ? (
+          employeesList.map(
+            ({ pk, first_name, employee, email, profile_picture }) => (
               <PersonnelManagementCard
-                key={id}
-                name={name}
-                cargo={cargo}
+                key={pk}
+                name={first_name}
+                cargo={employee.role}
                 email={email}
-                initialStatus={status}
-                imageSrc={imageSrc}
-                alt={alt}
+                initialStatus="active"
+                imageSrc={
+                  profile_picture
+                    ? profile_picture
+                    : "https://i.pravatar.cc/304"
+                }
+                alt={first_name}
               />
             )
           )
@@ -204,22 +236,27 @@ export const PersonnelManagementCardList = () => {
           </div>
         )}
 
-  
-    {/* Menú Circular flotante que sigue al mouse */}
-    {isMenuVisible && (
-        <div
-          className="absolute cursor-none"
-          style={{
-            top: `${mousePosition.y - menuSize / 2}px`,
-            left: `${mousePosition.x - menuSize / 2}px`,
-            width: `${menuSize}px`,
-            height: `${menuSize}px`,
-          }}
-        >
-          <CircularMenu isEmployeeSelected = {false}  />
-        </div>
-      )}
+        {/* Menú Circular en posición fija en la esquina superior derecha */}
+        {isMenuVisible && (
+          <div
+            className="absolute top-0 right-0 m-4"
+            style={{
+              width: "160px",
+              height: "160px",
+            }}
+          >
+            <CircularMenu
+              isEmployeeSelected={false}
+              onAddEmployee={handleAddEmployee}
+            />
+          </div>
+        )}
       </div>
+
+      {/* Componente Modal para agregar empleado */}
+      {isRegisterOpen && (
+        <Register isOpen={isRegisterOpen} setOpen={setIsRegisterOpen} />
+      )}
     </div>
   );
 };
