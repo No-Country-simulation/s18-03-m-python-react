@@ -37,20 +37,20 @@ export const PersonnelManagementCard = ({
   alt,
 }: Readonly<Props>) => {
   const [status, setStatus] = useState(initialStatus);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [newStatus, setNewStatus] = useState<"active" | "inactive">(
     initialStatus
   );
   const { toast } = useToast();
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 1500);
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   const handleStatusChange = () => {
     setNewStatus(status === "active" ? "inactive" : "active");
