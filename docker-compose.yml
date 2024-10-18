@@ -37,5 +37,12 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  front:
+    build: /frontend
+    container_name: next_app
+    ports:
+      - "3000:3000"
+    command: pnpm dev
+
 volumes:
   postgres_data:
