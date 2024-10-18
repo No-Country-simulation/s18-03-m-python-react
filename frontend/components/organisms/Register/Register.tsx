@@ -32,6 +32,10 @@ export default function Register({ isOpen, setOpen }: { isOpen: boolean; setOpen
     setOpen(false); // Cerrar el modal
   };
 
+  const onFinalize = ()=>{
+    setOpen(false); // Cerrar el modal
+  }
+
   // Definir títulos para cada paso del formulario
   const stepTitles = [
     "Información Personal",
@@ -54,7 +58,7 @@ export default function Register({ isOpen, setOpen }: { isOpen: boolean; setOpen
             {step === 1 && <PersonalForm onNext={handleNextStep} onCancel={handleCancel} />}
             {step === 2 && <LocationForm onNext={handleNextStep} onBack={handlePreviousStep} />}
             {step === 3 && <FormularioLaborales onNext={handleNextStep} onBack={handlePreviousStep} />}
-            {step === 4 && <Bancarios onBack={handlePreviousStep} onFinalize={handleNextStep} />}
+            {step === 4 && <Bancarios onBack={handlePreviousStep} onFinalize={onFinalize} />}
           </DialogContent>
 
           <DialogClose asChild>

@@ -50,20 +50,22 @@ const LocationForm = ({ onBack, onNext }: LocationFormProps) => {
   // Cargar los datos del sessionStorage
   useEffect(() => {
     const storedCountriesResponse = JSON.parse(sessionStorage.getItem("countryList") || "null");
-    const storedProvincesResponse = JSON.parse(sessionStorage.getItem("provincelist") || "null");
+    const storedProvincesResponse = JSON.parse(sessionStorage.getItem("provinceList") || "null");
     const storedCitiesResponse = JSON.parse(sessionStorage.getItem("cityList") || "null");
 console.log('provinces', storedProvincesResponse)
     // Verificar que la respuesta no sea null
-    if (storedCountriesResponse && Array.isArray(storedCountriesResponse.data)) {
-      setCountries(storedCountriesResponse.data);
+    if (storedCountriesResponse && Array.isArray(storedCountriesResponse)) {
+      setCountries(storedCountriesResponse);
     }
 
     if (storedProvincesResponse && Array.isArray(storedProvincesResponse)) {
+      console.log(storedProvincesResponse);
+      
       setProvinces(storedProvincesResponse); // Establece directamente el array de provincias
     }
 
-    if (storedCitiesResponse && Array.isArray(storedCitiesResponse.data)) {
-      setCities(storedCitiesResponse.data);
+    if (storedCitiesResponse && Array.isArray(storedCitiesResponse)) {
+      setCities(storedCitiesResponse);
     }
   }, []);
 

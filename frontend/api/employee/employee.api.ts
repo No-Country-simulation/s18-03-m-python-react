@@ -20,7 +20,7 @@ interface Employee {
     employee: {
         start_date: string; // Formato YYYY-MM-DD
         department: string; // ID del departamento
-        team: string[]; // Array de IDs
+        role: string;
         salary: string;
         working_day: string; // Ya está en el formato correcto
     };
@@ -48,7 +48,7 @@ export const registerEmployee = async(employee:Employee)=>{
         return response.data;
     } catch (error) {
         console.error('Error al registrar el empleado',error);
-        throw new Error('Error al registrar el empleado')
+        throw new Error('Error al registrar el empleado');
     }
 }
 
