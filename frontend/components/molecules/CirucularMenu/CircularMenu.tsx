@@ -10,7 +10,8 @@ import { buttons as defaultButtons } from "@/mocks/menuCircular/menuCirularData"
 export default function CircularMenu({
   isEmployeeSelected,
   idUserSelected = "0",
-  onAddEmployee // Asegúrate de que esta función se pase como prop
+  onAddEmployee, 
+  toggleMenu, // Asegúrate de que esta función se pase como prop
 }: CircularMenuProps) {
   const [currentIndex, setCurrentIndex] = useState<number>(-1);
   const [hoveredButton, setHoveredButton] = useState<Button | null>(null);
@@ -72,7 +73,10 @@ export default function CircularMenu({
 
   return (
     <div className="relative w-40 h-40">
-      <div className="absolute inset-0 flex items-center justify-center">
+      <div 
+      className="cursor-pointer absolute inset-0 flex items-center justify-center"
+      onClick={toggleMenu}
+      >
         {hoveredButton || (currentIndex !== -1 && isScrolling) ? (
           <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg text-center text-xs z-10">
             {hoveredButton?.label || buttons[currentIndex]?.label}

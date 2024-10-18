@@ -18,17 +18,9 @@ import {
 import { get } from "http";
 import { Person } from "@/interface/Person/Person";
 
-interface User {
-  id: string;
-  name: string;
-  cargo: string;
-  email: string;
-  status: "active" | "inactive";
-  imageSrc?: string;
-  alt?: string;
-}
 
-const users: User[] = [
+
+/* const users: User[] = [
   {
     id: "1",
     name: "Pepe 1 Argento",
@@ -83,7 +75,7 @@ const users: User[] = [
     imageSrc: "https://i.pravatar.cc/305",
     alt: "usuario 6",
   },
-];
+]; */
 
 const filterUsers = (users: Person[], query: string) => {
   if (!query) return users;
@@ -120,6 +112,11 @@ export const PersonnelManagementCardList = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false); // Estado para el modal de registro
   const [employeesList, setEmployeesList] = useState<Person[]>([]);
+  const [menuPosition, setMenuPosition] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+  const [isMenuFloating, setIsMenuFloating] = useState(false); 
   const filteredUsers = useMemo(
     () => filterUsers(employeesList, searchQuery),
     [searchQuery]
@@ -203,6 +200,25 @@ export const PersonnelManagementCardList = () => {
     toggleMenu();
   };
 
+
+  // Manejar el clic en una tarjeta de empleado
+  const handleEmployeeCardClick = (e: React.MouseEvent, employeeId: string) => {
+    const cardRect = (e.target as HTMLElement).getBoundingClientRect();
+    setMenuPosition({ x: cardRect.left, y: cardRect.top });
+    setIsMenuFloating(true); // Habilita el menú flotante
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isMenuFloating) {
+      const cardRect = (e.target as HTMLElement).getBoundingClientRect();
+      const mouseX = Math.max(cardRect.left, Math.min(e.clientX, cardRect.right));
+      const mouseY = Math.max(cardRect.top, Math.min(e.clientY, cardRect.bottom));
+      setMenuPosition({ x: mouseX, y: mouseY });
+    }
+  };
+
+
+
   return (
     <div className="container mx-auto p-4 shadow">
       <div className="flex flex-row justify-between px-4 items-center space-x-4">
@@ -227,7 +243,9 @@ export const PersonnelManagementCardList = () => {
                     : "https://i.pravatar.cc/304"
                 }
                 alt={first_name}
+                onMouseMove={handleMouseMove}
               />
+              
             )
           )
         ) : (
@@ -239,15 +257,16 @@ export const PersonnelManagementCardList = () => {
         {/* Menú Circular en posición fija en la esquina superior derecha */}
         {isMenuVisible && (
           <div
-            className="absolute top-0 right-0 m-4"
+            className="absolute top-[130px] right-[118px] m-4"
             style={{
               width: "160px",
               height: "160px",
             }}
           >
             <CircularMenu
-              isEmployeeSelected={false}
+              isEmployeeSelected={true}
               onAddEmployee={handleAddEmployee}
+              toggleMenu={toggleMenu}
             />
           </div>
         )}
