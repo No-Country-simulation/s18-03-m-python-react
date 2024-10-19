@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import VacationRequest
+from .models import VacationRequest, Vacation
 
 class VacationRequestSerializer(serializers.ModelSerializer):
     message = serializers.CharField(read_only=True)
@@ -36,3 +36,11 @@ class VacationAnsweredSerializer(serializers.ModelSerializer):
     class Meta:
         model = VacationRequest
         fields = ["employee", "start", "end", "status", "message"]
+        
+        
+class VacationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vacation
+        fields = ["id", "start", "end", "employee"]
+        
+    
