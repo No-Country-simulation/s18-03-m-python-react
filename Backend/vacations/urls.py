@@ -1,6 +1,10 @@
+
+from .views import VacationResponseView, VacationView, VacationRequestListCreateView
 from django.urls import path
-from .views import VacationRequestListCreateView
 
 urlpatterns = [
-    path('vacation-requests/', VacationRequestListCreateView.as_view(), name='vacation-request-list-create'), 
+    path("vacationresponse/", VacationResponseView.as_view(), name="vacation-response"),
+    path("confirmedvacations/", VacationView.as_view(), name="confirmed-vacations"),
+     path('vacation-requests/', VacationRequestListCreateView.as_view(), name='vacation-request-list-create')
+
 ]

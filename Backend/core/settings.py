@@ -17,6 +17,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -25,12 +26,18 @@ SECRET_KEY = 'django-insecure-z()o_^vyh)@f=b7&xdqi_!9w26ylx^svjext)5iyva4g@j^z2j
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+if DEBUG == True:
+    CORS_ALLOW_ALL_ORIGINS = True
+    
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000"
+]
 
 ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = "users.Person"
-MEDIA_ROOT = BASE_DIR / "media"
-MEDIA_URL = "/media/"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Application definition
 
@@ -46,6 +53,9 @@ INSTALLED_APPS = [
     "users",
     "vacations",
     "workgroups",
+    "core",
+    "rest_framework",
+    "drf_yasg",
 ]
 
 MIDDLEWARE = [
