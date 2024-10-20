@@ -55,6 +55,7 @@ class VacationView(APIView):
         
         return Response(vacations_serialized.data, status=status.HTTP_200_OK)
     
+    
 class VacationRequestListCreateView(generics.ListCreateAPIView):
     queryset = VacationRequest.objects.all()
     serializer_class = VacationRequestSerializer
