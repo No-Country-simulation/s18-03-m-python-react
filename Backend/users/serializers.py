@@ -148,7 +148,7 @@ class PersonSerializer(serializers.ModelSerializer):
                 "start_date": employee.start_date if employee.start_date else None,
                 "department": employee.department.title if employee.department else None,
                 "team": [team.title for team in employee.team.all()] if employee.team.exists() else None,
-                "role": employee.role.id if employee.role else None,
+                "role": employee.role.title if employee.role else None,
                 "salary": employee.salary if employee.salary else None,
                 "working_day": employee.working_day if employee.working_day else None,
                 "active_employee": employee.active_employee if employee.active_employee is not None else None
