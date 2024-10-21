@@ -1,4 +1,4 @@
-from .views import CountryListCreateView, CountryDetailView, ProvinceListCreateView, ProvinceDetailView, CityListCreateView, CityDetailView, BankListCreateView, BankDetailView, BankAccountTypeListCreateView, BankAccountTypeDetailView, PersonViewSet, ProfilePictureView, ActiveEmployeeView
+from .views import CountryListCreateView, CountryDetailView, ProvinceListCreateView, ProvinceDetailView, CityListCreateView, CityDetailView, BankListCreateView, BankDetailView, BankAccountTypeListCreateView, BankAccountTypeDetailView, PersonViewSet, ProfilePictureView, ActiveEmployeeView, EntitiesAmountView
 from django.urls import path
 
 
@@ -36,4 +36,6 @@ urlpatterns = [
     path("profilepicture/<int:pk>/", ProfilePictureView.as_view(), name="profilepicture"),
     
     path("activeemployee/<int:pk>/", ActiveEmployeeView.as_view(), name="active-employee"),
+    
+    path("entitiesamount/", EntitiesAmountView.as_view(), name="entities-amount"),
 ]
