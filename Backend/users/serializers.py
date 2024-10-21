@@ -39,7 +39,7 @@ class BankAccountTypeSerializer(serializers.ModelSerializer):
 class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = ["pk", "start_date", "department", "team", "role", "salary", "working_day"]
+        fields = ["pk", "start_date", "department", "team", "role", "salary", "working_day", "active_employee"]
               
         
 class PersonSerializer(serializers.ModelSerializer):
@@ -151,6 +151,7 @@ class PersonSerializer(serializers.ModelSerializer):
                 "role": employee.role.id if employee.role else None,
                 "salary": employee.salary if employee.salary else None,
                 "working_day": employee.working_day if employee.working_day else None,
+                "active_employee": employee.active_employee if employee.active_employee is not None else None
             }
         except Employee.DoesNotExist:
             employee_data = None

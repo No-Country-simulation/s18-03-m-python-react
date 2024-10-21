@@ -47,6 +47,7 @@ class Person(AbstractUser):
 
 class Employee(models.Model):
     person = models.ForeignKey(Person, on_delete=models.CASCADE, null=True, blank=True)
+    active_employee = models.BooleanField(default=False, blank=True)
     start_date = models.DateField(null=True, blank=True)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
     team = models.ManyToManyField(Team, blank=True)
