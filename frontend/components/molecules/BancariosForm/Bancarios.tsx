@@ -1,25 +1,26 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 // components/Bancarios.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+
 
 import useFormStore from "@/store/useFormStore";
 import { BancariosValidations } from "@/validations/auth/register/bancariosValidations";
 import { Employee, registerEmployee } from "@/api";
 import { useToast } from "@/hooks";
 
-type FormData = z.infer<typeof BancariosValidations>;
 
+type FormData = Employee
 interface BancariosProps {
   onBack: () => void;
   onFinalize: (data: Partial<FormData>) => void;
 }
 
 export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isStepValid, setIsStepValid] = useState(false);
   const [bankList, setBankList] = useState<{ pk: number; name: string }[]>([]);
   const [bankAccountTypeList, setBankAccountTypeList] = useState<
@@ -35,7 +36,7 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
   });
   //toaster
   const { toast } = useToast();
-  const { formData, setFormData } = useFormStore();
+  const { formData } = useFormStore();
 
   useEffect(() => {
     const storeBankList = JSON.parse(

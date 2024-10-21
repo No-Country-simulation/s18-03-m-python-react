@@ -12,8 +12,8 @@ export interface Employee {
     city: string | null | undefined; // ID de la ciudad
     address: string | null | undefined;
     bank: string | null | undefined; // Nombre del banco
-    bank_account_type: string | null | undefined; // Tipo de cuenta
-    bank_account_number: string | null | undefined;
+    bank_account_type: string | null; // Tipo de cuenta
+    bank_account_number: string | null ;
     email: string | null | undefined;
     first_name: string;
     last_name: string;
