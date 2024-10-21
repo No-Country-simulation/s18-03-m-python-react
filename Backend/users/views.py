@@ -82,3 +82,16 @@ class ProfilePictureView(APIView):
             return Response({'message': 'Image update correctly'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
+            
+class ActiveEmployeeView(APIView):
+    def post(self, request, pk):
+        try:
+            obj = Employee.objects.get(person=Person.objects.get(pk=pk))
+        except (Person.DoesNotExist, Employee.DoesNotExist):
+            return Response({"message": "Employee not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        obj.active_employee = not obj.active_employee
+        
+        obj.save()
+        
+        return Response({"message": f"Employee status set to {'active' if obj.active_employee else 'inactive'}"}, status=status.HTTP_200_OK)
