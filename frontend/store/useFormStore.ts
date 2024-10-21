@@ -17,7 +17,7 @@ interface Employee {
 interface Person {
   first_name: string;
   last_name: string;
-  dni: string | null;                  // DNI como string
+  dni: string | null ;                  // DNI como string
   phone_number: string | null;         // Número de teléfono como string
   email: string;
   birth: string | null;                // Fecha de nacimiento en formato 'YYYY-MM-DD'
@@ -26,9 +26,14 @@ interface Person {
   province: string | null;             // ID de la provincia como string
   city: string | null;                 // ID de la ciudad como string
   bank: string | null;                 // ID del banco como string
-  bank_account_type: string | null;    // Tipo de cuenta bancaria como string
+  bank_account_type: string | null ;    // Tipo de cuenta bancaria como string
   bank_account_number: string | null;  // Número de cuenta bancaria como string
-  profile_picture?: File | null;       // Archivo de imagen (opcional)
+  profile_picture?: File | null;
+  start_date?: string | null;
+  departament?: string | null;
+  role?: string[];
+  salary?: string | null;
+  working_day?: string | null;                     // Archivo de imagen (opcional)
 
   employee: Employee | null;           // Datos del empleado anidados
 }
@@ -36,7 +41,7 @@ interface Person {
 // Definimos la interfaz FormStore que representa nuestro store de Zustand
 interface FormStore {
   formData: Partial<Person>;  // Guardamos los datos en el estado tipado como `Person`
-  setFormData: (data: Partial<Person>, step: string) => void;  // Función para actualizar los datos
+  setFormData: (data: Partial<Person>) => void;  // Función para actualizar los datos
   resetFormData: () => void;   // Resetea los datos del formulario
   getFormattedData: () => Person; // Método para obtener los datos formateados para el backend
 }
@@ -78,11 +83,11 @@ const useFormStore = create<FormStore>()(
   devtools((set, get) => ({
     formData: {}, // Estado inicial vacío
 
-    setFormData: (data, step) => {
+    setFormData: (data) => {
       // Actualiza los datos del formulario
       set((state) => ({
         formData: { ...state.formData, ...data },
-      }), false, `Set Form Data - Step ${step}`);
+      }), false, `Set Form Data - Step `);
     },
 
     resetFormData: () => set({ formData: {} }, false, "Reset Form Data"),

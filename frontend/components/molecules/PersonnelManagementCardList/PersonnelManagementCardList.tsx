@@ -15,75 +15,8 @@ import {
   getAccountTypes,
   getEmployees,
 } from "@/api";
-import { get } from "http";
 import { Person } from "@/interface/Person/Person";
-
-interface User {
-  id: string;
-  name: string;
-  cargo: string;
-  email: string;
-  status: "active" | "inactive";
-  imageSrc?: string;
-  alt?: string;
-}
-
-const users: User[] = [
-  {
-    id: "1",
-    name: "Pepe 1 Argento",
-    cargo: "Front-End",
-    email: "pepe1@org.com",
-    status: "active",
-    imageSrc: "https://i.pravatar.cc/300",
-    alt: "usuario 1",
-  },
-  {
-    id: "2",
-    name: "Pepe 2 Argento",
-    cargo: "Back-End",
-    email: "pepe2@org.com",
-    status: "inactive",
-    imageSrc: "https://i.pravatar.cc/301",
-    alt: "usuario 2",
-  },
-  {
-    id: "3",
-    name: "Pepe 3 Argento",
-    cargo: "Front-End",
-    email: "pepe3@org.com",
-    status: "active",
-    imageSrc: "https://i.pravatar.cc/302",
-    alt: "usuario 3",
-  },
-  {
-    id: "4",
-    name: "Pepe 4 Argento",
-    cargo: "Design",
-    email: "pepe4@org.com",
-    status: "active",
-    imageSrc: "https://i.pravatar.cc/303",
-    alt: "usuario 4",
-  },
-  {
-    id: "5",
-    name: "Pepe 5 Argento",
-    cargo: "QA",
-    email: "pepe5@org.com",
-    status: "active",
-    imageSrc: "https://i.pravatar.cc/304",
-    alt: "usuario 5",
-  },
-  {
-    id: "6",
-    name: "Pepe 6 Argento",
-    cargo: "UX-UI",
-    email: "pepe6@org.com",
-    status: "active",
-    imageSrc: "https://i.pravatar.cc/305",
-    alt: "usuario 6",
-  },
-];
+import CircularMenuUser from "../CirucularMenu/CiruclarMenuUser";
 
 const filterUsers = (users: Person[], query: string) => {
   if (!query) return users;
@@ -115,11 +48,15 @@ const SearchBar = ({
   </div>
 );
 
-export const PersonnelManagementCardList = () => {
+export const PersonnelManagementCardList = ()  => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false); // Estado para el modal de registro
   const [employeesList, setEmployeesList] = useState<Person[]>([]);
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(null);
+  const [isCircularMenuVisible, setIsCircularMenuVisible] = useState(false);
+
+ 
   const filteredUsers = useMemo(
     () => filterUsers(employeesList, searchQuery),
     [searchQuery]
@@ -194,40 +131,80 @@ export const PersonnelManagementCardList = () => {
     fetchData(); // Llamar a la función para obtener los datos
   }, []); // El array vacío asegura que se ejecuta solo una vez al montarse
 
-  const toggleMenu = () => {
-    setIsMenuVisible((prev) => !prev); // Alternar visibilidad del menú
+  const closeCircularMenu = () => {
+    setIsCircularMenuVisible(false);
+};
+
+const handleSettingsClick = (employeePk: number) => {
+  if (selectedEmployeeId === employeePk) {
+    setSelectedEmployeeId(null); // Cierra el menú si ya está abierto
+  } else {
+    setSelectedEmployeeId(employeePk); // Abre el menú para el nuevo empleado
+  }
+};
+
+
+
+
+const openCircularMenu = () => {
+  setIsCircularMenuVisible(true);
+};
+  
+  const closeMenu = () => {
+    setIsMenuVisible(false);
   };
 
-  const handleAddEmployee = () => {
-    setIsRegisterOpen(true); // Abrir el modal al agregar empleado
-    toggleMenu();
+  const handleLogoClick = () => {
+    if (isCircularMenuVisible) {
+      closeCircularMenu();
+    } else {
+      openCircularMenu();
+    }
   };
+  
+  // Manejar el clic en el menú circular
+  const handleMenuClick = () => {
+    closeMenu(); // Cierra el menú al hacer clic en el menú circular
+  };
+
+  
+  
+
+
 
   return (
-    <div className="container mx-auto p-4 shadow">
+    <div className="min-h-screen container mx-auto p-4 shadow">
       <div className="flex flex-row justify-between px-4 items-center space-x-4">
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <span className="pr-12 cursor-pointer" onClick={toggleMenu}>
+        <div className="relative pr-12 cursor-pointer" onClick={handleLogoClick}>
+          {isCircularMenuVisible && (
+            <div className="absolute -top-8 -left-8 z-10">
+              <CircularMenu isEmployeeSelected={true} toogleMenu={handleMenuClick}
+               onAddEmployee={() => setIsRegisterOpen(true)} />
+            </div>
+          )}
           <LogoIcon />
-        </span>
+        </div>
       </div>
-      <div className="bg-white p-4 rounded-lg">
+
+ 
+      <div className="bg-white p-4 rounded-lgoverflow-y-auto">
         {employeesList.length > 0 ? (
           employeesList.map(
             ({ pk, first_name, employee, email, profile_picture }) => (
-              <PersonnelManagementCard
-                key={pk}
-                name={first_name}
-                cargo={employee.role}
-                email={email}
-                initialStatus="active"
-                imageSrc={
-                  profile_picture
-                    ? profile_picture
-                    : "https://i.pravatar.cc/304"
-                }
-                alt={first_name}
-              />
+              <div key={pk} className="relative">
+                <PersonnelManagementCard
+                  pk={pk}
+                  name={first_name}
+                  cargo={employee.role}
+                  email={email}
+                  initialStatus="active"
+                  imageSrc={profile_picture || "https://i.pravatar.cc/304"}
+                  alt={first_name}
+                  onSettingsClick={handleSettingsClick}
+                  isMenuOpen={selectedEmployeeId === pk}
+                />
+              </div>
             )
           )
         ) : (
@@ -235,28 +212,9 @@ export const PersonnelManagementCardList = () => {
             No hay empleados
           </div>
         )}
-
-        {/* Menú Circular en posición fija en la esquina superior derecha */}
-        {isMenuVisible && (
-          <div
-            className="absolute top-0 right-0 m-4"
-            style={{
-              width: "160px",
-              height: "160px",
-            }}
-          >
-            <CircularMenu
-              isEmployeeSelected={false}
-              onAddEmployee={handleAddEmployee}
-            />
-          </div>
-        )}
       </div>
 
-      {/* Componente Modal para agregar empleado */}
-      {isRegisterOpen && (
-        <Register isOpen={isRegisterOpen} setOpen={setIsRegisterOpen} />
-      )}
+      {isRegisterOpen && <Register isOpen={isRegisterOpen} setOpen={setIsRegisterOpen} />}
     </div>
   );
 };

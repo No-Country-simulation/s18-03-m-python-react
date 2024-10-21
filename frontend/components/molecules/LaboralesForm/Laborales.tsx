@@ -4,22 +4,28 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { z } from "zod";
 import { format } from "date-fns";
 import { laborales } from "@/mocks"; // Asegúrate de que esta importación no sea necesaria
 import { LaboralesValidations } from "@/validations/auth/register/laboralesValidations";
 import useFormStore from "@/store/useFormStore";
+import { Employee } from "@/interface/Person/Person";
 
-type FormData = z.infer<typeof LaboralesValidations>;
+type FormData = Employee;
 
 interface FormularioLaboralesProps {
   onBack: () => void;
   onNext: () => void;
 }
 
-export function FormularioLaborales({ onBack, onNext }: FormularioLaboralesProps) {
+export function FormularioLaborales({
+  onBack,
+  onNext,
+}: FormularioLaboralesProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isStepValid, setIsStepValid] = useState(false);
-  const [departmentList, setDepartmentList] = useState<{ pk: number; title: string }[]>([]);
+  const [departmentList, setDepartmentList] = useState<
+    { pk: number; title: string }[]
+  >([]);
   const [roleList, setRoleList] = useState<{ pk: number; title: string }[]>([]);
   const {
     register,
@@ -32,12 +38,12 @@ export function FormularioLaborales({ onBack, onNext }: FormularioLaboralesProps
   });
 
   const [fechaIngreso, setFechaIngreso] = useState<Date | null>(null);
-  const { formData, setFormData } = useFormStore();
+  const { setFormData } = useFormStore();
 
   useEffect(() => {
     // Cargar datos de sessionStorage
-    const departments = sessionStorage.getItem('departmentList');
-    const roles = sessionStorage.getItem('roleList');
+    const departments = sessionStorage.getItem("departmentList");
+    const roles = sessionStorage.getItem("roleList");
 
     if (departments) {
       setDepartmentList(JSON.parse(departments));
@@ -56,32 +62,43 @@ export function FormularioLaborales({ onBack, onNext }: FormularioLaboralesProps
     // Asegúrate de formatear la fecha aquí antes de guardar en el store
     const formattedData = {
       ...data,
-      start_date: format(fechaIngreso!, 'yyyy-MM-dd'), // Formato YYYY-MM-DD
+      start_date: format(fechaIngreso!, "yyyy-MM-dd"), // Formato YYYY-MM-DD
     };
-    
+
     setFormData(formattedData); // Almacena los datos en el store de Zustand
     onNext(); // Pasar los datos al siguiente paso
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-3 font-sans">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full flex flex-col gap-3 font-sans"
+    >
       {/* Fecha de Ingreso */}
       <section>
         <div className="flex items-center">
-          <label className="w-1/4 text-sm uppercase font-medium" htmlFor="start_date">
+          <label
+            className="w-1/4 text-sm uppercase font-medium"
+            htmlFor="start_date"
+          >
             Fecha de Ingreso
           </label>
           <DatePicker
             selected={fechaIngreso}
-            onChange={(date) => {
+            onChange={(date: Date | null) => {
               setFechaIngreso(date);
-              setValue("start_date", date!);
+              if (date) {
+                const formattedDate = date.toISOString().split("T")[0]; // Convierte la fecha a 'YYYY-MM-DD'
+                setValue("start_date", formattedDate); // Pasa la fecha formateada como string
+              }
             }}
             className="w-[355px] px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
             placeholderText="Seleccione una fecha"
           />
         </div>
-        {errors.start_date && <p className="text-red-500 text-sm">{errors.start_date.message}</p>}
+        {errors.start_date && (
+          <p className="text-red-500 text-sm">{errors.start_date.message}</p>
+        )}
       </section>
 
       {/* Cargo */}
@@ -103,18 +120,23 @@ export function FormularioLaborales({ onBack, onNext }: FormularioLaboralesProps
             ))}
           </select>
         </div>
-        {errors.role && <p className="text-red-500 text-sm">{errors.role.message}</p>}
+        {errors.role && (
+          <p className="text-red-500 text-sm">{errors.role.message}</p>
+        )}
       </section>
 
       {/* Departamento */}
       <section>
         <div className="flex items-center">
-          <label className="w-1/4 text-sm uppercase font-medium" htmlFor="departament">
+          <label
+            className="w-1/4 text-sm uppercase font-medium"
+            htmlFor="departament"
+          >
             Departamento
           </label>
           <select
             id="departamento"
-            {...register("departament")}
+            {...register("department")}
             className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
           >
             <option value="">Seleccione un departamento</option>
@@ -125,13 +147,18 @@ export function FormularioLaborales({ onBack, onNext }: FormularioLaboralesProps
             ))}
           </select>
         </div>
-        {errors.departament && <p className="text-red-500 text-sm">{errors.departament.message}</p>}
+        {errors.department && (
+          <p className="text-red-500 text-sm">{errors.department.message}</p>
+        )}
       </section>
 
       {/* Jornada de Trabajo */}
       <section>
         <div className="flex items-center">
-          <label className="w-1/4 text-sm uppercase font-medium" htmlFor="working_day">
+          <label
+            className="w-1/4 text-sm uppercase font-medium"
+            htmlFor="working_day"
+          >
             Jornada de Trabajo
           </label>
           <select
@@ -147,13 +174,18 @@ export function FormularioLaborales({ onBack, onNext }: FormularioLaboralesProps
             ))}
           </select>
         </div>
-        {errors.working_day && <p className="text-red-500 text-sm">{errors.working_day.message}</p>}
+        {errors.working_day && (
+          <p className="text-red-500 text-sm">{errors.working_day.message}</p>
+        )}
       </section>
 
       {/* Salario */}
       <section>
         <div className="flex items-center">
-          <label className="w-1/4 text-sm uppercase font-medium" htmlFor="salary">
+          <label
+            className="w-1/4 text-sm uppercase font-medium"
+            htmlFor="salary"
+          >
             Salario
           </label>
           <input
@@ -164,7 +196,9 @@ export function FormularioLaborales({ onBack, onNext }: FormularioLaboralesProps
             placeholder="Salario"
           />
         </div>
-        {errors.salary && <p className="text-red-500 text-sm">{errors.salary.message}</p>}
+        {errors.salary && (
+          <p className="text-red-500 text-sm">{errors.salary.message}</p>
+        )}
       </section>
 
       {/* Botones de "Atrás" y "Siguiente" */}
@@ -178,7 +212,9 @@ export function FormularioLaborales({ onBack, onNext }: FormularioLaboralesProps
         </button>
         <button
           type="submit"
-          className={`px-4 py-2 h-10 flex items-center bg-blue-500 text-white rounded-md ${!isValid ? "opacity-50 cursor-not-allowed" : ""}`}
+          className={`px-4 py-2 h-10 flex items-center bg-blue-500 text-white rounded-md ${
+            !isValid ? "opacity-50 cursor-not-allowed" : ""
+          }`}
           disabled={!isValid}
         >
           Siguiente
