@@ -54,7 +54,7 @@ export default function ProfileCard( { user }: { user: Person }) {
       <ProfileCardAvatar
         name={user.first_name}
         lastName={user.last_name}
-        imgSrc={user.profile_picture || ""}
+        imgSrc={`http://localhost:8000${user.profile_picture}`}
       />
       {/* Info Container */}
       <div className="relative w-full card-flip">

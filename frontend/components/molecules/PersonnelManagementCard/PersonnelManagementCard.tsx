@@ -20,7 +20,7 @@ import { useToast } from "@/hooks";
 import { GearIcon, PersonIcon } from "@radix-ui/react-icons";
 import { SuccessIcon } from "@/components/icons";
 import Image from "next/image";
-import CircularMenuUser from "../CirucularMenu/CiruclarMenuUser";
+import CircularMenuUser from "../CircularMenu/CircularMenuUser";
 
 interface Props {
   name: string;
@@ -30,7 +30,7 @@ interface Props {
   imageSrc?: string;
   alt?: string;
   pk: string;
-  onSettingsClick: (id: number) => void; 
+  onSettingsClick: (id: number) => void;
 }
 
 export const PersonnelManagementCard = ({
@@ -52,9 +52,9 @@ export const PersonnelManagementCard = ({
   const [isCircularMenuVisible, setIsCircularMenuVisible] = useState(false);
   const { toast } = useToast();
 
-const closeMenu = () => {
-  setIsCircularMenuVisible(false);
-}
+  const closeMenu = () => {
+    setIsCircularMenuVisible(false);
+  };
   const handleStatusChange = () => {
     setNewStatus(status === "active" ? "inactive" : "active");
     setIsConfirmOpen(true);
@@ -81,7 +81,6 @@ const closeMenu = () => {
       className: "bg-yellow-500 text-white",
     });
   };
-
 
   return (
     <>
@@ -112,7 +111,7 @@ const closeMenu = () => {
             ) : (
               <Image
                 className="rounded-full mr-4"
-                src={imageSrc}
+                src={`http://localhost:8000${imageSrc}`}
                 alt={alt ?? `Profile picture of ${name}`}
                 width={50}
                 height={50}
@@ -126,35 +125,34 @@ const closeMenu = () => {
               <p className="font-semibold text-lg">{email}</p>
             </div>
 
-
             <div className="flex items-center gap-2 justify-center">
-
-            <Button
-              onClick={handleStatusChange}
-              className={`w-24 h-10 text-white ${
-                status === "active"
-                  ? "bg-green-500 hover:bg-green-600"
-                  : "bg-red-500 hover:bg-red-600"
-              }`}
-            >
-              {status === "active" ? "Activo" : "Inactivo"}
-            </Button>
+              <Button
+                onClick={handleStatusChange}
+                className={`w-24 h-10 text-white ${
+                  status === "active"
+                    ? "bg-green-500 hover:bg-green-600"
+                    : "bg-red-500 hover:bg-red-600"
+                }`}
+              >
+                {status === "active" ? "Activo" : "Inactivo"}
+              </Button>
               <div className="relative">
-            <button
-            onClick={() => setIsCircularMenuVisible(!isCircularMenuVisible)} 
-             className="bg-base-primary rounded-full p-2" >
-              <GearIcon className="w-4 h-4 text-white" />
-            </button>
-          { isCircularMenuVisible && 
-          <div className="absolute -right-8 -top-8 z-10">
-
-            <CircularMenuUser pk={pk} toggleMenu={closeMenu} /> 
-          </div>
-
-          }	
+                <button
+                  onClick={() =>
+                    setIsCircularMenuVisible(!isCircularMenuVisible)
+                  }
+                  className="bg-base-primary rounded-full p-2"
+                >
+                  <GearIcon className="w-4 h-4 text-white" />
+                </button>
+                {isCircularMenuVisible && (
+                  <div className="absolute -right-8 -top-8 z-10">
+                    <CircularMenuUser pk={pk} toggleMenu={closeMenu} />
+                  </div>
+                )}
               </div>
             </div>
-        </CardContent>
+          </CardContent>
         </Card>
       )}
       <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
