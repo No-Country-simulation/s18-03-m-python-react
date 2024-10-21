@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // components/Bancarios.tsx
 "use client";
 
@@ -8,7 +9,7 @@ import { z } from "zod";
 
 import useFormStore from "@/store/useFormStore";
 import { BancariosValidations } from "@/validations/auth/register/bancariosValidations";
-import { registerEmployee } from "@/api";
+import { Employee, registerEmployee } from "@/api";
 import { useToast } from "@/hooks";
 
 type FormData = z.infer<typeof BancariosValidations>;
@@ -53,32 +54,29 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
 
   const onSubmit = async (data: FormData) => {
     // Combina los datos del store con los nuevos datos
-    const finalData = {
-      dni: formData.dni, // ya está en el formato correcto
-      phone_number: formData.phone_number, // ya está en el formato correcto
-      birth: formData.birth, // formatear fecha como YYYY-MM-DD
-      country: formData.country, // debe ser un ID, asegúrate de que este dato sea correcto
-      province: formData.province, // debe ser un ID, asegúrate de que este dato sea correcto
-      city: formData.city, // debe ser un ID, asegúrate de que este dato sea correcto
-      address: formData.address, // ya está en el formato correcto
-      bank: data.bank, // del formulario
-      bank_account_type: data.bank_account_type, // del formulario
-      bank_account_number: data.bank_account_number, // del formulario
-      email: formData.email, // ya está en el formato correcto
-      first_name: formData.first_name, // ya está en el formato correcto
-      last_name: formData.last_name, // ya está en el formato correcto
+    const finalData: Employee = {
+      dni: formData.dni || '', // ya está en el formato correcto
+      phone_number: formData.phone_number || '' , // ya está en el formato correcto
+      birth: formData.birth || '', // formatear fecha como YYYY-MM-DD
+      country: formData.country || '', // debe ser un ID, asegúrate de que este dato sea correcto
+      province: formData.province || '', // debe ser un ID, asegúrate de que este dato sea correcto
+      city: formData.city || '', // debe ser un ID, asegúrate de que este dato sea correcto
+      address: formData.address || '', // ya está en el formato correcto
+      bank: data.bank || '', // del formulario
+      bank_account_type: data.bank_account_type || '', // del formulario
+      bank_account_number: data.bank_account_number || '', // del formulario
+      email: formData.email || '', // ya está en el formato correcto
+      first_name: formData.first_name || '', // ya está en el formato correcto
+      last_name: formData.last_name || '', // ya está en el formato correcto
       employee: {
-        start_date: formData.start_date, // formatear fecha como YYYY-MM-DD
-        department: formData.departament, // debe ser un ID, asegúrate de que este dato sea correcto
+        start_date: formData.start_date || '', // formatear fecha como YYYY-MM-DD
+        department: formData.departament || '', // debe ser un ID, asegúrate de que este dato sea correcto
         role: formData.role, // asumiendo que es un array de IDs
-        salary: String(formData.salary), // convertir a string
-        working_day: formData.working_day, // ya está en el formato correcto
+        salary: String(formData.salary) || '', // convertir a string
+        working_day: formData.working_day || '', // ya está en el formato correcto
       },
       // ya está en el formato correcto
     };
-
-    // Agrega el console.log aquí para ver los datos que se van a enviar
-    console.log("Datos a enviar al backend:", finalData);
     try {
       await registerEmployee(finalData);
       toast({

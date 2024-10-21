@@ -1,73 +1,35 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/cn/utils";
 import { CircularMenuProps, Button } from "@/interface/menuCircular/menuCircular.interface";
 import { buttons as defaultButtons } from "@/mocks/menuCircular/menuCirularData";
+import { useRouter } from "next/navigation"; 
 
 export default function CircularMenu({
-  isEmployeeSelected,
-  idUserSelected = "0",
   onAddEmployee, 
   toggleMenu, // Asegúrate de que esta función se pase como prop
 }: CircularMenuProps) {
-  const [currentIndex, setCurrentIndex] = useState<number>(-1);
   const [hoveredButton, setHoveredButton] = useState<Button | null>(null);
-  const [isScrolling, setIsScrolling] = useState(false);
 
   // Clonar los botones y actualizar el último basado en isEmployeeSelected
   const buttons = [...defaultButtons];
 
-  // Si es un empleado seleccionado, cambia el botón de "Agregar" a "Eliminar"
-  if (isEmployeeSelected && idUserSelected !== "0") {
-    buttons[3] = {
-      id: 4,
-      label: "Eliminar Empleado",
-      icon: "/icons/delete.svg", // Cambia el icono también
-      bgColor: "bg-base-primary", // Color rojo o el que prefieras para "Eliminar"
-    };
-  }
+  const router = useRouter();
 
-  // Manejar el scroll para cambiar el índice actual
-  useEffect(() => {
-    const handleScroll = (event: WheelEvent) => {
-      setIsScrolling(true);
-      if (event.deltaY > 0) {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % buttons.length);
-      } else if (event.deltaY < 0) {
-        setCurrentIndex(
-          (prevIndex) => (prevIndex - 1 + buttons.length) % buttons.length
-        );
-      }
-    };
-
-    window.addEventListener("wheel", handleScroll);
-    return () => {
-      window.removeEventListener("wheel", handleScroll);
-    };
-  }, []);
-
-  // Enfocar el botón cuando cambia el índice
-  useEffect(() => {
-    if (currentIndex !== -1) {
-      const focusedButton = document.getElementById(`button-${currentIndex}`);
-      focusedButton?.focus();
-
-      const timeoutId = setTimeout(() => {
-        setCurrentIndex(-1);
-        setIsScrolling(false);
-      }, 1000);
-
-      return () => clearTimeout(timeoutId);
-    }
-  }, [currentIndex]);
 
   // Función para manejar el clic en el botón "Agregar Empleado"
   const handleButtonClick = (button: Button) => {
     if (button.label === "Agregar Empleado") {
-      onAddEmployee(); // Llama a la función para abrir el registro de empleados
+      onAddEmployee(); 
+    } else if (button.label === "Calendario") {
+      router.push("/vacation"); // Navegar a la ruta del calendario
+    }else if (button.label === "Panel") {
+      router.push("/dashboard"); // Navegar a la ruta del calendario
+    }else if (button.label === "Config") {
+      router.push("/settings"); // Navegar a la ruta del calendario
     }
   };
 
@@ -77,9 +39,9 @@ export default function CircularMenu({
       className="cursor-pointer absolute inset-0 flex items-center justify-center"
       onClick={toggleMenu}
       >
-        {hoveredButton || (currentIndex !== -1 && isScrolling) ? (
+        {hoveredButton ? (
           <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg text-center text-xs z-10">
-            {hoveredButton?.label || buttons[currentIndex]?.label}
+            {hoveredButton.label}
           </div>
         ) : (
           <Image
@@ -103,15 +65,10 @@ export default function CircularMenu({
 
         return (
           <div
-            id={`button-${index}`}
             key={button.id}
-            tabIndex={0}
             className={cn(
               "absolute w-20 h-20 flex items-center justify-center cursor-pointer text-white z-0 transform transition-transform duration-300 border border-white outline-none",
               button.bgColor,
-              currentIndex === index && isScrolling
-                ? "scale-110 bg-actions-success"
-                : "",
               hoveredButton?.id === button.id
                 ? "scale-110 bg-actions-success"
                 : "",

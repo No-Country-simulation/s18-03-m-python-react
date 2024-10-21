@@ -17,7 +17,7 @@ interface Employee {
 interface Person {
   first_name: string;
   last_name: string;
-  dni: string | null;                  // DNI como string
+  dni: string | null ;                  // DNI como string
   phone_number: string | null;         // Número de teléfono como string
   email: string;
   birth: string | null;                // Fecha de nacimiento en formato 'YYYY-MM-DD'
@@ -28,7 +28,12 @@ interface Person {
   bank: string | null;                 // ID del banco como string
   bank_account_type: string | null;    // Tipo de cuenta bancaria como string
   bank_account_number: string | null;  // Número de cuenta bancaria como string
-  profile_picture?: File | null;       // Archivo de imagen (opcional)
+  profile_picture?: File | null;
+  start_date?: string | null;
+  departament?: string | null;
+  role?: string[];
+  salary?: string | null;
+  working_day?: string | null;                     // Archivo de imagen (opcional)
 
   employee: Employee | null;           // Datos del empleado anidados
 }

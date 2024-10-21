@@ -3,28 +3,28 @@ import axios from 'axios';
 
 
 // Define la interfaz para un empleado
-interface Employee {
-    dni: string;
-    phone_number: string;
-    birth: string; // Formato YYYY-MM-DD
-    country: string; // ID del país
-    province: string; // ID de la provincia
-    city: string; // ID de la ciudad
-    address: string;
-    bank: string; // Nombre del banco
-    bank_account_type: string; // Tipo de cuenta
-    bank_account_number: string;
-    email: string;
+export interface Employee {
+    dni: string | null | undefined;
+    phone_number: string | null | undefined;
+    birth: string | null | undefined; // Formato YYYY-MM-DD
+    country: string | null | undefined; // ID del país
+    province: string | null | undefined; // ID de la provincia
+    city: string | null | undefined; // ID de la ciudad
+    address: string | null | undefined;
+    bank: string | null | undefined; // Nombre del banco
+    bank_account_type: string | null | undefined; // Tipo de cuenta
+    bank_account_number: string | null | undefined;
+    email: string | null | undefined;
     first_name: string;
     last_name: string;
     employee: {
-        start_date: string; // Formato YYYY-MM-DD
-        department: string; // ID del departamento
-        role: string;
-        salary: string;
-        working_day: string; // Ya está en el formato correcto
+        start_date: string | null | undefined; // Formato YYYY-MM-DD
+        department: string | null | undefined; // ID del departamento
+        role: string[] | null | undefined;
+        salary: string | null | undefined;
+        working_day: string | null | undefined; // Ya está en el formato correcto
     };
-    profile_picture: string; // URL de la foto
+    profile_picture?: string | null | undefined; // URL de la foto
 }
 
 // Ver Swagger en Backend, el endpoint de employee incluye la entidad PERSON
@@ -63,7 +63,7 @@ export const getOneEmployee = async(id: string)=>{
 }
 
 
-export const updateEmployee = async(id: string, employee: any) =>{
+export const updateEmployee = async(id: string, employee: Employee) =>{
     try {
         const response = await axios.put(`${API_URL}/employee/${id}`,{
             employee
@@ -76,9 +76,9 @@ export const updateEmployee = async(id: string, employee: any) =>{
 }
 
 
-export const deleteEmployee = async (id: string): Promise<string> => {
+export const deleteEmployee = async (pk: string): Promise<string> => {
     try {
-        const response = await axios.delete(`${API_URL}/employee/${id}`);
+        const response = await axios.delete(`${API_URL}/employee/${pk}`);
 
         if (response.status === 204) {
             return 'Empleado borrado con éxito';
