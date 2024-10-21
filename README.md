@@ -43,11 +43,11 @@ Elegimos desarrollar una aplicación de recursos humanos porque creemos en la im
 
 ### 🧰 Back End [🔝](#-readme-for-app-)
 
-[![Python Link](https://img.shields.io/badge/Python-%20%233776AB?style=for-the-badge&logo=Python&logoColor=%23FFFFFF 'Python Link')](https://www.python.org/)
+[![Python Link](https://img.shields.io/badge/Python-%20%233776AB?style=for-the-badge&logo=Python&logoColor=%23FFFFFF 'Python Link')](https://www.python.org/) [![Postgres](https://img.shields.io/badge/Postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)](#) [![Django](https://img.shields.io/badge/Django-%23092E20.svg?logo=django&logoColor=white&style=for-the-badge)](#) [![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff&style=for-the-badge)](#)
 
 ### 🌠 Quality Assurance [🔝](#-readme-for-app-)
 
-[![Excel Link](https://img.shields.io/badge/Microsoft_Excel-217346?style=for-the-badge&logo=microsoft-excel&logoColor=white 'Excell Link')](https://www.office.com/) [![Word Link](https://img.shields.io/badge/Microsoft_Word-2B579A?style=for-the-badge&logo=microsoft-word&logoColor=white 'Word Link')](https://www.office.com/)
+[![Excel Link](https://img.shields.io/badge/Microsoft_Excel-217346?style=for-the-badge&logo=microsoft-excel&logoColor=white 'Excell Link')](https://www.office.com/) [![Word Link](https://img.shields.io/badge/Microsoft_Word-2B579A?style=for-the-badge&logo=microsoft-word&logoColor=white 'Word Link')](https://www.office.com/) 
 
 ## 🤵‍♂️ Team communication channels [🔝](#-readme-for-app-)
 
