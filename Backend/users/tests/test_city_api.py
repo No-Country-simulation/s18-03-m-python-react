@@ -64,5 +64,5 @@ class CityAPITest(APITestCase):
     def test_create_invalid_city(self):
         response = self.client.post(self.url_list, self.invalid_name_data, form="json")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("name", response.data)
+        self.assertIn("name", response.data["message"])
         self.assertEqual(City.objects.count(), 1)
