@@ -3,7 +3,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import VacationResponseSerializer, VacationAnsweredSerializer, VacationSerializer, VacationRequestSerializer
 from .models import Vacation, VacationRequest
-from rest_framework.permissions import AllowAny
 
 # Create your views here.
 class VacationResponseView(APIView):
@@ -59,4 +58,3 @@ class VacationView(APIView):
 class VacationRequestListCreateView(generics.ListCreateAPIView):
     queryset = VacationRequest.objects.all()
     serializer_class = VacationRequestSerializer
-    permission_classes = [AllowAny] 
