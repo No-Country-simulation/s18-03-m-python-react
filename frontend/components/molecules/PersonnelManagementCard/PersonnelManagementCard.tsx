@@ -110,7 +110,7 @@ export const PersonnelManagementCard = ({
         >
           <CardContent className="flex items-center p-4">
             {/* volver a poner !imageSrc cuando se integre la imagen a backend */}
-            {imageSrc ? (
+            {!imageSrc ? (
               <div className="w-12 h-12 rounded-ful flex items-center justify-center mr-5">
                 <ProfileIcon />
               </div>
