@@ -40,7 +40,7 @@ export default function CircularMenuUser({ pk, toggleMenu }: CircularMenuUserPro
     {
       id: 2,
       label: "Perfil",
-      icon: "/icons/profil-icon.svg", // Cambia el icono según lo necesites
+      icon: "/icons/profile-icon.svg", // Cambia el icono según lo necesites
       bgColor: "bg-base-primary", // Color de fondo para "Perfil"
     },
     {
