@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Skeleton,
   Button,
@@ -18,6 +18,7 @@ import {
 import { useToast } from "@/hooks";
 import { PersonIcon } from "@radix-ui/react-icons";
 import { SuccessIcon } from "@/components/icons";
+import { ProfileIcon } from "@/components/icons/Profile/ProfileIcon";
 
 interface Props {
   name: string;
@@ -101,14 +102,15 @@ export const PersonnelManagementCard = ({
           } ${isConfirmOpen ? "blur-sm" : ""}`}
         >
           <CardContent className="flex items-center p-4">
-            {!imageSrc ? (
-              <div className="w-12 h-12 rounded-full bg-base-primary flex items-center justify-center mr-4">
-                <PersonIcon className="w-8 h-8 text-base-secondary" />
+            {/* volver a poner !imageSrc cuando se integre la imagen a backend */}
+            {imageSrc ? (
+              <div className="w-12 h-12 rounded-ful flex items-center justify-center mr-5">
+                <ProfileIcon />
               </div>
             ) : (
               <img
                 className="rounded-full mr-4"
-                src={imageSrc}
+                src={`${imageSrc}`}
                 alt={alt ?? `Profile picture of ${name}`}
                 width={50}
                 height={50}

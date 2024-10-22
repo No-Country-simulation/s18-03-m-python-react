@@ -5,85 +5,8 @@ import { useState, useMemo, useEffect } from "react";
 import { PersonnelManagementCard } from "../PersonnelManagementCard/PersonnelManagementCard";
 import CircularMenu from "../CirucularMenu/CircularMenu";
 import Register from "@/components/organisms/Register/Register";
-import {
-  getCityList,
-  getDepartmentList,
-  getProvinceList,
-  getAllRoles,
-  getCountryList,
-  getBankList,
-  getAccountTypes,
-  getEmployees,
-} from "@/api";
-import { get } from "http";
+
 import { Person } from "@/interface/Person/Person";
-
-interface User {
-  id: string;
-  name: string;
-  cargo: string;
-  email: string;
-  status: "active" | "inactive";
-  imageSrc?: string;
-  alt?: string;
-}
-
-const users: User[] = [
-  {
-    id: "1",
-    name: "Pepe 1 Argento",
-    cargo: "Front-End",
-    email: "pepe1@org.com",
-    status: "active",
-    imageSrc: "https://i.pravatar.cc/300",
-    alt: "usuario 1",
-  },
-  {
-    id: "2",
-    name: "Pepe 2 Argento",
-    cargo: "Back-End",
-    email: "pepe2@org.com",
-    status: "inactive",
-    imageSrc: "https://i.pravatar.cc/301",
-    alt: "usuario 2",
-  },
-  {
-    id: "3",
-    name: "Pepe 3 Argento",
-    cargo: "Front-End",
-    email: "pepe3@org.com",
-    status: "active",
-    imageSrc: "https://i.pravatar.cc/302",
-    alt: "usuario 3",
-  },
-  {
-    id: "4",
-    name: "Pepe 4 Argento",
-    cargo: "Design",
-    email: "pepe4@org.com",
-    status: "active",
-    imageSrc: "https://i.pravatar.cc/303",
-    alt: "usuario 4",
-  },
-  {
-    id: "5",
-    name: "Pepe 5 Argento",
-    cargo: "QA",
-    email: "pepe5@org.com",
-    status: "active",
-    imageSrc: "https://i.pravatar.cc/304",
-    alt: "usuario 5",
-  },
-  {
-    id: "6",
-    name: "Pepe 6 Argento",
-    cargo: "UX-UI",
-    email: "pepe6@org.com",
-    status: "active",
-    imageSrc: "https://i.pravatar.cc/305",
-    alt: "usuario 6",
-  },
-];
 
 const filterUsers = (users: Person[], query: string) => {
   if (!query) return users;
@@ -120,79 +43,19 @@ export const PersonnelManagementCardList = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false); // Estado para el modal de registro
   const [employeesList, setEmployeesList] = useState<Person[]>([]);
+
+  //declare useEffect
+  useEffect(() => {
+    const empList = JSON.parse(
+      sessionStorage.getItem("employees") || "[]"
+    ) as Person[];
+    setEmployeesList(empList);
+  }, []);
+
   const filteredUsers = useMemo(
     () => filterUsers(employeesList, searchQuery),
-    [searchQuery]
+    [employeesList, searchQuery] // Asegúrate de que el filtro dependa de employeesList también
   );
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Obtener lista de ciudades
-        const cityList = await getCityList();
-        if (Array.isArray(cityList)) {
-          sessionStorage.setItem("cityList", JSON.stringify(cityList));
-        }
-
-        // Obtener lista de países
-        const countryList = await getCountryList();
-        if (Array.isArray(countryList)) {
-          sessionStorage.setItem("countryList", JSON.stringify(countryList));
-        }
-
-        // Obtener lista de bancos
-        const bankList = await getBankList();
-        if (Array.isArray(bankList)) {
-          sessionStorage.setItem("bankList", JSON.stringify(bankList));
-        }
-
-        // Obtener lista de tipos de cuenta
-        const accountTypeList = await getAccountTypes();
-        if (Array.isArray(accountTypeList)) {
-          sessionStorage.setItem(
-            "accountTypeList",
-            JSON.stringify(accountTypeList)
-          );
-        }
-
-        // Obtener lista de departamentos
-        const departmentList = await getDepartmentList();
-        if (Array.isArray(departmentList)) {
-          sessionStorage.setItem(
-            "departmentList",
-            JSON.stringify(departmentList)
-          );
-        }
-
-        // Obtener lista de roles
-        const roleList = await getAllRoles();
-        if (Array.isArray(roleList)) {
-          sessionStorage.setItem("roleList", JSON.stringify(roleList));
-        }
-
-        // Obtener lista de provincias
-        const provinceList = await getProvinceList();
-        if (Array.isArray(provinceList)) {
-          sessionStorage.setItem("provinceList", JSON.stringify(provinceList));
-        }
-
-        // Obtener lista de empleados
-        const empList = await getEmployees();
-        if (Array.isArray(empList) && empList.length > 0) {
-          // Eliminar el primer elemento usando slice()
-          const filteredEmpList = empList.slice(1); // Elimina el primer elemento
-
-          console.log(filteredEmpList);
-          setEmployeesList(filteredEmpList); // Actualizar el estado con la lista filtrada
-          sessionStorage.setItem("employees", JSON.stringify(filteredEmpList)); // Guardar en el sessionStorage
-        }
-      } catch (error) {
-        console.error("Error al cargar los datos:", error);
-      }
-    };
-
-    fetchData(); // Llamar a la función para obtener los datos
-  }, []); // El array vacío asegura que se ejecuta solo una vez al montarse
 
   const toggleMenu = () => {
     setIsMenuVisible((prev) => !prev); // Alternar visibilidad del menú
@@ -213,7 +76,7 @@ export const PersonnelManagementCardList = () => {
       </div>
       <div className="bg-white p-4 rounded-lg">
         {employeesList.length > 0 ? (
-          employeesList.map(
+          filteredUsers.map(
             ({ pk, first_name, employee, email, profile_picture }) => (
               <PersonnelManagementCard
                 key={pk}
