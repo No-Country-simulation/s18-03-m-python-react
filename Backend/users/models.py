@@ -1,6 +1,8 @@
+from datetime import datetime, date
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from workgroups.models import Role, Department, Team
+from utils.utils import get_vacation_days
 # Create your models here.
 class Country(models.Model):
     name = models.TextField(max_length=50)
@@ -48,9 +50,19 @@ class Person(AbstractUser):
 class Employee(models.Model):
     person = models.ForeignKey(Person, on_delete=models.CASCADE, null=True, blank=True)
     active_employee = models.BooleanField(default=False, blank=True)
-    start_date = models.DateField(null=True, blank=True)
+    start_date = models.DateField(default=date.today, blank=True)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
     team = models.ManyToManyField(Team, blank=True)
     role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, blank=True)
     salary = models.PositiveIntegerField(null=True, blank=True)
     working_day = models.TextField(max_length=200, null=True, blank=True)
+    vacation_days = models.PositiveSmallIntegerField(default=0, blank=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            if self.start_date:
+                if type(self.start_date) == str:
+                    self.start_date = datetime.fromisoformat(self.start_date).date()
+                self.vacation_days = get_vacation_days(self.start_date)
+                
+        super().save(*args, **kwargs)
