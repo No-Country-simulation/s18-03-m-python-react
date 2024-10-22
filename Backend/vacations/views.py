@@ -2,7 +2,7 @@ from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import VacationResponseSerializer, VacationAnsweredSerializer, VacationSerializer, VacationRequestSerializer
-from .models import Vacation, VacationRequest
+from .models import Vacation, VacationRequest, VacationDeniedLog
 
 # Create your views here.
 class VacationResponseView(APIView):
@@ -39,6 +39,9 @@ class VacationResponseView(APIView):
             vacation_obj.save()
         else:
             vacation_request.status = "D"
+            denied_log = VacationDeniedLog(vacation_request=vacation_request)
+            denied_log.full_clean()
+            denied_log.save()
             
         vacation_request.full_clean()
         vacation_request.save()

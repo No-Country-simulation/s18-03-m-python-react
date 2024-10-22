@@ -37,3 +37,7 @@ class VacationRequest(models.Model, VacationDatesValidation):
         self.custom_clean()
         super().clean()
     
+    
+class VacationDeniedLog(models.Model):
+    vacation_request = models.ForeignKey(VacationRequest, on_delete=models.CASCADE, null=True)
+    log_date = models.DateField(auto_now_add=True)
