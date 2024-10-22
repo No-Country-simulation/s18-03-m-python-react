@@ -5,6 +5,7 @@ export * from './CircularMenu/CircularMenuUser';
 export * from './DashboardCard/DashboardCard';
 export * from './DashboardCardList/DashboardCardList';
 export * from './GestionCard/GestionCard';
+export * from './GestionForm/GestionEditForm';
 export * from './GestionForm/GestionForm';
 export * from './HeaderContainer/HeaderContainer';
 export * from './HeaderDropdown/HeaderDropdown';

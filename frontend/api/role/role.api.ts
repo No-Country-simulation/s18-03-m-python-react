@@ -12,8 +12,8 @@ export const getAllRoles = async () => {
 //cambiar tipo any por interfaz acorde
 export const createNewRole = async (role: any) => {
   try {
-    const response = await axios.post(`${API_URL}/role`, {
-      role,
+    const response = await axios.post(`${API_URL}/role/`, {
+      ...role,
     });
     return response.data;
   } catch (error) {
@@ -25,7 +25,7 @@ export const createNewRole = async (role: any) => {
 export const updateNewRole = async (id: string, newData: any) => {
   try {
     const response = await axios.put(`${API_URL}/role/${id}`, {
-      newData,
+      ...newData,
     });
     return response.data;
   } catch (error) {

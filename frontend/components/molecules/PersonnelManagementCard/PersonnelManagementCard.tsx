@@ -162,7 +162,7 @@ export const PersonnelManagementCard = ({
         </Card>
       )}
       <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="bg-white">
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar cambio de estado</AlertDialogTitle>
             <AlertDialogDescription>
@@ -171,10 +171,10 @@ export const PersonnelManagementCard = ({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={cancelStatusChange}>
+            <AlertDialogCancel className="bg-base-secondary text-white" onClick={cancelStatusChange}>
               Cancelar
             </AlertDialogCancel>
-            <AlertDialogAction onClick={confirmStatusChange}>
+            <AlertDialogAction className="bg-base-primary text-white" onClick={confirmStatusChange}>
               Confirmar
             </AlertDialogAction>
           </AlertDialogFooter>
