@@ -42,9 +42,9 @@ const Sidebar: React.FC = () => {
       {/* Body */}
       <ul className="flex-1">
         {menuItems.map((item, index) => (
-          <>
+          <div key={index}>
             <li
-              key={index}
+              
               className={`px-3 ${
                 open ? "py-2 my-2" : "py-0.5 my-0.5"
               } hover:bg-blue-800 rounded-md duration-300 cursor-pointer flex gap-2 items-center relative group`}
@@ -71,7 +71,7 @@ const Sidebar: React.FC = () => {
             {(index === 0 || index === 3 || index === 5 || index === 8) && (
               <hr className="border-t-4 border-gray-300 w-auto mx-auto my-0.5" />
             )}
-          </>
+          </div>
         ))}
       </ul>
 

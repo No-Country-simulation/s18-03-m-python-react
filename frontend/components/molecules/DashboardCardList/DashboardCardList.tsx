@@ -14,13 +14,14 @@ import {
   CardFooter,
   CardTitle,
 } from "@/components/atoms";
+import Link from "next/link";
 
 const cardData = [
-  { id: "1", title: "Gestión de Personal", icon: <GroupIcon /> },
-  { id: "2", title: "Vacaciones y Licencias", icon: <CalendarIcon /> },
-  { id: "3", title: "Control de Asistencia", icon: <ClipboardIcon /> },
-  { id: "4", title: "Reportes", icon: <GraphIcon /> },
-  { id: "5", title: "Mis Datos", icon: <PersonIcon /> },
+  { id: "1", title: "Gestión de Personal", icon: <GroupIcon />, route:"/management" },
+  { id: "2", title: "Vacaciones y Licencias", icon: <CalendarIcon />, route:"/vacation" },
+  { id: "3", title: "Control de Asistencia", icon: <ClipboardIcon />, route:"/assists" },
+  { id: "4", title: "Reportes", icon: <GraphIcon />, route:"/payrolls" },
+  { id: "5", title: "Mis Datos", icon: <PersonIcon />, route:"/profile" },
 ];
 const WelcomeCard = () => (
   <Card className="h-40 bg-slate-700 text-white w-full max-w-sm rounded-lg">
@@ -54,8 +55,10 @@ export const DashboardCardList = () => {
     <div className="flex-col justify-between items-center p-4 bg-white shadow">
       <div className="grid grid-cols-3 gap-8 p-8">
         <WelcomeCard />
-        {cardData.map(({ id, title, icon }) => (
-          <DashboardCard key={id} title={title} icon={icon} />
+        {cardData.map(({ id, title, icon, route }) => (
+          <Link href={route} key={id}>
+          <DashboardCard  title={title} icon={icon} />
+          </Link>
         ))}
       </div>
       <MsnCard />
