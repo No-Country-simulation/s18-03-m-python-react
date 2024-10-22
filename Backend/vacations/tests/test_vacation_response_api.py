@@ -9,8 +9,8 @@ class VacationResponse(APITestCase):
     def setUp(self):
         # Creates vacations requests
         employee = Employee.objects.create()
-        self.vacation_1 = VacationRequest.objects.create(employee=employee, start='2024-01-01', end='2024-02-01')
-        self.vacation_2 = VacationRequest.objects.create(employee=employee, start='2024-01-05', end='2024-03-02')
+        self.vacation_1 = VacationRequest.objects.create(employee=employee, start='2025-01-01', end='2025-02-01')
+        self.vacation_2 = VacationRequest.objects.create(employee=employee, start='2025-01-05', end='2025-03-02')
         
         self.url = reverse("vacation-response")
         
