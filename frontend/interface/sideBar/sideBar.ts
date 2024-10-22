@@ -1,5 +1,7 @@
+
+
 export interface MenuItem {
-    iconSrc: string;
+    iconSrc:  React.FC;
     label: string;
     path: string;
   }
