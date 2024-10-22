@@ -37,9 +37,10 @@ class BankAccountTypeSerializer(serializers.ModelSerializer):
 
     
 class EmployeeSerializer(serializers.ModelSerializer):
+    vacation_days = serializers.IntegerField(read_only=True)
     class Meta:
         model = Employee
-        fields = ["pk", "start_date", "department", "team", "role", "salary", "working_day", "active_employee"]
+        fields = ["pk", "start_date", "department", "team", "role", "salary", "working_day", "active_employee", "vacation_days"]
               
         
 class PersonSerializer(serializers.ModelSerializer):
@@ -151,6 +152,7 @@ class PersonSerializer(serializers.ModelSerializer):
                 "role": employee.role.title if employee.role else None,
                 "salary": employee.salary if employee.salary else None,
                 "working_day": employee.working_day if employee.working_day else None,
+                "vacation_days": employee.vacation_days if employee.vacation_days else None,
                 "active_employee": employee.active_employee if employee.active_employee is not None else None
             }
         except Employee.DoesNotExist:
