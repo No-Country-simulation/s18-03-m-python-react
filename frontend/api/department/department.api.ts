@@ -15,7 +15,7 @@ export const getDepartmentList = async()=>{
 //cambiar valores de data a interfaz de department
 export const registerDepartment = async(department: any)=>{
     try {
-        const response = await axios.post(`${API_URL}/department`,
+        const response = await axios.post(`${API_URL}/department/`,
             department
         )
         return response.data;

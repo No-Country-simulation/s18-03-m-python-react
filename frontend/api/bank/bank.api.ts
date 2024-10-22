@@ -14,8 +14,8 @@ export const getBankList = async () => {
 //cambiar bank por interfaz acorde
 export const bankRegister = async (bank: any) => {
   try {
-    const response = await axios.post(`${API_URL}/bank`, {
-      bank,
+    const response = await axios.post(`${API_URL}/bank/`, {
+      ...bank,
     });
     return response.data;
   } catch (error) {
@@ -27,7 +27,7 @@ export const bankRegister = async (bank: any) => {
 export const updateBank = async (id: string, newData: any) => {
   try {
     const response = await axios.put(`${API_URL}/bank/${id}`, {
-      newData,
+      ...newData,
     });
     return response.data;
   } catch (error) {

@@ -1,4 +1,5 @@
 "use client";
+import { bankRegister, createNewRole, deleteAccount, deleteBank, deleteDepartment, deleteRole, registerAccount, registerDepartment, updateAccount, updateBank, updateDepartment, updateNewRole } from "@/api";
 import { Button } from "@/components/atoms";
 import {
   AccountIcon,
@@ -20,6 +21,7 @@ export default function PlatformGestion() {
   const [modalTitle, setModalTitle] = useState("");
   //create form status
   const [formOpen, setFormOpen] = useState(false);
+  const [isName, setIsName] = useState(true);
   //Entities Arrays
   const [bankList, setBankList] = useState<Bank[]>([]);
   const [accountList, setAccountList] = useState<AccountType[]>([]);
@@ -28,10 +30,10 @@ export default function PlatformGestion() {
   // State to hold the selected list of entities
   const [selectedList, setSelectedList] = useState<any[]>([]);
   //crud api functions handling
-  const [createAction, setCreateAction] = useState<(() => void) | null>(null); // Callback de create
-  const [editAction, setEditAction] = useState<(() => void) | null>(null); // Callback de create
-  const [deleteAction, setDeleteAction] = useState<(() => void) | null>(null); // Callback de create
-
+  const [createAction, setCreateAction] = useState<(data: any) => Promise<void>>(async () => {});
+  const [editAction, setEditAction] = useState<(id: string, data: any) => Promise<void>>(async () => {});
+  const [deleteAction, setDeleteAction] = useState<(id: string) => Promise<string>>(async () => "");
+  
   useEffect(() => {
     setBankList(
       JSON.parse(sessionStorage.getItem("bankList") || "[]") as Bank[]
@@ -56,63 +58,60 @@ export default function PlatformGestion() {
     title: string;
     icon: JSX.Element;
     list: Bank[] | Role[] | AccountType[] | Department[]; // Tipamos la lista usando las interfaces
-    create: () => void;
-    edit: () => void;
-    delete: () => void;
+    create: (data: any) => Promise<void>; // Aseguramos que create reciba datos
+    edit: (id:string, data: any) => Promise<void>;
+    delete: (id: string) => Promise<string>;
+    nameAtr: boolean;
   }[] = [
     {
       id: "1",
       title: "Bancos Asociados",
       icon: <BankIcon />,
       list: bankList, // Lista de Bank[]
-      create: () => console.log("Creating a bank"),
-      edit: () => console.log("Editing a bank"),
-      delete: () => console.log("Deleting a bank"),
+      create: bankRegister,
+      edit: updateBank,
+      delete: deleteBank,
+      nameAtr: true
     },
     {
       id: "2",
       title: "Gestión de Roles",
       icon: <WorkerIcon />,
       list: roleList, // Lista de Role[]
-      create: () => console.log("Creating a role"),
-      edit: () => console.log("Editing a role"),
-      delete: () => console.log("Deleting a role"),
+      create: createNewRole,
+      edit: updateNewRole,
+      delete: deleteRole,
+      nameAtr: false
     },
     {
       id: "3",
       title: "Gestión tipos de Cuenta",
       icon: <AccountIcon />,
       list: accountList, // Lista de AccountType[]
-      create: () => console.log("Creating an account type"),
-      edit: () => console.log("Editing an account type"),
-      delete: () => console.log("Deleting an account type"),
+      create: registerAccount,
+      edit: updateAccount,
+      delete: deleteAccount,
+      nameAtr: true
     },
     {
       id: "4",
       title: "Gestión de Departamentos",
       icon: <DepartmentIcon />,
       list: departmentList, // Lista de Department[]
-      create: () => console.log("Creating a department"),
-      edit: () => console.log("Editing a department"),
-      delete: () => console.log("Deleting a department"),
-    },
-    {
-      id: "5",
-      title: "Datos Generales",
-      icon: <GraphIcon />,
-      list: [], // Si no tienes una lista, simplemente puedes ponerla vacía
-      create: () => {},
-      edit: () => {},
-      delete: () => {},
-    },
+      create: registerDepartment,
+      edit: updateDepartment,
+      delete: deleteDepartment,
+      nameAtr: false
+    }
   ];
 
   const toggleForm = (
     title: string,
     list: Bank[] | Role[] | AccountType[] | Department[],
-    create: () => void,
-    edit: () => void,
-    del: () => void
+    create: (data: any) => Promise<void>, // Cambiamos para que acepte una función con `data`
+    edit: (id:string, data: any) => Promise<void>,
+    del: (id: string) => Promise<string>,
+    nameAtr: boolean
   ) => {
     setModalTitle(title);
     setSelectedList(list);
@@ -120,12 +119,11 @@ export default function PlatformGestion() {
     setEditAction(() => edit);
     setDeleteAction(() => del);
     setModalOpen(true);
+    setIsName(nameAtr);
   };
 
   const handleCreate = () => {
-    if (createAction) {
-      setFormOpen(true);
-    }
+      setFormOpen(true); // Abre el formulario
   };
 
   return (
@@ -133,16 +131,17 @@ export default function PlatformGestion() {
       <section className="flex-col justify-between items-center p-4 bg-white shadow">
         <div className="grid grid-cols-3 gap-8 p-8">
           {cardData.map(
-            ({ id, title, icon, list, create, edit, delete: del }) => (
+            ({ id, title, icon, list, create, edit, delete: del, nameAtr }) => (
               <button
                 key={id}
                 onClick={() =>
                   toggleForm(
                     title,
                     list,
-                    create ?? (() => {}),
-                    edit ?? (() => {}),
-                    del ?? (() => {})
+                    create,  // Pasamos correctamente el `create` con su firma
+                    edit,
+                    del,
+                    nameAtr
                   )
                 }
               >
@@ -162,8 +161,9 @@ export default function PlatformGestion() {
                 id={item.pk}
                 title={item.name || item.title}
                 alt={item.name || item.title}
-                edit={editAction ?? (() => {})}
-                delete={deleteAction ?? (() => {})}
+                edit={editAction}
+                delete={deleteAction}
+                isName={isName}
               />
             ))}
           </div>
@@ -175,8 +175,15 @@ export default function PlatformGestion() {
           </Button>
         </Modal>
       )}
+
       {formOpen && (
-        <GestionForm isOpen={formOpen} setOpen={setFormOpen} action={createAction ?? (() => {})} modalTitle={modalTitle} />
+        <GestionForm
+          isOpen={formOpen}
+          setOpen={setFormOpen}
+          action={createAction ?? (() => {})} // Pasamos correctamente la acción de crear
+          modalTitle={modalTitle}
+          isName={isName}
+        />
       )}
     </>
   );

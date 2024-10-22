@@ -1,30 +1,47 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, Skeleton } from "@/components/atoms";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, Card, CardContent, Skeleton } from "@/components/atoms";
 import IconSpan from "@/components/atoms/IconSpan";
 import { DeleteIcon, EditIcon } from "@/components/icons";
+import { useToastAlerts } from "@/hooks";
+import GestionEditForm from "../GestionForm/GestionEditForm";
 
 interface Props {
   id: string;
   title: string;
   imageSrc?: string;
   alt?: string;
-  edit?: () => void;  // Función opcional para editar
-  delete?: () => void;  // Función opcional para eliminar
+  edit: (id:string, data: any) => Promise<void>;  // Función opcional para editar
+  delete: (id: string) => Promise<string>;  // Función opcional para eliminar
+  isName: boolean;
 }
 
-export default function GestionCard({ id, title, imageSrc, alt, edit, delete: del }: Props) {
+export default function GestionCard({ id, title, imageSrc, alt, edit, delete: del, isName }: Props) {
   const [isLoading, setIsLoading] = useState(false);
-  const handleEdit = () => {
-    if (edit) {
-      edit(); // Ejecuta la función de edición si está disponible
-    }
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
+  const { toastSuccess, toastWarning, toastError } = useToastAlerts();
+
+  const toggleConfirm = ()=>{
+    setIsConfirmOpen(!isConfirmOpen);
+  }
+
+  const toggleEdit = () => {
+    setFormOpen(true);
   };
 
-  const handleDelete = () => {
-    if (del) {
+  const handleCancel = ()=>{
+    toastWarning('Cancelado', 'No se realizará ninguna acción');
+    setIsConfirmOpen(false);
+  }
 
-      del(); // Ejecuta la función de eliminación si está disponible
+  const handleDelete = async() => {
+    try {
+        await  del(id); // Ejecuta la función de eliminación si está disponible
+        toastSuccess('Exito!', 'Entrada borrada exitosamente');
+        setIsConfirmOpen(false);
+    } catch (error) {
+      toastError('Error', 'Ocurrió un error al borrar la entrada');
     }
   };
 
@@ -58,13 +75,13 @@ export default function GestionCard({ id, title, imageSrc, alt, edit, delete: de
             </div>
             <IconSpan>
               <button
-                onClick={handleEdit}
+                onClick={toggleEdit}
                 className="hover:scale-110 active:scale-100 transition-transform duration-200"
               >
                 <EditIcon />
               </button>
               <button
-                onClick={handleDelete}
+                onClick={toggleConfirm}
                 className="hover:scale-110 active:scale-100 transition-transform duration-200"
               >
                 <DeleteIcon />
@@ -73,6 +90,37 @@ export default function GestionCard({ id, title, imageSrc, alt, edit, delete: de
           </CardContent>
         </Card>
       )}
+
+{formOpen && (
+        <GestionEditForm
+          isOpen={formOpen}
+          setOpen={setFormOpen}
+          action={edit} // Pasamos correctamente la acción de crear
+          modalTitle={'Modificar'}
+          isName={isName}
+          id={id}
+          oldName={title}
+        />
+      )}
+
+<AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
+        <AlertDialogContent className="bg-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Borrar Registro</AlertDialogTitle>
+            <AlertDialogDescription>
+              ¿Estás seguro de que quieres borrar el registro? Una vez realizado esta acción es irreversible
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-base-secondary text-white" onClick={handleCancel}>
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction className="bg-base-primary text-white" onClick={handleDelete}>
+              Confirmar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

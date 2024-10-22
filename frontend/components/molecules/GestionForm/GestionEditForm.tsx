@@ -13,15 +13,17 @@ interface Props {
   isOpen: boolean;
   setOpen: (open: boolean) => void;
   modalTitle: string;
-  action:(data: any) => Promise<void>;
-  isName: boolean
+  action:(id:string, data: any) => Promise<void>;
+  isName: boolean,
+  id: string,
+  oldName: string
 }
 
 type FormData ={
   title: string;
 }
 
-export default function GestionForm({ isOpen, setOpen, modalTitle, action, isName }: Props) {
+export default function GestionEditForm({ isOpen, setOpen, modalTitle, action, isName, id, oldName }: Props) {
   const { toastSuccess, toastError } = useToastAlerts();
   // Usar el resolutor de zod con react-hook-form
   const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<FormData>({
@@ -40,12 +42,12 @@ export default function GestionForm({ isOpen, setOpen, modalTitle, action, isNam
     };
     try{
       console.log(dataToSend);
-      await action(dataToSend);
+      await action(id, dataToSend);
       reset();
-      toastSuccess('Exito!', 'El registro se creo Exitosamente');
+      toastSuccess('Exito!', 'El registro se modificó correctamente');
       setOpen(!isOpen);
     }catch (error){
-      toastError('Error', 'Error al crear');
+      toastError('Error', 'Error al modificar la entrada');
     }
     console.log("info a enviar:", dataToSend);
   };
@@ -60,6 +62,7 @@ export default function GestionForm({ isOpen, setOpen, modalTitle, action, isNam
             </label>
             <input
               type="text"
+              defaultValue={oldName}
               {...register("title")} // Registrar el campo 'title' con react-hook-form
               className={`w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300 ${
                 errors.title ? "border-red-500" : ""
@@ -72,7 +75,7 @@ export default function GestionForm({ isOpen, setOpen, modalTitle, action, isNam
         </section>
 
         <button type="submit" className="bg-base-primary font-semibold text-white">
-          Crear
+          Editar
         </button>
       </form>
     </Modal>
