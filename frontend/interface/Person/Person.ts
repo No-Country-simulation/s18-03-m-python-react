@@ -1,17 +1,17 @@
 // Interfaz para el empleado
 export interface Employee {
-    start_date: string;   // Fecha de inicio en formato ISO
+    start_date: string ;   // Fecha de inicio en formato ISO
     department: string;   // Departamento donde trabaja
-    team: string[] | undefined;  // Equipo al que pertenece (puede ser null)
-    role: string [] | null;         // Rol del empleado (se puede mejorar si hay más detalles sobre los roles)
-    salary: string;       // Salario del empleado
+    team?: string[];  // Equipo al que pertenece (puede ser null)
+    role: string;         // Rol del empleado (se puede mejorar si hay más detalles sobre los roles)
+    salary: number ;       // Salario del empleado
     working_day: string;
     // Descripción del horario laboral
   }
   
   // Interfaz principal
   export interface Person {
-    pk: number ;                         // Identificador único (primary key)
+    pk: number;                         // Identificador único (primary key)
     dni: string;                        // Número de documento de identidad (DNI)
     phone_number: string;               // Número de teléfono
     birth: string;                      // Fecha de nacimiento en formato ISO (YYYY-MM-DD)
@@ -26,6 +26,6 @@ export interface Employee {
     email: string;                      // Correo electrónico
     first_name: string;                 // Primer nombre
     last_name: string;                  // Apellido
-    employee: Employee;                 // Información adicional del empleado
+    employee?: Employee;                 // Información adicional del empleado
   }
   

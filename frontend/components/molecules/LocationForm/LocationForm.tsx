@@ -34,6 +34,7 @@ const LocationForm = ({ onBack, onNext }: LocationFormProps) => {
   });
 
   const { formData, setFormData } = useFormStore();
+  
 
   // Estado para los datos de ubicación
   const [countries, setCountries] = useState<{ pk: number; name: string }[]>([]);
@@ -49,17 +50,15 @@ const LocationForm = ({ onBack, onNext }: LocationFormProps) => {
 
   // Cargar los datos del sessionStorage
   useEffect(() => {
-    const storedCountriesResponse = JSON.parse(sessionStorage.getItem("countryList") || "null");
-    const storedProvincesResponse = JSON.parse(sessionStorage.getItem("provinceList") || "null");
-    const storedCitiesResponse = JSON.parse(sessionStorage.getItem("cityList") || "null");
-console.log('provinces', storedProvincesResponse)
+    const storedCountriesResponse = JSON.parse(sessionStorage.getItem("countryList") ?? "null");
+    const storedProvincesResponse = JSON.parse(sessionStorage.getItem("provinceList") ?? "null");
+    const storedCitiesResponse = JSON.parse(sessionStorage.getItem("cityList") ?? "null");
     // Verificar que la respuesta no sea null
     if (storedCountriesResponse && Array.isArray(storedCountriesResponse)) {
       setCountries(storedCountriesResponse);
     }
 
     if (storedProvincesResponse && Array.isArray(storedProvincesResponse)) {
-      console.log(storedProvincesResponse);
       
       setProvinces(storedProvincesResponse); // Establece directamente el array de provincias
     }
@@ -75,10 +74,19 @@ console.log('provinces', storedProvincesResponse)
   };
 
   const renderError = (field: keyof typeof formData) => {
-    return errors[field] ? (
-      <span className="text-red-500 text-xs lowercase">{errors[field]?.message}</span>
-    ) : null;
+    if (errors[field]) {
+      const errorMessage = errors[field]?.message;
+  
+      // Verificar que el mensaje de error sea un string
+      if (typeof errorMessage === "string") {
+        return (
+          <span className="text-red-500 text-xs lowercase">{errorMessage}</span>
+        );
+      }
+    }
+    return null;
   };
+  
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5 m-1 p-1">
@@ -88,7 +96,6 @@ console.log('provinces', storedProvincesResponse)
       <div className="flex flex-col">
         <Label htmlFor="country">País</Label>
         <Select
-          id="country"
           onValueChange={(value) => setValue("country", value)}
         >
           <SelectTrigger className="w-full text-actions-disable">
@@ -116,7 +123,6 @@ console.log('provinces', storedProvincesResponse)
       <div className="flex flex-col">
         <Label htmlFor="province">Provincia</Label>
         <Select
-          id="province"
           onValueChange={(value) => setValue("province", value)}
         >
           <SelectTrigger className="w-full text-actions-disable">
@@ -144,7 +150,6 @@ console.log('provinces', storedProvincesResponse)
       <div className="flex flex-col">
         <Label htmlFor="city">Ciudad</Label>
         <Select
-          id="city"
           onValueChange={(value) => setValue("city", value)}
         >
           <SelectTrigger className="w-full text-actions-disable">
