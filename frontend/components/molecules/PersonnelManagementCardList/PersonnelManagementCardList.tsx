@@ -1,21 +1,30 @@
 "use client";
 import { LogoIcon, SearchIcon } from "@/components/icons";
 import { Input } from "@/components/atoms";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { PersonnelManagementCard } from "../PersonnelManagementCard/PersonnelManagementCard";
-import CircularMenu from "../CirucularMenu/CircularMenu";
+import CircularMenu from "../CircularMenu/CircularMenu";
 import Register from "@/components/organisms/Register/Register";
-
+import {
+  getCityList,
+  getDepartmentList,
+  getProvinceList,
+  getAllRoles,
+  getCountryList,
+  getBankList,
+  getAccountTypes,
+  getEmployees,
+} from "@/api";
 import { Person } from "@/interface/Person/Person";
 
-const filterUsers = (users: Person[], query: string) => {
+/* const filterUsers = (users: Person[], query: string) => {
   if (!query) return users;
   return users.filter(
     (user) =>
       user.first_name.toLowerCase().includes(query.toLowerCase()) ||
       user.email.toLowerCase().includes(query.toLowerCase())
   );
-};
+}; */
 
 const SearchBar = ({
   searchQuery,
@@ -43,80 +52,170 @@ export const PersonnelManagementCardList = () => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false); // Estado para el modal de registro
   const [employeesList, setEmployeesList] = useState<Person[]>([]);
-
-  //declare useEffect
-  useEffect(() => {
-    const empList = JSON.parse(
-      sessionStorage.getItem("employees") || "[]"
-    ) as Person[];
-    setEmployeesList(empList);
-  }, []);
-
-  const filteredUsers = useMemo(
-    () => filterUsers(employeesList, searchQuery),
-    [employeesList, searchQuery] // Asegúrate de que el filtro dependa de employeesList también
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<number | null>(
+    null
   );
+  const [isCircularMenuVisible, setIsCircularMenuVisible] = useState(false);
 
-  const toggleMenu = () => {
-    setIsMenuVisible((prev) => !prev); // Alternar visibilidad del menú
+  /*   const filteredUsers = useMemo(
+    () => filterUsers(employeesList, searchQuery),
+    [searchQuery]
+  ); */
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Obtener lista de ciudades
+        const cityList = await getCityList();
+        if (Array.isArray(cityList)) {
+          sessionStorage.setItem("cityList", JSON.stringify(cityList));
+        }
+
+        
+        // Obtener lista de países
+        const countryList = await getCountryList();
+        if (Array.isArray(countryList)) {
+          sessionStorage.setItem("countryList", JSON.stringify(countryList));
+        }
+
+        // Obtener lista de bancos
+        const bankList = await getBankList();
+        if (Array.isArray(bankList)) {
+          sessionStorage.setItem("bankList", JSON.stringify(bankList));
+        }
+
+        // Obtener lista de tipos de cuenta
+        const accountTypeList = await getAccountTypes();
+        if (Array.isArray(accountTypeList)) {
+          sessionStorage.setItem(
+            "accountTypeList",
+            JSON.stringify(accountTypeList)
+          );
+        }
+
+        // Obtener lista de departamentos
+        const departmentList = await getDepartmentList();
+        if (Array.isArray(departmentList)) {
+          sessionStorage.setItem(
+            "departmentList",
+            JSON.stringify(departmentList)
+          );
+        }
+
+        // Obtener lista de roles
+        const roleList = await getAllRoles();
+        if (Array.isArray(roleList)) {
+          sessionStorage.setItem("roleList", JSON.stringify(roleList));
+        }
+
+        // Obtener lista de provincias
+        const provinceList = await getProvinceList();
+        if (Array.isArray(provinceList)) {
+          sessionStorage.setItem("provinceList", JSON.stringify(provinceList));
+        }
+
+        // Obtener lista de empleados
+        const empList = await getEmployees();
+        if (Array.isArray(empList) && empList.length > 0) {
+          // Eliminar el primer elemento usando slice()
+          const filteredEmpList = empList.slice(1); // Elimina el primer elemento
+
+          setEmployeesList(filteredEmpList); // Actualizar el estado con la lista filtrada
+          sessionStorage.setItem("employees", JSON.stringify(filteredEmpList)); // Guardar en el sessionStorage
+        }
+      } catch (error) {
+        console.error("Error al cargar los datos:", error);
+      }
+    };
+
+    fetchData(); // Llamar a la función para obtener los datos
+  }, []); // El array vacío asegura que se ejecuta solo una vez al montarse
+
+  const closeCircularMenu = () => {
+    setIsCircularMenuVisible(false);
   };
 
-  const handleAddEmployee = () => {
-    setIsRegisterOpen(true); // Abrir el modal al agregar empleado
-    toggleMenu();
+  const handleSettingsClick = (employeePk: number) => {
+    if (selectedEmployeeId === employeePk) {
+      setSelectedEmployeeId(null); // Cierra el menú si ya está abierto
+    } else {
+      setSelectedEmployeeId(employeePk); // Abre el menú para el nuevo empleado
+    }
+  };
+
+  const openCircularMenu = () => {
+    setIsCircularMenuVisible(true);
+  };
+
+  const closeMenu = () => {
+    setIsMenuVisible(!isMenuVisible);
+  };
+
+  const handleLogoClick = () => {
+    if (isCircularMenuVisible) {
+      closeCircularMenu();
+    } else {
+      openCircularMenu();
+    }
+  };
+
+  // Manejar el clic en el menú circular
+  const handleMenuClick = () => {
+    closeMenu(); // Cierra el menú al hacer clic en el menú circular
   };
 
   return (
-    <div className="container mx-auto p-4 shadow">
+    <div className="min-h-screen container mx-auto p-4 shadow">
       <div className="flex flex-row justify-between px-4 items-center space-x-4">
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <span className="pr-12 cursor-pointer" onClick={toggleMenu}>
+        <div
+          className="relative pr-12 cursor-pointer"
+          onClick={handleLogoClick}
+        >
+          {isCircularMenuVisible && (
+            <div className="absolute -top-8 -left-8 z-10">
+              <CircularMenu
+                isEmployeeSelected={true}
+                toggleMenu={handleMenuClick}
+                onAddEmployee={() => setIsRegisterOpen(true)}
+              />
+            </div>
+          )}
           <LogoIcon />
-        </span>
+        </div>
       </div>
-      <div className="bg-white p-4 rounded-lg">
+
+      <div className="bg-white p-4 rounded overflow-y-auto">
         {employeesList.length > 0 ? (
           filteredUsers.map(
             ({ pk, first_name, employee, email, profile_picture }) => (
-              <PersonnelManagementCard
-                key={pk}
-                name={first_name}
-                cargo={employee.role}
-                email={email}
-                initialStatus="active"
-                imageSrc={
-                  profile_picture
-                    ? profile_picture
-                    : "https://i.pravatar.cc/304"
-                }
-                alt={first_name}
-              />
+              <div key={pk} className="relative">
+                {/* Verificamos si employee está definido antes de acceder a sus propiedades */}
+                {employee ? (
+                  <PersonnelManagementCard
+                    pk={pk}
+                    name={first_name}
+                    cargo={employee.role} // Asegúrate de que esto no cause errores
+                    email={email}
+                    initialStatus="active"
+                    imageSrc={profile_picture}
+                    alt={first_name}
+                    onSettingsClick={handleSettingsClick}
+                    isMenuOpen={selectedEmployeeId === pk}
+                    employee={employee}
+                    picture_profile={profile_picture}
+                  />
+                ) : (
+                  <div className="text-gray-500">Empleado no disponible</div> // Mensaje si employee es undefined
+                )}
+              </div>
             )
           )
         ) : (
-          <div className="text-2xl px-20 text-base-primary animate-blink">
-            No hay empleados
-          </div>
-        )}
-
-        {/* Menú Circular en posición fija en la esquina superior derecha */}
-        {isMenuVisible && (
-          <div
-            className="absolute top-0 right-0 m-4"
-            style={{
-              width: "160px",
-              height: "160px",
-            }}
-          >
-            <CircularMenu
-              isEmployeeSelected={false}
-              onAddEmployee={handleAddEmployee}
-            />
-          </div>
+          <div>No hay empleados disponibles.</div> // Mensaje si la lista está vacía
         )}
       </div>
 
-      {/* Componente Modal para agregar empleado */}
       {isRegisterOpen && (
         <Register isOpen={isRegisterOpen} setOpen={setIsRegisterOpen} />
       )}

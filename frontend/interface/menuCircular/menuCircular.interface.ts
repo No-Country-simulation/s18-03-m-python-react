@@ -7,8 +7,15 @@ export interface Button {
   
   export interface CircularMenuProps {
     isEmployeeSelected: boolean;
-    idUserSelected?: string; // Prop para indicar si se seleccionó un empleado
+    idUserSelected?: string;
+    onAddEmployee: () => void;
+    toggleMenu: () => void;
   };
+
+  export interface CircularMenuUserProps {
+    pk: number;
+    toggleMenu: () => void; 
+  }
   
   
   

@@ -8,12 +8,12 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useForm, SubmitHandler, FieldError } from "react-hook-form";
-import { z } from "zod"; 
 import { PersonalValidations } from "@/validations/auth/register/PersonalValidations";
 import useFormStore from "@/store/useFormStore";
+import { Person } from "@/interface/Person/Person";
 
 // Definimos el tipo FormData usando el esquema de validación
-type FormData = z.infer<typeof PersonalValidations>;
+type FormData = Person;
 
 interface PersonalFormProps {
   onCancel: () => void; 
@@ -164,7 +164,7 @@ export function PersonalForm({ onCancel, onNext }: PersonalFormProps) {
               <Calendar
                 mode="single"
                 selected={selectedDate}
-                onSelect={(date) => {
+                onSelect={(date : Date | undefined) => {
                   setSelectedDate(date);
                   if (date) {
                     setValue("birth", date); // Asegúrate de que esto esté estableciendo un objeto Date
@@ -212,7 +212,7 @@ export function PersonalForm({ onCancel, onNext }: PersonalFormProps) {
             )}
           </div>
         </div>
-        {errors.foto && <span className="text-red-500 text-xs lowercase">{errors.foto.message}</span>}
+        {errors.profile_picture && <span className="text-red-500 text-xs lowercase">{errors.profile_picture.message}</span>}
       </div>
 
       {/* Botones de Cancelar y Siguiente */}

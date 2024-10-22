@@ -16,13 +16,14 @@ import { CopyIcon } from "lucide-react";
 import IconSpan from "@/components/atoms/IconSpan";
 import BadgeSpan from "@/components/atoms/BadgeSpan";
 import { useToast } from "@/hooks";
+import { Person } from "@/interface/Person/Person";
 
 // Estilos comunes
 const commonText = "font-semibold text-sm";
 const sectionContainer = "flex w-full gap-5 px-6 items-center justify-between";
 const span = "flex items-center justify-center";
 
-export default function ProfileCard() {
+export default function ProfileCard( { user }: { user: Person }) {
   const [flip, setFlip] = useState(false);
   const [status, setStatus] = useState("inactive");
   const [isLoading, setIsLoading] = useState(true);
@@ -46,13 +47,14 @@ export default function ProfileCard() {
     });
   };
 
+  const edad = new Date().getFullYear() - new Date(user.birth).getFullYear();
   return (
     <div className="flex flex-col max-w-sm items-center bg-none">
       {/* Avatar */}
       <ProfileCardAvatar
-        name="Pepe"
-        lastName="Argento"
-        imgSrc="https://github.com/shadcn.png"
+        name={user.first_name}
+        lastName={user.last_name}
+        imgSrc={`http://localhost:8000${user.profile_picture}`}
       />
       {/* Info Container */}
       <div className="relative w-full card-flip">
@@ -71,32 +73,32 @@ export default function ProfileCard() {
             >
               <CardSection title="Información Personal">
                 <div className={cn(sectionContainer, commonText)}>
-                  <p>50 Años</p>
+                  <p>{edad} años</p>
                   <IconSpan>
                     <CakeIcon />
-                    <p>19 de Junio</p>
+                    <p>{user.birth}</p>
                   </IconSpan>
                 </div>
                 <div className={cn(sectionContainer, commonText)}>
-                  <p className="text-base-primary">Desarrollador</p>
+                  <p className="text-base-primary">{user.employee.role}</p>
                   <BadgeSpan>
                     <p>Fecha De inicio</p>
-                    <p>01/07/2023</p>
+                    <p>{user.employee.start_date}</p>
                   </BadgeSpan>
                 </div>
                 <IconSpan>
                   <LocationIcon />
-                  <p>Buenos Aires, Argentina</p>
+                  <p>{user.country},{user.city}</p>
                 </IconSpan>
               </CardSection>
               <CardSection title="Contacto">
                 <IconSpan>
                   <EmailIcon />
-                  <p>pepe@org.com</p>
+                  <p>{user.email}</p>
                 </IconSpan>
                 <IconSpan>
                   <PhoneIcon />
-                  <p>+54112578899</p>
+                  <p>{user.phone_number}</p>
                 </IconSpan>
               </CardSection>
             </div>
@@ -113,21 +115,21 @@ export default function ProfileCard() {
                 <div className={cn(sectionContainer, commonText)}>
                   <BadgeSpan>
                     <p>DNI</p>
-                    <p>16.879.911</p>
+                    <p>{user.dni}</p>
                   </BadgeSpan>
                   {/* textIcon span */}
                   <IconSpan>
                     <AddressIcon />
-                    <p className="text-center">Callejón Pardo 123</p>
+                    <p className="text-center">{user.address}</p>
                   </IconSpan>
                 </div>
                 <div className={cn(sectionContainer, commonText)}>
                   <p className="text-base-primary">Departamento Ventas</p>
-                  <p>Jornada 8hs</p>
+                  <p>Jornada {user.employee.working_day}</p>
                 </div>
                 <span className={cn(span, commonText, "gap-6")}>
-                  <p className="text-base-primary">Precio/Hora</p>
-                  <p>$10000</p>
+                  <p className="text-base-primary">Salario</p>
+                  <p>${user.employee.salary}</p>
                 </span>
               </CardSection>
               <CardSection title="Datos Bancarios">
@@ -135,16 +137,16 @@ export default function ProfileCard() {
                   {/* badge */}
                   <BadgeSpan color="bg-base-primary">
                     <p>Banco:</p>
-                    <p>Banco Nación</p>
+                    <p>{user.bank}</p>
                   </BadgeSpan>
                   <span className={cn(span, commonText)}>
-                    <p>Caja de Ahorro</p>
+                    <p>{user.bank_account_type}</p>
                   </span>
                 </div>
                 <span className={cn(span, commonText, "gap-6")}>
                   <div className="flex flex-col">
                     <p>Cuenta terminada en</p>
-                    <p>*********9876</p>
+                    <p>*********{user.bank_account_number}</p>
                   </div>
                   <button onClick={toggleCopy}>
                     <CopyIcon />
