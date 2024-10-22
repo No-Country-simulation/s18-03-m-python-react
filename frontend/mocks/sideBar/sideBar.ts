@@ -1,3 +1,14 @@
+import { 
+  HomeIcon , 
+ PersonalIcon,
+ VacationIcon,
+ AttendanceIcon,
+ PayrollIcon,
+ MessageIcon,
+ ProfilesIcon ,
+ JournalIcon,
+ SettingsIcon
+} from "@/components/icons";
 import { MenuItem } from "@/interface/sideBar/sideBar";
 
     
@@ -5,48 +16,48 @@ import { MenuItem } from "@/interface/sideBar/sideBar";
 
 export const menuItems: MenuItem[] = [
     {
-      iconSrc: "/icons/home-icon.svg", // Reemplaza con la ruta correcta a tu icono
+      iconSrc: HomeIcon, // Reemplaza con la ruta correcta a tu icono
       label: "Panel",
       path: "/dashboard",
     },
-    {
-      iconSrc: "/icons/personal-icon.svg",
+     {
+      iconSrc: PersonalIcon,
       label: "Gestion de personal",
       path: "/management",
-    },
+     },
     {
-      iconSrc: "/icons/vacation-icon.svg",
+      iconSrc: VacationIcon,
       label: "Vacaciones y Licencias",
       path: "/vacation",
-    },
+     },
     {
-      iconSrc: "/icons/attendance-icon.svg",
+      iconSrc: AttendanceIcon,
       label: "Control de asistencia",
-      path: "/assists",
-    },
+       path: "/assists",
+   },
     {
-      iconSrc: "/icons/payroll-icon.svg",
-      label: "Gestion de nominas",
+     iconSrc: PayrollIcon,
+     label: "Gestion de nominas",
       path: "/payrolls",
     },
-    {
-      iconSrc: "/icons/message-icon.svg",
+     {
+      iconSrc: MessageIcon,
       label: "Mensaje y notificaciones",
-      path: "/notifications",
+       path: "/notifications",
     },
-    {
-      iconSrc: "/icons/profil-icon.svg",
-      label: "Mi perfil",
-      path: "/profile",
-    },
-    {
-      iconSrc: "/icons/journal-icon.svg",
+     {
+       iconSrc: ProfilesIcon,
+       label: "Mi perfil",
+       path: "/profile",
+     },
+     {
+      iconSrc: JournalIcon,
       label: "Registro de horas",
-      path: "/hours",
-    },
-    {
-      iconSrc: "/icons/settings-icon.svg",
+       path: "/hours",
+     },
+     {
+      iconSrc: SettingsIcon,
       label: "Configuracion",
       path: "/settings",
-    },
+     },
   ];
