@@ -11,6 +11,11 @@ export interface Button {
     onAddEmployee: () => void;
     toggleMenu: () => void;
   };
+
+  export interface CircularMenuUserProps {
+    pk: number;
+    toggleMenu: () => void; 
+  }
   
   
   

@@ -21,16 +21,20 @@ import { GearIcon, PersonIcon } from "@radix-ui/react-icons";
 import { SuccessIcon } from "@/components/icons";
 import Image from "next/image";
 import CircularMenuUser from "../CircularMenu/CircularMenuUser";
+import { Employee } from "@/interface/Person/Person";
 
 interface Props {
   name: string;
   email: string;
   cargo: string;
   initialStatus: "active" | "inactive";
-  imageSrc?: string;
+  imageSrc?: File | null;
   alt?: string;
-  pk: string;
-  onSettingsClick: (id: number) => void;
+  pk: number;
+  employee: Employee | undefined;
+  picture_profile:File | null;
+  onSettingsClick: (pk: number) => void;
+  isMenuOpen: boolean;
 }
 
 export const PersonnelManagementCard = ({
@@ -111,7 +115,7 @@ export const PersonnelManagementCard = ({
             ) : (
               <Image
                 className="rounded-full mr-4"
-                src={`http://localhost:8000${imageSrc}`}
+                src={imageSrc ? `http://localhost:8000${imageSrc}` : "http://i.pravatar.cc/304"}
                 alt={alt ?? `Profile picture of ${name}`}
                 width={50}
                 height={50}

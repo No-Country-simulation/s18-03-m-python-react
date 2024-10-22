@@ -1,7 +1,7 @@
 "use client";
 import { LogoIcon, SearchIcon } from "@/components/icons";
 import { Input } from "@/components/atoms";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { PersonnelManagementCard } from "../PersonnelManagementCard/PersonnelManagementCard";
 import CircularMenu from "../CircularMenu/CircularMenu";
 import Register from "@/components/organisms/Register/Register";
@@ -16,16 +16,15 @@ import {
   getEmployees,
 } from "@/api";
 import { Person } from "@/interface/Person/Person";
-import CircularMenuUser from "../CircularMenu/CircularMenuUser";
 
-const filterUsers = (users: Person[], query: string) => {
+/* const filterUsers = (users: Person[], query: string) => {
   if (!query) return users;
   return users.filter(
     (user) =>
       user.first_name.toLowerCase().includes(query.toLowerCase()) ||
       user.email.toLowerCase().includes(query.toLowerCase())
   );
-};
+}; */
 
 const SearchBar = ({
   searchQuery,
@@ -58,10 +57,10 @@ export const PersonnelManagementCardList = () => {
   );
   const [isCircularMenuVisible, setIsCircularMenuVisible] = useState(false);
 
-  const filteredUsers = useMemo(
+  /*   const filteredUsers = useMemo(
     () => filterUsers(employeesList, searchQuery),
     [searchQuery]
-  );
+  ); */
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,6 +71,7 @@ export const PersonnelManagementCardList = () => {
           sessionStorage.setItem("cityList", JSON.stringify(cityList));
         }
 
+        
         // Obtener lista de países
         const countryList = await getCountryList();
         if (Array.isArray(countryList)) {
@@ -120,7 +120,6 @@ export const PersonnelManagementCardList = () => {
           // Eliminar el primer elemento usando slice()
           const filteredEmpList = empList.slice(1); // Elimina el primer elemento
 
-          console.log(filteredEmpList);
           setEmployeesList(filteredEmpList); // Actualizar el estado con la lista filtrada
           sessionStorage.setItem("employees", JSON.stringify(filteredEmpList)); // Guardar en el sessionStorage
         }
@@ -149,7 +148,7 @@ export const PersonnelManagementCardList = () => {
   };
 
   const closeMenu = () => {
-    setIsMenuVisible(false);
+    setIsMenuVisible(!isMenuVisible);
   };
 
   const handleLogoClick = () => {
@@ -177,7 +176,7 @@ export const PersonnelManagementCardList = () => {
             <div className="absolute -top-8 -left-8 z-10">
               <CircularMenu
                 isEmployeeSelected={true}
-                toogleMenu={handleMenuClick}
+                toggleMenu={handleMenuClick}
                 onAddEmployee={() => setIsRegisterOpen(true)}
               />
             </div>
@@ -186,29 +185,34 @@ export const PersonnelManagementCardList = () => {
         </div>
       </div>
 
-      <div className="bg-white p-4 rounded-lgoverflow-y-auto">
+      <div className="bg-white p-4 rounded overflow-y-auto">
         {employeesList.length > 0 ? (
           employeesList.map(
             ({ pk, first_name, employee, email, profile_picture }) => (
               <div key={pk} className="relative">
-                <PersonnelManagementCard
-                  pk={pk}
-                  name={first_name}
-                  cargo={employee.role}
-                  email={email}
-                  initialStatus="active"
-                  imageSrc={profile_picture || "https://i.pravatar.cc/304"}
-                  alt={first_name}
-                  onSettingsClick={handleSettingsClick}
-                  isMenuOpen={selectedEmployeeId === pk}
-                />
+                {/* Verificamos si employee está definido antes de acceder a sus propiedades */}
+                {employee ? (
+                  <PersonnelManagementCard
+                    pk={pk}
+                    name={first_name}
+                    cargo={employee.role} // Asegúrate de que esto no cause errores
+                    email={email}
+                    initialStatus="active"
+                    imageSrc={profile_picture}
+                    alt={first_name}
+                    onSettingsClick={handleSettingsClick}
+                    isMenuOpen={selectedEmployeeId === pk}
+                    employee={employee}
+                    picture_profile={profile_picture}
+                  />
+                ) : (
+                  <div className="text-gray-500">Empleado no disponible</div> // Mensaje si employee es undefined
+                )}
               </div>
             )
           )
         ) : (
-          <div className="text-2xl px-20 text-base-primary animate-blink">
-            No hay empleados
-          </div>
+          <div>No hay empleados disponibles.</div> // Mensaje si la lista está vacía
         )}
       </div>
 

@@ -164,7 +164,7 @@ export function PersonalForm({ onCancel, onNext }: PersonalFormProps) {
               <Calendar
                 mode="single"
                 selected={selectedDate}
-                onSelect={(date) => {
+                onSelect={(date : Date | undefined) => {
                   setSelectedDate(date);
                   if (date) {
                     setValue("birth", date); // Asegúrate de que esto esté estableciendo un objeto Date

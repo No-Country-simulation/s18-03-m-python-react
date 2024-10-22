@@ -3,16 +3,13 @@
 import { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/cn/utils"; // Asegúrate de que esta función esté definida
-import { Button } from "@/interface/menuCircular/menuCircular.interface"; // Importar correctamente la interfaz
+import { Button, CircularMenuUserProps } from "@/interface/menuCircular/menuCircular.interface"; // Importar correctamente la interfaz
 import { useRouter } from "next/navigation";
 import { deleteEmployee } from "@/api";
 import { useToast } from "@/hooks";
 
 
-interface CircularMenuUserProps {
-  pk: string;
-  toggleMenu: () => void; 
-}
+
 
 export default function CircularMenuUser({ pk, toggleMenu }: CircularMenuUserProps) {
   const [hoveredButton, setHoveredButton] = useState<Button | null>(null);

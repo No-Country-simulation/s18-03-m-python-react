@@ -62,8 +62,12 @@ export function FormularioLaborales({
     // Asegúrate de formatear la fecha aquí antes de guardar en el store
     const formattedData = {
       ...data,
-      start_date: format(fechaIngreso!, "yyyy-MM-dd"), // Formato YYYY-MM-DD
+      employee: {
+        ...data,
+        start_date: format(fechaIngreso!, "yyyy-MM-dd"),
+      },
     };
+    console.log('formattedData', formattedData)
 
     setFormData(formattedData); // Almacena los datos en el store de Zustand
     onNext(); // Pasar los datos al siguiente paso
@@ -89,7 +93,7 @@ export function FormularioLaborales({
               setFechaIngreso(date);
               if (date) {
                 const formattedDate = date.toISOString().split("T")[0]; // Convierte la fecha a 'YYYY-MM-DD'
-                setValue("start_date", formattedDate); // Pasa la fecha formateada como string
+                setValue("start_date", formattedDate,); // Pasa la fecha formateada como string
               }
             }}
             className="w-[355px] px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"

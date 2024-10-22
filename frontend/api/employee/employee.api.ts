@@ -76,7 +76,7 @@ export const updateEmployee = async(id: string, employee: Employee) =>{
 }
 
 
-export const deleteEmployee = async (pk: string): Promise<string> => {
+export const deleteEmployee = async (pk: number): Promise<string> => {
     try {
         const response = await axios.delete(`${API_URL}/employee/${pk}`);
 
