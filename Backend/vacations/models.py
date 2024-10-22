@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 
 # Create your models here.
 class Vacation(models.Model):
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     start = models.DateField()
     end = models.DateField()
     
