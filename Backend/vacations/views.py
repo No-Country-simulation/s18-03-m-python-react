@@ -1,7 +1,7 @@
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import VacationResponseSerializer, VacationAnsweredSerializer, VacationSerializer
+from .serializers import VacationResponseSerializer, VacationAnsweredSerializer, VacationSerializer, VacationRequestSerializer
 from .models import Vacation, VacationRequest
 
 # Create your views here.
@@ -53,3 +53,8 @@ class VacationView(APIView):
         vacations_serialized = VacationSerializer(vacations_queryset, many=True)
         
         return Response(vacations_serialized.data, status=status.HTTP_200_OK)
+    
+    
+class VacationRequestListCreateView(generics.ListCreateAPIView):
+    queryset = VacationRequest.objects.all()
+    serializer_class = VacationRequestSerializer

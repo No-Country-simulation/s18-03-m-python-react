@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import VacationRequest, Vacation
+from django.core.exceptions import ValidationError
 
 class VacationRequestSerializer(serializers.ModelSerializer):
     message = serializers.CharField(read_only=True)
@@ -7,11 +8,15 @@ class VacationRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = VacationRequest
-        fields = ['start', 'end', 'status', 'message']
+        fields = ['employee', 'start', 'end', 'status', 'message'] 
 
     def create(self, validated_data):
-        validated_data['employee'] = None  # For when you decide to implement user management and authentication in the future.
-        vacation_request = VacationRequest.objects.create(**validated_data)
+        vacation_request = VacationRequest(**validated_data)
+        try:
+            vacation_request.full_clean() 
+            vacation_request.save()
+        except ValidationError as e:
+            raise serializers.ValidationError({"detail": e.messages})
         return vacation_request
     
     
