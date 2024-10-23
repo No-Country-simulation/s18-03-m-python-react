@@ -10,5 +10,5 @@ def recurrent_task():
 def start_scheduler():
     print("Scheduler started")
     scheduler = BackgroundScheduler()
-    scheduler.add_job(recurrent_task, 'interval', seconds=10) 
+    scheduler.add_job(recurrent_task, 'interval', days=7) 
     scheduler.start()
