@@ -9,6 +9,7 @@ import {
   WorkerIcon,
 } from "@/components/icons";
 import { DashboardCard } from "@/components/molecules";
+import GeneralData from "@/components/molecules/GeneralData/GeneralData";
 import GestionCard from "@/components/molecules/GestionCard/GestionCard";
 import GestionForm from "@/components/molecules/GestionForm/GestionForm";
 import Modal from "@/components/molecules/Modal/Modal";
@@ -22,6 +23,8 @@ export default function PlatformGestion() {
   //create form status
   const [formOpen, setFormOpen] = useState(false);
   const [isName, setIsName] = useState(true);
+  //General data status
+  const [dataOpen, setDataOpen] = useState(false);
   //Entities Arrays
   const [bankList, setBankList] = useState<Bank[]>([]);
   const [accountList, setAccountList] = useState<AccountType[]>([]);
@@ -126,6 +129,9 @@ export default function PlatformGestion() {
       setFormOpen(true); // Abre el formulario
   };
 
+  const toggleGeneralData = ()=> {
+    setDataOpen(!dataOpen);
+  }
   return (
     <>
       <section className="flex-col justify-between items-center p-4 bg-white shadow">
@@ -149,6 +155,9 @@ export default function PlatformGestion() {
               </button>
             )
           )}
+          <button onClick={toggleGeneralData}>
+            <DashboardCard title={"Datos Generales"} icon={<GraphIcon />} />
+          </button>
         </div>
       </section>
 
@@ -184,6 +193,9 @@ export default function PlatformGestion() {
           modalTitle={modalTitle}
           isName={isName}
         />
+      )}
+      {dataOpen && (
+        <GeneralData isOpen={dataOpen} setOpen={setDataOpen} />
       )}
     </>
   );

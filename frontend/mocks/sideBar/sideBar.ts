@@ -57,7 +57,7 @@ export const menuItems: MenuItem[] = [
      },
      {
       iconSrc: SettingsIcon,
-      label: "Configuracion",
-      path: "/settings",
+      label: "Gestion",
+      path: "/gestion",
      },
   ];
