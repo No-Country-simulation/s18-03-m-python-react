@@ -3,9 +3,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import VacationResponseSerializer, VacationAnsweredSerializer, VacationSerializer, VacationRequestSerializer
 from .models import Vacation, VacationRequest
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 # Create your views here.
 class VacationResponseView(APIView):
+    @swagger_auto_schema(operation_description="Returns confirmed and denied vacation requests")
     def get(self, request, *args, **kwargs):
         vacations_answered_queryset = VacationRequest.objects.filter(status__in=["A","D"])
         
@@ -13,7 +16,15 @@ class VacationResponseView(APIView):
         
         return Response(vacations_answered_serialized.data, status=status.HTTP_200_OK)
     
-    
+    @swagger_auto_schema(
+        operation_description="Accepts or Denies a vacation request.",
+        manual_parameters=[
+            openapi.Parameter('vacation', openapi.IN_QUERY, description="vacation_request id", type=openapi.TYPE_INTEGER, required=True),
+            openapi.Parameter('status', openapi.IN_QUERY, description="If the request is accepted or denied", type=openapi.TYPE_BOOLEAN, required=True),
+            openapi.Parameter('message', openapi.IN_QUERY, description="Message sent to the employee", type=openapi.TYPE_STRING, required=False)
+        ],
+        responses={200: []}
+    )
     def post(self, request, *args, **kwargs):
         data = request.data
         
@@ -47,6 +58,7 @@ class VacationResponseView(APIView):
     
     
 class VacationView(APIView):
+    @swagger_auto_schema(operation_description="Returns already accepted and confirmed vacations")
     def get(self, request, *args, **kwargs):
         vacations_queryset = Vacation.objects.all()
         
