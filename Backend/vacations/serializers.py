@@ -5,10 +5,11 @@ from django.core.exceptions import ValidationError
 class VacationRequestSerializer(serializers.ModelSerializer):
     message = serializers.CharField(read_only=True)
     status = serializers.CharField(read_only=True)
+    pk = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = VacationRequest
-        fields = ['employee', 'start', 'end', 'status', 'message'] 
+        fields = ['pk', 'employee', 'start', 'end', 'status', 'message'] 
 
     def create(self, validated_data):
         vacation_request = VacationRequest(**validated_data)
