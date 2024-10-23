@@ -18,11 +18,15 @@ class VacationResponseView(APIView):
     
     @swagger_auto_schema(
         operation_description="Accepts or Denies a vacation request.",
-        manual_parameters=[
-            openapi.Parameter('vacation', openapi.IN_QUERY, description="vacation_request id", type=openapi.TYPE_INTEGER, required=True),
-            openapi.Parameter('status', openapi.IN_QUERY, description="If the request is accepted or denied", type=openapi.TYPE_BOOLEAN, required=True),
-            openapi.Parameter('message', openapi.IN_QUERY, description="Message sent to the employee", type=openapi.TYPE_STRING, required=False)
-        ],
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'vacation': openapi.Schema(type=openapi.TYPE_INTEGER, description='Vacation request ID'),
+                'status': openapi.Schema(type=openapi.TYPE_BOOLEAN, description='If the request is accepted or denied'),
+                'message': openapi.Schema(type=openapi.TYPE_STRING, description='Message sent to the employee'),
+            },
+            required=['vacation', 'status']
+        ),
         responses={200: []}
     )
     def post(self, request, *args, **kwargs):
