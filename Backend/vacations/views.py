@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import VacationResponseSerializer, VacationAnsweredSerializer, VacationSerializer, VacationRequestSerializer
 from .models import Vacation, VacationRequest
+from drf_yasg.utils import swagger_auto_schema
 
 # Create your views here.
 class VacationResponseView(APIView):
@@ -47,6 +48,7 @@ class VacationResponseView(APIView):
     
     
 class VacationView(APIView):
+    @swagger_auto_schema(operation_description="Returns already accepted and confirmed vacations")
     def get(self, request, *args, **kwargs):
         vacations_queryset = Vacation.objects.all()
         
