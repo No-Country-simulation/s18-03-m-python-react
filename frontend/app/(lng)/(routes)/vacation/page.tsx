@@ -1,3 +1,4 @@
+import GeneralData from "@/components/molecules/GeneralData/GeneralData";
 import React from "react";
 
 function PageVacation() {

@@ -5,6 +5,7 @@ export * from './city/city.api';
 export * from './country/employee.api';
 export * from './department/department.api';
 export * from './employee/employee.api';
+export * from './entitiesAmount/entitiesAmount.api';
 export * from './province/province.api';
 export * from './role/role.api';
 export * from './team/team.api';

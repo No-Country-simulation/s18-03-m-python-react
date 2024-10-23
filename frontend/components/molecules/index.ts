@@ -4,6 +4,7 @@ export * from './CircularMenu/CircularMenu';
 export * from './CircularMenu/CircularMenuUser';
 export * from './DashboardCard/DashboardCard';
 export * from './DashboardCardList/DashboardCardList';
+export * from './GeneralData/GeneralData';
 export * from './GestionCard/GestionCard';
 export * from './GestionForm/GestionEditForm';
 export * from './GestionForm/GestionForm';
