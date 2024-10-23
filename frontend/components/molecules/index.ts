@@ -1,3 +1,4 @@
+export * from './AlertConfirm/AlertConfirm';
 export * from './BancariosForm/Bancarios';
 export * from './CardSection/CardSection';
 export * from './CircularMenu/CircularMenu';
