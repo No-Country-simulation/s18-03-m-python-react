@@ -3,6 +3,7 @@ from django.db import IntegrityError
 from django.core.management.base import BaseCommand
 from users.models import Bank, BankAccountType, Country, Province, City, Employee, Person
 from workgroups.models import Department, Role
+from vacations.models import VacationRequest, Vacation
 
 class Command(BaseCommand):
     help = 'Create an admin user'
@@ -97,5 +98,26 @@ class Command(BaseCommand):
                     )
                 except IntegrityError:
                     pass
+                
+        with open((data_dir + "vacationrequests.json"), "r") as file:
+            data = load(file)
+            
+            for vacationrequest in data:
+                vacationrequest["employee"] = Employee.objects.get(id=vacationrequest["employee"])
+                
+                created = self.load_data(VacationRequest, [vacationrequest])
+                if created:
+                    return
+            
+        with open((data_dir + "vacation.json"), "r") as file:
+            data = load(file)
+            
+            for vacation in data:
+                vacation["employee"] = Employee.objects.get(id=vacation["employee"])
+               
+                created = self.load_data(Vacation, [vacation])
+                if created:
+                    return
+                
             
         self.stdout.write(self.style.SUCCESS("Example data created succesfully"))    
