@@ -1,0 +1,72 @@
+[
+    {
+        "status": "A",
+        "message": "Enjoy your vacation!",
+        "employee": 1,
+        "start": "2024-01-01",
+        "end": "2024-01-07"
+    },
+    {
+        "status": "D",
+        "message": "Vacation request denied due to high workload",
+        "employee": 2,
+        "start": "2024-02-10",
+        "end": "2024-02-20"
+    },
+    {
+        "status": "P",
+        "message": null,
+        "employee": 3,
+        "start": "2024-03-05",
+        "end": "2024-03-15"
+    },
+    {
+        "status": "A",
+        "message": "Vacation approved",
+        "employee": 4,
+        "start": "2024-04-01",
+        "end": "2024-04-10"
+    },
+    {
+        "status": "D",
+        "message": "Denied due to conflict with another employee",
+        "employee": 5,
+        "start": "2024-05-12",
+        "end": "2024-05-20"
+    },
+    {
+        "status": "A",
+        "message": "Approved, enjoy!",
+        "employee": 6,
+        "start": "2024-06-01",
+        "end": "2024-06-15"
+    },
+    {
+        "status": "P",
+        "message": null,
+        "employee": 7,
+        "start": "2024-07-10",
+        "end": "2024-07-20"
+    },
+    {
+        "status": "A",
+        "message": "Approved, well deserved!",
+        "employee": 8,
+        "start": "2024-08-05",
+        "end": "2024-08-15"
+    },
+    {
+        "status": "D",
+        "message": "Request cannot be approved for this period",
+        "employee": 9,
+        "start": "2024-09-10",
+        "end": "2024-09-20"
+    },
+    {
+        "status": "P",
+        "message": null,
+        "employee": 10,
+        "start": "2024-10-01",
+        "end": "2024-10-10"
+    }
+]
