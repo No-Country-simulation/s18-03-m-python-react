@@ -1,5 +1,5 @@
 import calendar
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from django.db import models
 from django.db.models.functions import TruncDate
 from django.core.exceptions import ValidationError
@@ -45,9 +45,16 @@ class Assistance(models.Model):
                 employee = id,
                 entry__year=today.year,
                 entry__month=today.month
-            ).annotate(date=TruncDate('entry')).values_list('date', flat=True)
+            )
             
-            days_with_assistance = [assistance.day for assistance in month_asistance]
+            total_worked_time = timedelta()
+            
+            for assistance in month_asistance:
+                if assistance.exit:  # Asegurarse de que haya un valor de salida
+                    worked_time = assistance.exit - assistance.entry
+                    total_worked_time += worked_time
+            
+            days_with_assistance = [assistance.entry.day for assistance in month_asistance]
             
             days_without_assistance = [
                 day for day in work_days
@@ -58,6 +65,10 @@ class Assistance(models.Model):
                 date(today.year, today.month, day) for day in days_without_assistance
             ]
             
-            data[id] =  dates_without_assistance
+            data[id] = {
+                "inassistances": dates_without_assistance,
+                "hours_worked": total_worked_time.total_seconds() // 3600,
+                "days_worked": len(month_asistance),
+                } 
         
         return data
