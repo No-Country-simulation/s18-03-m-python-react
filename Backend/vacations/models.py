@@ -35,5 +35,12 @@ class VacationRequest(models.Model, VacationDatesValidation):
    
     def clean(self):
         self.custom_clean()
+        
+        diff = self.end - self.start
+        if diff.days + 1> self.employee.vacation_days:
+            raise ValidationError({
+                "end": "Not enough vacation days"
+            })
+        
         super().clean()
     
