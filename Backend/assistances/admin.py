@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Assistance, AssistanceReport
+from .models import Assistance
 
 # Register your models here.
 admin.site.register(Assistance)
-admin.site.register(AssistanceReport)
