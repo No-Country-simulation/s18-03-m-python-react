@@ -8,16 +8,17 @@ from users.models import Employee
 # Create your models here.
 class Assistance(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    entry = models.DateTimeField()
+    entry = models.DateTimeField(auto_now_add=True)
     exit = models.DateTimeField(null=True, blank=True)
         
     def clean(self):
         super().clean()
-        if self.entry > self.exit:
-            raise ValidationError({
-                'exit': "Exit time must be after entry time."
-            })
-            
+        if self.entry and self.exit:
+            if self.entry > self.exit:
+                raise ValidationError({
+                    'exit': "Exit time must be after entry time."
+                })
+                
 
     @classmethod
     def get_report(cls, month: int=None, employee_id: int=None):
@@ -72,3 +73,11 @@ class Assistance(models.Model):
                 } 
         
         return data
+    
+    
+    @classmethod
+    def get_assistance(cls, employee_id):
+        today = date.today()
+        assistance = cls.objects.get(employee=employee_id, entry__date=today, exit=None)
+        return assistance
+        
