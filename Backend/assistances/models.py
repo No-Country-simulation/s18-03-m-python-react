@@ -15,6 +15,11 @@ class Assistance(models.Model):
             raise ValidationError({
                 'exit': "Exit time must be after entry time."
             })
+            
+    @classmethod
+    def open_asistance(cls, employee_id):
+        today = datetime.today()
+        return cls.objects.filter(employee=employee_id, exit=None, entry__year=today.year, entry__month=today.month, entry__day=today.day).exists()
     
 class AssistanceReport(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
