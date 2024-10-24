@@ -6,3 +6,4 @@ export * from './menuCircular/menuCircular.interface';
 export * from './Person/Person';
 export * from './Role/Role';
 export * from './sideBar/sideBar';
+export * from './Vacation/vacation.interface';
