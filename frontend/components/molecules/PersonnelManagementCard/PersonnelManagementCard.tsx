@@ -67,7 +67,6 @@ export const PersonnelManagementCard = ({
 
   const confirmStatusChange = async() => {
     try{
-      console.log('Cambiando estado empleado', pk);
       await changeEmployeeStatus(pk);
       
       setStatus(!status);
