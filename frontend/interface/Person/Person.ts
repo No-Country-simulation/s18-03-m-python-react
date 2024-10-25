@@ -6,6 +6,7 @@ export interface Employee {
     role: string;         // Rol del empleado (se puede mejorar si hay más detalles sobre los roles)
     salary: number ;       // Salario del empleado
     working_day: string;
+    active_employee:boolean;
     // Descripción del horario laboral
   }
   
