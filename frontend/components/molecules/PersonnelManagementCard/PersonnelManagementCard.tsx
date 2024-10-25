@@ -125,9 +125,9 @@ export const PersonnelManagementCard = ({
             )}
             <div className="flex-grow">
               <h3 className="font-semibold text-lg">{name}</h3>
-              <p className="text-sm text-gray-600">{cargo}</p>
+              <p className="text-sm text-gray-600 max-w-40">{cargo}</p>
             </div>
-            <div className="flex-grow">
+            <div className="flex-grow max-w-64">
               <p className="font-semibold text-lg">{email}</p>
             </div>
 

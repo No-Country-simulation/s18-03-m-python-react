@@ -6,6 +6,7 @@ export interface Employee {
     role: string;         // Rol del empleado (se puede mejorar si hay más detalles sobre los roles)
     salary: number ;       // Salario del empleado
     working_day: string;
+    vacation_days: string;
     // Descripción del horario laboral
   }
   
@@ -26,6 +27,7 @@ export interface Employee {
     email: string;                      // Correo electrónico
     first_name: string;                 // Primer nombre
     last_name: string;                  // Apellido
-    employee?: Employee;                 // Información adicional del empleado
+    employee?: Employee;
+    status?: string;                    // Información adicional del empleado
   }
   

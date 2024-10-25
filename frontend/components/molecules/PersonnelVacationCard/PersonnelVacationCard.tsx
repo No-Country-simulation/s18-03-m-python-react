@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Skeleton,
   Button,
@@ -16,34 +16,39 @@ import {
   AlertDialogTitle,
 } from "@/components/atoms";
 import { useToast } from '@/hooks';
-import { PersonIcon } from "@radix-ui/react-icons";
-import { SuccessIcon } from '@/components/icons';
+import { ProfileIcon, SuccessIcon } from '@/components/icons';
+import Image from 'next/image';
+import { Employee } from '@/api';
 
 interface Props {
   name: string;
+  email: string;
   cargo: string;
-  initialStatus: 'in-process' | 'completed'; // Cambiado a "en proceso" y "completado"
-  imageSrc?: string;
+  initialStatus: "active" | "inactive";
+  imageSrc?: File | null;
   alt?: string;
-  periodRequested: string; // Nuevo campo: Periodo solicitado
-  totalDays: number; // Nuevo campo: Total de días
-  remainingDays: number; // Nuevo campo: Días restantes
+  pk: number;
+  employee: Employee | undefined;
+  picture_profile:File | null;
+  onSettingsClick: (pk: number) => void;
+  isMenuOpen: boolean;
+  totalDays: number;
 }
 
 export const VacationCard = ({ name, cargo, initialStatus, imageSrc, alt, periodRequested, totalDays, remainingDays }: Readonly<Props>) => {
   const [status, setStatus] = useState(initialStatus);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [newStatus, setNewStatus] = useState<'in-process' | 'completed'>(initialStatus);
   const { toast } = useToast();
 
-  useEffect(() => {
+ /*  useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, []); */
 
   const handleStatusChange = () => {
     setNewStatus(status === 'in-process' ? 'completed' : 'in-process');
@@ -71,7 +76,8 @@ export const VacationCard = ({ name, cargo, initialStatus, imageSrc, alt, period
   };
 
   return (
-    <>
+    <section className=''>
+      
       {isLoading ? (
         <Card className="w-full mx-auto px-5 mb-4 overflow-hidden">
           <CardContent className="flex items-center p-4">
@@ -87,32 +93,35 @@ export const VacationCard = ({ name, cargo, initialStatus, imageSrc, alt, period
         <Card className={`w-full mx-auto px-5 mb-4 overflow-hidden ${
           status === 'in-process' ? 'border-l-8 border-l-yellow-500' : 'border-l-8 border-l-green-500'
         } ${isConfirmOpen ? 'blur-sm' : ''}`}>
-          <CardContent className="flex items-center p-4">
-            {!imageSrc ? (
-              <div className="w-12 h-12 rounded-full bg-base-primary flex items-center justify-center mr-4">
-                <PersonIcon className="w-8 h-8 text-base-secondary" />
+          <CardContent className="flex items-center justify-between p-4">
+            <section className='flex w-64 gap-3'>
+
+          {!imageSrc ? (
+              <div className="w-12 h-12 rounded-ful flex items-center justify-center mr-5">
+                <ProfileIcon />
               </div>
             ) : (
-              <img
-                className="rounded-full mr-4"
-                src={imageSrc}
+              <Image
+                className="rounded-full "
+                src={imageSrc ? `http://localhost:8000${imageSrc}` : "http://i.pravatar.cc/304"}
                 alt={alt ?? `Profile picture of ${name}`}
                 width={50}
                 height={50}
               />
             )}
-            <div className="flex-grow">
+            <div className="">
               <h3 className="font-semibold text-lg">{name}</h3>
               <p className="text-sm text-gray-600">{cargo}</p>
             </div>
-            <div  className="flex-grow">
-              <p className="text-sm text-gray-600">{periodRequested}</p>
+            </section>
+            <div  className="">
+              <p className="text-sm text-gray-600">12/05/2023</p>
             </div>
-            <div  className="flex-grow">
-              <p className="text-sm text-gray-600">{totalDays}</p>
+            <div  className=" ">
+              <p className="text-sm text-gray-600">{totalDays} dias</p>
             </div>
-            <div  className="flex-grow">
-              <p className="text-sm text-gray-600">{remainingDays}</p>
+            <div  className="">
+              <p className="text-sm text-gray-600">12 dias</p>
             </div>    
 
             <Button
@@ -142,6 +151,6 @@ export const VacationCard = ({ name, cargo, initialStatus, imageSrc, alt, period
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </section>
   );
 };
