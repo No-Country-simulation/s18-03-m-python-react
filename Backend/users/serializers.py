@@ -145,6 +145,7 @@ class PersonSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         try:
             employee = Employee.objects.get(person=instance)
+            pk = employee.pk
             employee_data = {
                 "start_date": employee.start_date if employee.start_date else None,
                 "department": employee.department.title if employee.department else None,
@@ -156,10 +157,10 @@ class PersonSerializer(serializers.ModelSerializer):
                 "active_employee": employee.active_employee if employee.active_employee is not None else None
             }
         except Employee.DoesNotExist:
-            employee_data = None
+            return
 
         representation = {
-            'pk': instance.pk if instance.pk else None,
+            'pk': pk,
             'dni': instance.dni if instance.dni else None,
             'phone_number': instance.phone_number if instance.phone_number else None,
             'birth': instance.birth if instance.birth else None,

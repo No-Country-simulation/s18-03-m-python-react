@@ -83,6 +83,13 @@ class PersonViewSet(viewsets.ModelViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
     
+    def get_object(self):
+        
+        employee =  Employee.objects.get(id=self.kwargs["pk"])
+        self.kwargs["pk"] = employee.person.id
+        
+        return super().get_object()
+    
 
 class ProfilePictureView(APIView):
     parser_classes = (MultiPartParser, FormParser)
