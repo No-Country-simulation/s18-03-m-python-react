@@ -1,42 +1,35 @@
-'use client'
-import { LogoIcon, ProfileIcon, SearchIcon } from '@/components/icons';
-import { Button, Card, CardContent, Input } from '@/components/atoms';
-import { useEffect, useMemo, useState } from 'react';
-import { VacationCard } from '../PersonnelVacationCard/PersonnelVacationCard'; // Asegúrate de crear este nuevo componente.
+'use client';
+import { ProfileIcon, SearchIcon } from '@/components/icons';
+import { Button,Input } from '@/components/atoms';
+import { useEffect, useState } from 'react';
+import { VacationCard } from '../PersonnelVacationCard/PersonnelVacationCard';
 import { VacationForm } from '../VacationForm/VacationForm';
 import { Person } from '@/interface';
 import { getVacationList } from '@/api/vacations/vacation.api';
 
 interface Vacation {
+  pk: number;
   id: string;
   name: string;
   cargo: string;
-  status: 'in-process' | 'completed'; // Cambiado a 'en proceso' y 'completado'
+  status: 'in-process' | 'completed';
   imageSrc?: string;
   alt?: string;
-  periodRequested: string; // Periodo solicitado en formato fecha
-  totalDays: number; // Total de días
-  remainingDays: number; // Días restantes
+  periodRequested: string;
+  totalDays: number;
+  remainingDays: number;
 }
 
-const filterUsers = (users: Person[], query: string) => {
+/* const filterUsers = (users: Person[], query: string) => {
   if (!query) return users;
   return users.filter(
     (user) =>
       user.first_name.toLowerCase().includes(query.toLowerCase()) ||
       user.email.toLowerCase().includes(query.toLowerCase())
   );
-};
-
-/* const filterVacations = (vacations: Person[], query: string) => {
-  if (!query) return vacations;
-  return filterUsers.filter(vacation =>
-    vacation.name.toLowerCase().includes(query.toLowerCase()) ||
-    vacation.cargo.toLowerCase().includes(query.toLowerCase())
-  );
 }; */
 
-const SearchBar = ({ searchQuery, setSearchQuery }: { searchQuery: string, setSearchQuery: (query: string) => void }) => (
+const SearchBar = ({ searchQuery, setSearchQuery }: { searchQuery: string; setSearchQuery: (query: string) => void }) => (
   <div className="relative w-full max-w-md">
     <Input
       type="text"
@@ -56,22 +49,22 @@ export const PersonnelVacationCardList = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [employeesList, setEmployeesList] = useState<Person[]>([]);
   const [vacationsList, setVacationsList] = useState<Vacation[]>([]);
+  const [employeesWithVacations, setEmployeesWithVacations] = useState<Person[]>([]);
 
   useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const vacationList= await getVacationList();
-      if(Array.isArray(vacationList)) {
-        sessionStorage.setItem("vacationList", JSON.stringify(vacationList));
-        setVacationsList(vacationList);
+    const fetchData = async () => {
+      try {
+        const vacationList = await getVacationList();
+        if (Array.isArray(vacationList)) {
+          sessionStorage.setItem("vacationList", JSON.stringify(vacationList));
+          setVacationsList(vacationList);
+        }
+      } catch (error) {
+        console.error('Ocurrió un error al obtener la lista de vacaciones', error);
       }
-    } catch (error) {
-      console.error('Ocurrio un error al obtener la lista de vacaciones', error);
-    }
-  }
+    };
 
-  fetchData();
-   
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -81,10 +74,27 @@ export const PersonnelVacationCardList = () => {
 
     setEmployeesList(empList);
   }, []);
-  const filteredUsers = useMemo(
+
+  useEffect(() => {
+    if (employeesList.length > 0 && vacationsList.length > 0) {
+      const combinedList = employeesList.map(employee => {
+        const employeeVacations = vacationsList.filter(vacation => vacation.pk === employee.pk); // Asegúrate de usar la propiedad correcta para el pk
+        return {
+          ...employee,
+          vacations: employeeVacations
+        };
+      });
+      setEmployeesWithVacations(combinedList);
+    }
+  }, [employeesList, vacationsList]);
+
+
+  
+/*   const filteredUsers = useMemo(
     () => filterUsers(employeesList, searchQuery),
-    [employeesList, searchQuery] // Asegúrate de que el filtro dependa de employeesList también
-  );
+    [employeesList, searchQuery]
+  ); */
+  console.log(employeesWithVacations)
 
   return (
     <div className="container mx-auto p-4 shadow">
@@ -93,62 +103,60 @@ export const PersonnelVacationCardList = () => {
         <span className="pr-12">
           <Button 
             onClick={() => setIsOpen(!isOpen)}
-            className='bg-base-primary text-white'>Agregar Vación</Button>
+            className='bg-base-primary text-white'>Agregar Vacación</Button>
         </span>
       </div>
 
-          {/* Renderizar el formulario si isOpen es true */}
-          {isOpen && (
+      {isOpen && (
         <div className="mt-4">
           <VacationForm isOpen={isOpen} onClose={() => setIsOpen(false)} />
         </div>
       )}
 
       <div className="bg-white p-4 rounded-lg">
-      <section className=''>
-        <div className={`w-full mx-auto px-5 overflow-hidden`}>
-          <div className="flex items-center justify-between">
-            <section className='flex w-64 gap-3'>
+        <section>
+          <div className={`w-full mx-auto px-5 overflow-hidden`}>
+            <div className="flex items-center justify-between">
+              <section className='flex w-64 gap-3'>
+                <div className="w-12 h-12 rounded-full flex items-center justify-center mr-5">
+                  <ProfileIcon className="opacity-0" />
+                </div>
+                <div className="opacity-0">
+                  <h3 className="font-semibold text-lg">dasdasdasd</h3>
+                  <p className="text-sm text-gray-600">dasdasdasdas</p>
+                </div>
+              </section>
+            <div>
+              <p className=""></p>
+            </div>
 
-              <div className="w-12 h-12 rounded-ful flex items-center justify-center mr-5">
-                <ProfileIcon className="hidden " />
+              <div className="">
+                <p className="text-sm text-gray-400 font-semibold uppercase">pedido solicitado</p>
               </div>
- 
-            <div className="">
-              <h3 className="font-semibold text-lg"></h3>
-              <p className="text-sm text-gray-600"></p>
+              <div className="">
+                <p className="text-sm text-gray-400 font-semibold uppercase">total de días</p>
+              </div>
+              <div className="text-left">
+                <p className="text-sm text-gray-400 font-semibold uppercase">días restantes</p>
+              </div>
+              <div className='opacity-0'>
+                <p className="text-sm text-gray-400 font-semibold uppercase">estado  de la vida</p>
+              </div>
             </div>
-            </section>
-            <div  className="">
-              <p className="text-sm text-gray-400 font-semibold uppercase">pedido solicitado</p>
-            </div>
-            <div  className=" ">
-              <p className="text-sm text-gray-400 font-semibold uppercase">total de dias</p>
-            </div>
-            <div  className="">
-              <p className="text-sm text-gray-400 font-semibold uppercase">dias restantes</p>
-            </div>    
-
-            <Button
-              className={`ml-2 w-24 h-10 text-white`}
-            >
-              {status === 'in-process' ? 'En proceso' : 'Completado'}
-            </Button>
           </div>
-        </div>
-    </section>
-        {employeesList.length > 0 ? (
-          filteredUsers.map(({ pk, first_name, employee, status, profile_picture, alt, periodRequested,remainingDays }) => (
+        </section>
+
+        {vacationsList.length > 0 ? (
+          employeesWithVacations.map(({ pk, first_name, employee,profile_picture, alt,vacations }) => (
             <VacationCard
               key={pk}
               name={first_name}
               cargo={employee?.role}
-              initialStatus={status}
               imageSrc={profile_picture}
               alt={alt}
-              periodRequested={periodRequested}
-              totalDays={employee.vacation_days}
-              remainingDays={remainingDays}
+              vacations={vacations}
+              totalDays={employee?.vacation_days }
+       
             />
           ))
         ) : (
@@ -158,4 +166,3 @@ export const PersonnelVacationCardList = () => {
     </div>
   );
 };
-

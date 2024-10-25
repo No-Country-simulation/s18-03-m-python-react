@@ -1,156 +1,140 @@
-'use client'
-
-import { useState } from 'react';
-import {
-  Skeleton,
-  Button,
-  Card,
-  CardContent,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/atoms";
-import { useToast } from '@/hooks';
-import { ProfileIcon, SuccessIcon } from '@/components/icons';
-import Image from 'next/image';
-import { Employee } from '@/api';
+import { useEffect, useState } from "react";
+import { Card, CardContent } from "@/components/atoms";
+import { useToastAlerts } from "@/hooks/UseToast/useToastAlerts"; // Asegúrate de que la ruta sea correcta
+import { ProfileIcon } from "@/components/icons";
+import Image from "next/image";
+import { Employee } from "@/api";
+import { cn } from "@/lib/cn/utils";
+import { responseVacation } from "@/api/vacations/vacation.api";
 
 interface Props {
   name: string;
   email: string;
-  cargo: string;
-  initialStatus: "active" | "inactive";
+  cargo: string | null | undefined;
+  initialStatus: "P" | "A" | "D"; // P: En proceso, A: Aceptado, D: Rechazado
   imageSrc?: File | null;
   alt?: string;
   pk: number;
   employee: Employee | undefined;
-  picture_profile:File | null;
+  picture_profile: File | null;
   onSettingsClick: (pk: number) => void;
-  isMenuOpen: boolean;
   totalDays: number;
+  vacations: { pk: number; start: string; end: string; status: "P" | "A" | "D" }[];
 }
 
-export const VacationCard = ({ name, cargo, initialStatus, imageSrc, alt, periodRequested, totalDays, remainingDays }: Readonly<Props>) => {
-  const [status, setStatus] = useState(initialStatus);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [newStatus, setNewStatus] = useState<'in-process' | 'completed'>(initialStatus);
-  const { toast } = useToast();
+export const VacationCard = ({
+  name,
+  cargo,
+  imageSrc,
+  alt,
+  totalDays,
+  vacations,
+}: Readonly<Props>) => {
+  const [status, setStatus] = useState(vacations?.[0]?.status);
+  const [remainingDays, setRemainingDays] = useState(0);
 
- /*  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
+  const { toastSuccess, toastError } = useToastAlerts(); // Utiliza el hook aquí
 
-    return () => clearTimeout(timer);
-  }, []); */
+  useEffect(() => {
+    if (vacations?.[0]?.start && vacations?.[0]?.end) {
+      const startDate = new Date(vacations[0].start);
+      const endDate = new Date(vacations[0].end);
 
-  const handleStatusChange = () => {
-    setNewStatus(status === 'in-process' ? 'completed' : 'in-process');
-    setIsConfirmOpen(true);
-  };
+      startDate.setHours(0, 0, 0, 0);
+      endDate.setHours(0, 0, 0, 0);
 
-  const confirmStatusChange = () => {
+      const timeDifference = endDate.getTime() - startDate.getTime();
+      const totalVacationDays = Math.ceil(
+        timeDifference / (1000 * 60 * 60 * 24)
+      );
+
+      const calculatedRemainingDays = totalDays - totalVacationDays;
+      setRemainingDays(
+        calculatedRemainingDays > 0 ? calculatedRemainingDays : 0
+      );
+    }
+  }, [vacations, totalDays]);
+
+  const handleStatusChange = async (newStatus: "A" | "D" | "P") => {
     setStatus(newStatus);
-    setIsConfirmOpen(false);
-    toast({
-      title: "Estado actualizado",
-      description: `El estado de la solicitud de ${name} ahora es ${newStatus === 'in-process' ? 'en proceso' : 'completado'}.`,
-      className: "bg-green-500 text-white",
-    });
-  };
 
-  const cancelStatusChange = () => {
-    setIsConfirmOpen(false);
-    toast({
-      children: <SuccessIcon />,
-      title: "Cambio cancelado",
-      description: `El estado de la solicitud de ${name} no ha sido modificado.`,
-      className: "bg-yellow-500 text-white",
-    });
+    const message = newStatus === "A"
+      ? "Vacaciones aceptadas."
+      : "Vacaciones rechazadas.";
+
+    try {
+      // Realiza la llamada al backend
+      const response = await responseVacation({
+        vacation: vacations?.[0]?.pk,
+        status: newStatus === "A",
+        message,
+      });
+      
+      // Muestra el mensaje de éxito
+      toastSuccess("Éxito", response);
+    } catch (error) { // Asegúrate de manejar el error correctamente
+      const errorMessage = error?.response?.data?.vacation?.[0] || "Error desconocido";
+      toastError("Error", errorMessage);
+    }
   };
 
   return (
-    <section className=''>
-      
-      {isLoading ? (
-        <Card className="w-full mx-auto px-5 mb-4 overflow-hidden">
-          <CardContent className="flex items-center p-4">
-            <Skeleton className="h-12 w-12 rounded-full mr-4" />
-            <div className="flex-grow">
-              <Skeleton className="h-4 w-3/4 mb-2" />
-              <Skeleton className="h-3 w-1/2" />
-            </div>
-            <Skeleton className="h-8 w-20 ml-2" />
-          </CardContent>
-        </Card>
-      ) : (
-        <Card className={`w-full mx-auto px-5 mb-4 overflow-hidden ${
-          status === 'in-process' ? 'border-l-8 border-l-yellow-500' : 'border-l-8 border-l-green-500'
-        } ${isConfirmOpen ? 'blur-sm' : ''}`}>
-          <CardContent className="flex items-center justify-between p-4">
-            <section className='flex w-64 gap-3'>
-
-          {!imageSrc ? (
-              <div className="w-12 h-12 rounded-ful flex items-center justify-center mr-5">
+    <section className="">
+      <Card
+        className={cn(
+          "w-full mx-auto px-5 mb-4 overflow-hidden",
+          status === "P" ? "border-l-8 border-l-yellow-500" :
+          status === "A" ? "border-l-8 border-l-green-500" :
+          "border-l-8 border-l-red-500"
+        )}
+      >
+        <CardContent className="flex items-center justify-between p-4">
+          <section className="flex w-64 gap-3">
+            {!imageSrc ? (
+              <div className="w-12 h-12 rounded-full flex items-center justify-center mr-5">
                 <ProfileIcon />
               </div>
             ) : (
               <Image
-                className="rounded-full "
+                className="rounded-full"
                 src={imageSrc ? `http://localhost:8000${imageSrc}` : "http://i.pravatar.cc/304"}
                 alt={alt ?? `Profile picture of ${name}`}
                 width={50}
                 height={50}
               />
             )}
-            <div className="">
+            <div>
               <h3 className="font-semibold text-lg">{name}</h3>
               <p className="text-sm text-gray-600">{cargo}</p>
             </div>
-            </section>
-            <div  className="">
-              <p className="text-sm text-gray-600">12/05/2023</p>
-            </div>
-            <div  className=" ">
-              <p className="text-sm text-gray-600">{totalDays} dias</p>
-            </div>
-            <div  className="">
-              <p className="text-sm text-gray-600">12 dias</p>
-            </div>    
+          </section>
+          <div>
+            <p className="text-sm text-gray-600">{vacations[0]?.start} - {vacations[0]?.end}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">{totalDays} días</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">{remainingDays} días</p>
+          </div>
 
-            <Button
-              onClick={handleStatusChange}
-              className={`ml-2 w-24 h-10 text-white ${
-                status === 'in-process'
-                  ? 'bg-yellow-500 hover:bg-yellow-600'
-                  : 'bg-green-500 hover:bg-green-600'
-              }`}
-            >
-              {status === 'in-process' ? 'En proceso' : 'Completado'}
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-      <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirmar cambio de estado</AlertDialogTitle>
-            <AlertDialogDescription>
-              ¿Estás seguro de que quieres cambiar el estado de la solicitud de {name} a {newStatus === 'in-process' ? 'en proceso' : 'completado'}?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={cancelStatusChange}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmStatusChange}>Confirmar</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+          <select
+            className={cn(
+              "ml-2 w-24 h-10 text-white appearance-none rounded-md py-2 px-3 leading-tight focus:outline-none focus:shadow-outline",
+              status === "P" ? "bg-yellow-500 cursor-pointer" :
+              status === "A" ? "bg-green-500 cursor-not-allowed" :
+              "bg-red-500 cursor-not-allowed"
+            )}
+            value={status}
+            onChange={(e) => handleStatusChange(e.target.value as "A" | "D" | "P")}
+            disabled={status === "A" || status === "D"}
+          >
+            <option value="P">En proceso</option>
+            <option value="A">Aceptado</option>
+            <option value="D">Rechazado</option>
+          </select>
+        </CardContent>
+      </Card>
     </section>
   );
 };
