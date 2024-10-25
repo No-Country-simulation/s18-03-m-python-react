@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import VacationResponseSerializer, VacationAnsweredSerializer, VacationSerializer, VacationRequestSerializer
 from .models import Vacation, VacationRequest
+from users.models import Employee
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
@@ -47,11 +48,19 @@ class VacationResponseView(APIView):
         if message:
             vacation_request.message = validated_data["message"]
         
+        employee = Employee.objects.get(id=vacation_request.employee.id)
+        
         if accepted:
             vacation_request.status = "A"
+            diff = vacation_request.end - vacation_request.start
+            if diff.days > vacation_request.employee.vacation_days:
+                return Response({"message": "Not enough vacation days"})
             vacation_obj = Vacation(employee=vacation_request.employee, start=vacation_request.start, end=vacation_request.end)
             vacation_obj.full_clean()
             vacation_obj.save()
+            employee.vacation_days -= diff.days + 1
+            employee.save()
+            
         else:
             vacation_request.status = "D"
             

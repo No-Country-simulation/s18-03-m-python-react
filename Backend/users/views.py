@@ -83,14 +83,22 @@ class PersonViewSet(viewsets.ModelViewSet):
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
     
+    def get_object(self):
+        
+        employee =  Employee.objects.get(id=self.kwargs["pk"])
+        self.kwargs["pk"] = employee.person.id
+        
+        return super().get_object()
+    
 
 class ProfilePictureView(APIView):
     parser_classes = (MultiPartParser, FormParser)
     
     def post(self, request, pk):
         try:
-            obj = Person.objects.get(pk=pk)
-        except Person.DoesNotExist:
+            employee_obj = Employee.objects.get(pk=pk)
+            obj = employee_obj.person
+        except Employee.DoesNotExist:
             return Response({'error': 'Person not found'}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = ProfilePictureSerializer(obj, data=request.data, partial=True)
@@ -103,8 +111,8 @@ class ProfilePictureView(APIView):
 class ActiveEmployeeView(APIView):
     def post(self, request, pk):
         try:
-            obj = Employee.objects.get(person=Person.objects.get(pk=pk))
-        except (Person.DoesNotExist, Employee.DoesNotExist):
+            obj = Employee.objects.get(pk=pk)
+        except (Employee.DoesNotExist):
             return Response({"message": "Employee not found"}, status=status.HTTP_404_NOT_FOUND)
         
         obj.active_employee = not obj.active_employee
