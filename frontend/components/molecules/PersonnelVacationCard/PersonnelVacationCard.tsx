@@ -8,7 +8,7 @@ import { cn } from "@/lib/cn/utils";
 import { responseVacation } from "@/api/vacations/vacation.api";
 
 interface Props {
-  name: string;
+  name: string | null | undefined;
   email: string;
   cargo: string | null | undefined;
   initialStatus: "P" | "A" | "D"; // P: En proceso, A: Aceptado, D: Rechazado
@@ -16,10 +16,14 @@ interface Props {
   alt?: string;
   pk: number;
   employee: Employee | undefined;
+  vacation_days: number | null | undefined;
+  
   picture_profile: File | null;
   onSettingsClick: (pk: number) => void;
-  totalDays: number;
-  vacations: { pk: number; start: string; end: string; status: "P" | "A" | "D" }[];
+  totalDays: number ;
+  startDay: string | null | undefined;
+  endDay: string;
+  status: "P" | "A" | "D";
 }
 
 export const VacationCard = ({
@@ -28,55 +32,54 @@ export const VacationCard = ({
   imageSrc,
   alt,
   totalDays,
-  vacations,
+  startDay,
+  endDay,
+  status,
+  pk,
 }: Readonly<Props>) => {
-  const [status, setStatus] = useState(vacations?.[0]?.status);
   const [remainingDays, setRemainingDays] = useState(0);
-
   const { toastSuccess, toastError } = useToastAlerts(); // Utiliza el hook aquí
 
   useEffect(() => {
-    if (vacations?.[0]?.start && vacations?.[0]?.end) {
-      const startDate = new Date(vacations[0].start);
-      const endDate = new Date(vacations[0].end);
+    if (startDay && endDay) {
+      const startDate = new Date(startDay);
+      const endDate = new Date(endDay);
 
       startDate.setHours(0, 0, 0, 0);
       endDate.setHours(0, 0, 0, 0);
 
       const timeDifference = endDate.getTime() - startDate.getTime();
-      const totalVacationDays = Math.ceil(
-        timeDifference / (1000 * 60 * 60 * 24)
-      );
+      const totalVacationDays = Math.ceil(timeDifference / (1000 * 60 * 60 * 24)) + 1; // +1 para incluir el día de inicio
 
       const calculatedRemainingDays = totalDays - totalVacationDays;
-      setRemainingDays(
-        calculatedRemainingDays > 0 ? calculatedRemainingDays : 0
-      );
+      setRemainingDays(calculatedRemainingDays > 0 ? calculatedRemainingDays : 0);
     }
-  }, [vacations, totalDays]);
+  }, [startDay, endDay, totalDays]); // Añadimos startDay y endDay como dependencias
 
   const handleStatusChange = async (newStatus: "A" | "D" | "P") => {
-    setStatus(newStatus);
-
-    const message = newStatus === "A"
-      ? "Vacaciones aceptadas."
-      : "Vacaciones rechazadas.";
-
+    // Definir el mensaje según el nuevo estado
+    const message = newStatus === "A" ? "Vacaciones aceptadas." : "Vacaciones rechazadas.";
+  
+    // Crea el objeto con la estructura que necesita el backend
+  
+  
     try {
       // Realiza la llamada al backend
       const response = await responseVacation({
-        vacation: vacations?.[0]?.pk,
-        status: newStatus === "A",
-        message,
+        vacation: pk, // El estado actual de la solicitud
+        status: newStatus === "A", // Aquí se usa el nuevo estado (A o D)
+        message: message, // Mensaje a enviar
       });
-      
+  
       // Muestra el mensaje de éxito
-      toastSuccess("Éxito", response);
-    } catch (error) { // Asegúrate de manejar el error correctamente
-      const errorMessage = error?.response?.data?.vacation?.[0] || "Error desconocido";
+      toastSuccess("Éxito", response?.message); // Asumiendo que la respuesta tiene un mensaje
+    } catch (error) {
+      // Maneja el error correctamente
+      const errorMessage = error instanceof Error ? error.message : "Error al cambiar el estado de la petición";
       toastError("Error", errorMessage);
     }
   };
+  
 
   return (
     <section className="">
@@ -109,7 +112,7 @@ export const VacationCard = ({
             </div>
           </section>
           <div>
-            <p className="text-sm text-gray-600">{vacations[0]?.start} - {vacations[0]?.end}</p>
+            <p>{startDay} - {endDay}</p>
           </div>
           <div>
             <p className="text-sm text-gray-600">{totalDays} días</p>

@@ -1,23 +1,34 @@
-'use client';
-import { ProfileIcon, SearchIcon } from '@/components/icons';
-import { Button,Input } from '@/components/atoms';
-import { useEffect, useState } from 'react';
-import { VacationCard } from '../PersonnelVacationCard/PersonnelVacationCard';
-import { VacationForm } from '../VacationForm/VacationForm';
-import { Person } from '@/interface';
-import { getVacationList } from '@/api/vacations/vacation.api';
+"use client";
+import { ProfileIcon, SearchIcon } from "@/components/icons";
+import { Button, Input } from "@/components/atoms";
+import { useEffect, useState } from "react";
+import { VacationCard } from "../PersonnelVacationCard/PersonnelVacationCard";
+import { VacationForm } from "../VacationForm/VacationForm";
+import { getVacationList } from "@/api/vacations/vacation.api";
 
 interface Vacation {
   pk: number;
   id: string;
   name: string;
   cargo: string;
-  status: 'in-process' | 'completed';
+  status: "P" | "A" | "D";
   imageSrc?: string;
   alt?: string;
   periodRequested: string;
   totalDays: number;
   remainingDays: number;
+  startDay: string;
+  endDay: string;
+  profile_picture: File;
+  end: string;
+  start: string;
+  message?: string | null;
+  employee?: {
+    first_name: string;
+    last_name: string;
+    role: string;
+    vacation_days: number;
+  };
 }
 
 /* const filterUsers = (users: Person[], query: string) => {
@@ -29,7 +40,13 @@ interface Vacation {
   );
 }; */
 
-const SearchBar = ({ searchQuery, setSearchQuery }: { searchQuery: string; setSearchQuery: (query: string) => void }) => (
+const SearchBar = ({
+  searchQuery,
+  setSearchQuery,
+}: {
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+}) => (
   <div className="relative w-full max-w-md">
     <Input
       type="text"
@@ -45,11 +62,9 @@ const SearchBar = ({ searchQuery, setSearchQuery }: { searchQuery: string; setSe
 );
 
 export const PersonnelVacationCardList = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [employeesList, setEmployeesList] = useState<Person[]>([]);
   const [vacationsList, setVacationsList] = useState<Vacation[]>([]);
-  const [employeesWithVacations, setEmployeesWithVacations] = useState<Person[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,50 +75,27 @@ export const PersonnelVacationCardList = () => {
           setVacationsList(vacationList);
         }
       } catch (error) {
-        console.error('Ocurrió un error al obtener la lista de vacaciones', error);
+        console.error(
+          "Ocurrió un error al obtener la lista de vacaciones",
+          error
+        );
       }
     };
 
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const empList = JSON.parse(
-      sessionStorage.getItem("employees") ?? "[]"
-    ) as Person[];
-
-    setEmployeesList(empList);
-  }, []);
-
-  useEffect(() => {
-    if (employeesList.length > 0 && vacationsList.length > 0) {
-      const combinedList = employeesList.map(employee => {
-        const employeeVacations = vacationsList.filter(vacation => vacation.pk === employee.pk); // Asegúrate de usar la propiedad correcta para el pk
-        return {
-          ...employee,
-          vacations: employeeVacations
-        };
-      });
-      setEmployeesWithVacations(combinedList);
-    }
-  }, [employeesList, vacationsList]);
-
-
-  
-/*   const filteredUsers = useMemo(
-    () => filterUsers(employeesList, searchQuery),
-    [employeesList, searchQuery]
-  ); */
-  console.log(employeesWithVacations)
-
   return (
     <div className="container mx-auto p-4 shadow">
       <div className="flex flex-row justify-between px-4 items-center space-x-4">
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <span className="pr-12">
-          <Button 
+          <Button
             onClick={() => setIsOpen(!isOpen)}
-            className='bg-base-primary text-white'>Agregar Vacación</Button>
+            className="bg-base-primary text-white"
+          >
+            Agregar Vacación
+          </Button>
         </span>
       </div>
 
@@ -117,7 +109,7 @@ export const PersonnelVacationCardList = () => {
         <section>
           <div className={`w-full mx-auto px-5 overflow-hidden`}>
             <div className="flex items-center justify-between">
-              <section className='flex w-64 gap-3'>
+              <section className="flex w-64 gap-3">
                 <div className="w-12 h-12 rounded-full flex items-center justify-center mr-5">
                   <ProfileIcon className="opacity-0" />
                 </div>
@@ -126,41 +118,63 @@ export const PersonnelVacationCardList = () => {
                   <p className="text-sm text-gray-600">dasdasdasdas</p>
                 </div>
               </section>
-            <div>
-              <p className=""></p>
-            </div>
+              <div>
+                <p className=""></p>
+              </div>
 
               <div className="">
-                <p className="text-sm text-gray-400 font-semibold uppercase">pedido solicitado</p>
+                <p className="text-sm text-gray-400 font-semibold uppercase">
+                  pedido solicitado
+                </p>
               </div>
               <div className="">
-                <p className="text-sm text-gray-400 font-semibold uppercase">total de días</p>
+                <p className="text-sm text-gray-400 font-semibold uppercase">
+                  total de días
+                </p>
               </div>
               <div className="text-left">
-                <p className="text-sm text-gray-400 font-semibold uppercase">días restantes</p>
+                <p className="text-sm text-gray-400 font-semibold uppercase">
+                  días restantes
+                </p>
               </div>
-              <div className='opacity-0'>
-                <p className="text-sm text-gray-400 font-semibold uppercase">estado  de la vida</p>
+              <div className="opacity-0">
+                <p className="text-sm text-gray-400 font-semibold uppercase">
+                  estado de la vida
+                </p>
               </div>
             </div>
           </div>
         </section>
 
         {vacationsList.length > 0 ? (
-          employeesWithVacations.map(({ pk, first_name, employee,profile_picture, alt,vacations }) => (
-            <VacationCard
-              key={pk}
-              name={first_name}
-              cargo={employee?.role}
-              imageSrc={profile_picture}
-              alt={alt}
-              vacations={vacations}
-              totalDays={employee?.vacation_days }
-       
-            />
-          ))
+          vacationsList.map(
+            ({ pk, employee, profile_picture, alt, end, start, status }) => (
+              <VacationCard
+                key={pk}
+                name={employee?.first_name}
+                cargo={employee?.role}
+                imageSrc={profile_picture}
+                alt={alt}
+                startDay={start}
+                endDay={end}
+                status={status}
+                totalDays={employee?.vacation_days}
+                pk={pk}
+                email={""}
+                initialStatus={"P"}
+                employee={undefined}
+                vacation_days={undefined}
+                picture_profile={null}
+                onSettingsClick={function (): void {
+                  throw new Error("Function not implemented.");
+                }}
+              />
+            )
+          )
         ) : (
-          <div className="text-2xl px-20 text-base-primary animate-blink">No hay solicitudes de vacaciones</div>
+          <div className="text-2xl px-20 text-base-primary animate-blink">
+            No hay solicitudes de vacaciones
+          </div>
         )}
       </div>
     </div>
