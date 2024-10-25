@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import VacationRequest, Vacation
+from users.models import Employee
 from django.core.exceptions import ValidationError
 
 class VacationRequestSerializer(serializers.ModelSerializer):
@@ -19,6 +20,23 @@ class VacationRequestSerializer(serializers.ModelSerializer):
         except ValidationError as e:
             raise serializers.ValidationError({"detail": e.messages})
         return vacation_request
+    
+    def to_representation(self, instance):
+        data = {
+            "pk": instance.pk,
+            "start": instance.start,
+            "end": instance.end,
+            "status": instance.status,
+            "message": instance.message,
+            "employee": {
+                "pk": instance.employee.pk,
+                "first_name": instance.employee.person.first_name,
+                "last_name": instance.employee.person.last_name,
+                "role": instance.employee.role.title,
+                "profile_picture": instance.employee.person.profile_picture.url
+            }
+        }
+        return data
     
     
 class VacationResponseSerializer(serializers.Serializer):
