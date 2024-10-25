@@ -4,9 +4,13 @@ import {
   DashboardCardList,
   HeaderContainer
 } from "@/components/molecules"
+import { useEmployeeStore } from "@/store";
 import { useEffect } from "react";
 
 export const DashboardContainer = () => {
+  const employee = useEmployeeStore(state => state.employee);
+  console.log('employee', employee);
+  console.log('employee', employee?.[6]);
   useEffect(() => {
     const fetchData = async () => {
       try {

@@ -1,4 +1,4 @@
-import { API_URL } from "../base";
+import { API_URL } from "../base/base";
 import axios from "axios";
 
 export const getTeamList = async () => {

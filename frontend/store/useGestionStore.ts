@@ -15,7 +15,9 @@ interface GestionStore {
 }
 
 // Creación de la tienda con Zustand
-export const useGestionStore = create<GestionStore>((set) => ({
+export const useGestionStore = create<GestionStore>(
+
+  (set) => ({
   formData: {
     pk: "",
     name: "",

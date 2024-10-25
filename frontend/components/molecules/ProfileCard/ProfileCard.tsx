@@ -11,12 +11,12 @@ import CardSection from "../CardSection/CardSection";
 import ProfileCardAvatar from "../ProfileCardAvatar/ProfileCardAvatar";
 import { cn } from "@/lib";
 import { useState } from "react";
-import "./profilecard.css";
 import { CopyIcon } from "lucide-react";
 import IconSpan from "@/components/atoms/IconSpan";
 import BadgeSpan from "@/components/atoms/BadgeSpan";
 import { useToast } from "@/hooks";
 import { Person } from "@/interface/Person/Person";
+import "./profilecard.css";
 
 // Estilos comunes
 const commonText = "font-semibold text-sm";

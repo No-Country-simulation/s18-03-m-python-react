@@ -1,6 +1,6 @@
 export * from './bank/bank.api';
 export * from './bankaccount/bankaccount.api';
-export * from './base';
+export * from './base/base';
 export * from './city/city.api';
 export * from './country/employee.api';
 export * from './department/department.api';

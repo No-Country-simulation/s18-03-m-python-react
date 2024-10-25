@@ -13,6 +13,8 @@
   "aliases": {
     "components": "@/components",
     "utils": "@/lib",
+    "api": "@/api",
+    "store": "@/store",
     "atoms": "@/components/atoms",
     "molecules": "@/components/molecules",
     "organisms": "@/components/organisms",

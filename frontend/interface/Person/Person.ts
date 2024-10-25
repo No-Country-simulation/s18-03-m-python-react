@@ -8,7 +8,7 @@ export interface Employee {
     working_day: string;
     // Descripción del horario laboral
   }
-  
+
   // Interfaz principal
   export interface Person {
     pk: number;                         // Identificador único (primary key)
@@ -28,4 +28,3 @@ export interface Employee {
     last_name: string;                  // Apellido
     employee?: Employee;                 // Información adicional del empleado
   }
-  

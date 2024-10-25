@@ -59,7 +59,7 @@ const filteredUsers = useMemo(
   () => filterUsers(employeesList, searchQuery),
   [employeesList, searchQuery] // Asegúrate de que el filtro dependa de employeesList también
 );
- 
+
   const closeCircularMenu = () => {
     setIsCircularMenuVisible(false);
   };
@@ -97,7 +97,7 @@ const filteredUsers = useMemo(
     <div className="min-h-screen container mx-auto p-4 shadow">
       <div className="flex flex-row justify-between px-4 items-center space-x-4">
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <div
+        <button
           className="relative pr-12 cursor-pointer"
           onClick={handleLogoClick}
         >
@@ -111,7 +111,7 @@ const filteredUsers = useMemo(
             </div>
           )}
           <LogoIcon />
-        </div>
+        </button>
       </div>
 
       <div className="bg-white p-4 rounded overflow-y-auto">

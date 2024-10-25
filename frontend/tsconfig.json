@@ -19,9 +19,11 @@
     ],
     "paths": {
       "@/*": ["./*"],
+      "@/api/*": ["./api/*"],
+      "@/store/*": ["./store/*"],
       "@/ui/*": ["./components/atoms/*"],
       "@/views/*": ["./components/views/*"],
-      "@/pages/*": ["./omponents/organisms/*"],
+      "@/pages/*": ["./components/organisms/*"],
       "@/providers/*": ["./components/providers/*"],
       "@/icons/*": ["./components/icons/*"],
       "@/lib/*": ["./lib/*"],

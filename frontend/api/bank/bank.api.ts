@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_URL } from "../base";
+import { API_URL } from "@/api";
 
 export const getBankList = async () => {
   try {

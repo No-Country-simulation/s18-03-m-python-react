@@ -36,7 +36,7 @@ export default function PlatformGestion() {
   const [createAction, setCreateAction] = useState<(data: any) => Promise<void>>(async () => {});
   const [editAction, setEditAction] = useState<(id: string, data: any) => Promise<void>>(async () => {});
   const [deleteAction, setDeleteAction] = useState<(id: string) => Promise<string>>(async () => "");
-  
+
   useEffect(() => {
     setBankList(
       JSON.parse(sessionStorage.getItem("bankList") || "[]") as Bank[]
@@ -126,7 +126,7 @@ export default function PlatformGestion() {
   };
 
   const handleCreate = () => {
-      setFormOpen(true); // Abre el formulario
+    setFormOpen(true); // Abre el formulario
   };
 
   const toggleGeneralData = ()=> {
