@@ -1,36 +1,52 @@
-'use client'
-import { LogoIcon, SearchIcon } from '@/components/icons';
-import { Input } from '@/components/atoms';
-import { useMemo, useState } from 'react';
-import { VacationCard } from '../PersonnelVacationCard/PersonnelVacationCard'; // Asegúrate de crear este nuevo componente.
+"use client";
+import { ProfileIcon, SearchIcon } from "@/components/icons";
+import { Button, Input } from "@/components/atoms";
+import { useEffect, useState } from "react";
+import { VacationCard } from "../PersonnelVacationCard/PersonnelVacationCard";
+import { VacationForm } from "../VacationForm/VacationForm";
+import { getVacationList } from "@/api/vacations/vacation.api";
 
 interface Vacation {
+  pk: number;
   id: string;
   name: string;
   cargo: string;
-  status: 'in-process' | 'completed'; // Cambiado a 'en proceso' y 'completado'
+  status: "P" | "A" | "D";
   imageSrc?: string;
   alt?: string;
-  periodRequested: string; // Periodo solicitado en formato fecha
-  totalDays: number; // Total de días
-  remainingDays: number; // Días restantes
+  periodRequested: string;
+  totalDays: number;
+  remainingDays: number;
+  startDay: string;
+  endDay: string;
+  profile_picture: File;
+  end: string;
+  start: string;
+  message?: string | null;
+  employee?: {
+    first_name: string;
+    last_name: string;
+    role: string;
+    vacation_days: number;
+  };
 }
 
-const vacations: Vacation[] = [
-  { id: "1", name: 'conrado 1', cargo:"Front-End", status: 'in-process', imageSrc: "https://i.pravatar.cc/300", alt: "vacaciones 1", periodRequested: '2024-10-01', totalDays: 10, remainingDays: 5 },
-  { id: "2", name: 'pablo 2', cargo:"Back-End", status: 'completed', imageSrc: "https://i.pravatar.cc/301", alt: "vacaciones 2", periodRequested: '2024-09-15', totalDays: 15, remainingDays: 0 },
-  { id: "3", name: 'alejandro 3', cargo:"Front-End", status: 'in-process', imageSrc: "https://i.pravatar.cc/302", alt: "vacaciones 3", periodRequested: '2024-10-05', totalDays: 8, remainingDays: 3 },
-];
-
-const filterVacations = (vacations: Vacation[], query: string) => {
-  if (!query) return vacations;
-  return vacations.filter(vacation =>
-    vacation.name.toLowerCase().includes(query.toLowerCase()) ||
-    vacation.cargo.toLowerCase().includes(query.toLowerCase())
+/* const filterUsers = (users: Person[], query: string) => {
+  if (!query) return users;
+  return users.filter(
+    (user) =>
+      user.first_name.toLowerCase().includes(query.toLowerCase()) ||
+      user.email.toLowerCase().includes(query.toLowerCase())
   );
-};
+}; */
 
-const SearchBar = ({ searchQuery, setSearchQuery }: { searchQuery: string, setSearchQuery: (query: string) => void }) => (
+const SearchBar = ({
+  searchQuery,
+  setSearchQuery,
+}: {
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+}) => (
   <div className="relative w-full max-w-md">
     <Input
       type="text"
@@ -46,33 +62,119 @@ const SearchBar = ({ searchQuery, setSearchQuery }: { searchQuery: string, setSe
 );
 
 export const PersonnelVacationCardList = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [vacationsList, setVacationsList] = useState<Vacation[]>([]);
 
-  const filteredVacations = useMemo(() => filterVacations(vacations, searchQuery), [searchQuery]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const vacationList = await getVacationList();
+        if (Array.isArray(vacationList)) {
+          sessionStorage.setItem("vacationList", JSON.stringify(vacationList));
+          setVacationsList(vacationList);
+        }
+      } catch (error) {
+        console.error(
+          "Ocurrió un error al obtener la lista de vacaciones",
+          error
+        );
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className="container mx-auto p-4 shadow">
       <div className="flex flex-row justify-between px-4 items-center space-x-4">
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <span className="pr-12"><LogoIcon /></span>
+        <span className="pr-12">
+          <Button
+            onClick={() => setIsOpen(!isOpen)}
+            className="bg-base-primary text-white"
+          >
+            Agregar Vacación
+          </Button>
+        </span>
       </div>
+
+      {isOpen && (
+        <div className="mt-4">
+          <VacationForm isOpen={isOpen} onClose={() => setIsOpen(false)} />
+        </div>
+      )}
+
       <div className="bg-white p-4 rounded-lg">
-        {filteredVacations.length > 0 ? (
-          filteredVacations.map(({ id, name, cargo, status, imageSrc, alt, periodRequested, totalDays, remainingDays }) => (
-            <VacationCard
-              key={id}
-              name={name}
-              cargo={cargo}
-              initialStatus={status}
-              imageSrc={imageSrc}
-              alt={alt}
-              periodRequested={periodRequested}
-              totalDays={totalDays}
-              remainingDays={remainingDays}
-            />
-          ))
+        <section>
+          <div className={`w-full mx-auto px-5 overflow-hidden`}>
+            <div className="flex items-center justify-between">
+              <section className="flex w-64 gap-3">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center mr-5">
+                  <ProfileIcon className="opacity-0" />
+                </div>
+                <div className="opacity-0">
+                  <h3 className="font-semibold text-lg">dasdasdasd</h3>
+                  <p className="text-sm text-gray-600">dasdasdasdas</p>
+                </div>
+              </section>
+              <div>
+                <p className=""></p>
+              </div>
+
+              <div className="">
+                <p className="text-sm text-gray-400 font-semibold uppercase">
+                  pedido solicitado
+                </p>
+              </div>
+              <div className="">
+                <p className="text-sm text-gray-400 font-semibold uppercase">
+                  total de días
+                </p>
+              </div>
+              <div className="text-left">
+                <p className="text-sm text-gray-400 font-semibold uppercase">
+                  días restantes
+                </p>
+              </div>
+              <div className="opacity-0">
+                <p className="text-sm text-gray-400 font-semibold uppercase">
+                  estado de la vida
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {vacationsList.length > 0 ? (
+          vacationsList.map(
+            ({ pk, employee, profile_picture, alt, end, start, status }) => (
+              <VacationCard
+                key={pk}
+                name={employee?.first_name}
+                cargo={employee?.role}
+                imageSrc={profile_picture}
+                alt={alt}
+                startDay={start}
+                endDay={end}
+                status={status}
+                totalDays={employee?.vacation_days}
+                pk={pk}
+                email={""}
+                initialStatus={"P"}
+                employee={undefined}
+                vacation_days={undefined}
+                picture_profile={null}
+                onSettingsClick={function (): void {
+                  throw new Error("Function not implemented.");
+                }}
+              />
+            )
+          )
         ) : (
-          <div className="text-2xl px-20 text-base-primary animate-blink">No hay solicitudes de vacaciones</div>
+          <div className="text-2xl px-20 text-base-primary animate-blink">
+            No hay solicitudes de vacaciones
+          </div>
         )}
       </div>
     </div>

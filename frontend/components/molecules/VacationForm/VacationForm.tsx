@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import {
   Dialog,
@@ -10,8 +8,10 @@ import {
 import { Person } from "@/interface";
 import Image from "next/image";
 import { DatePickerWithRange } from "../DateRangePicker/DateRangePicker";
-import { differenceInDays } from "date-fns"; // Importamos para calcular los días
+import { differenceInDays } from "date-fns";
 import { Button } from "@/components/atoms";
+import { createVacationRequest } from "@/api/vacations/vacation.api";
+// Ajusta la ruta según corresponda
 
 interface VacationFormProps {
   readonly isOpen: boolean;
@@ -26,8 +26,10 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
     to: Date | undefined;
   }>({ from: undefined, to: undefined });
   const [daysSelected, setDaysSelected] = useState<number>(0);
-  const maxDays = 15; // Días de saldo de vacaciones
-  const { from, to } = selectedRange;
+  const [maxDays, setMaxDays] = useState<number>(0);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<boolean>(false);
+
   useEffect(() => {
     if (isOpen) {
       const employeeList = JSON.parse(
@@ -37,7 +39,55 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
     }
   }, [isOpen]);
 
-  // Información de vacaciones
+  const handleEmployeeChange = (employeeId: string) => {
+    setSelectedEmployee(employeeId);
+    const employee = employees.find((emp) => emp.pk === parseInt(employeeId));
+    if (employee?.employee && typeof employee.employee.vacation_days === "number") {
+      setMaxDays(employee.employee.vacation_days);
+    } else {
+      setMaxDays(0);
+    }
+  };
+
+  const handleRangeChange = (range: {
+    from: Date | undefined;
+    to: Date | undefined;
+  }) => {
+    setSelectedRange(range);
+    if (range.from && range.to) {
+      const days = differenceInDays(range.to, range.from) + 1;
+      setDaysSelected(days);
+    } else {
+      setDaysSelected(0);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (selectedEmployee && selectedRange.from && selectedRange.to) {
+      const vacationData = {
+        employee: parseInt(selectedEmployee),
+        start: selectedRange.from.toISOString().split("T")[0],
+        end: selectedRange.to.toISOString().split("T")[0],
+      };
+
+      console.log(vacationData)
+
+      try {
+        await createVacationRequest(vacationData);
+        setSuccess(true);
+        setError(null);
+        onClose();
+      } catch (error) {
+        setError(error.message);
+        setSuccess(false);
+      }
+    } else {
+      setError("Por favor, completa todos los campos antes de enviar.");
+    }
+  };
+
   const VacationInfo = [
     {
       icon: "/Icons/tabler_calendar-heart.svg",
@@ -56,19 +106,6 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
     },
   ];
 
-  const handleRangeChange = (range: {
-    from: Date | undefined;
-    to: Date | undefined;
-  }) => {
-    setSelectedRange(range);
-    if (range.from && range.to) {
-      const days = differenceInDays(range.to, range.from) + 1; // Sumar 1 para incluir el día final
-      setDaysSelected(days);
-    } else {
-      setDaysSelected(0); // Si no hay rango seleccionado, reiniciar a 0
-    }
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="w-full bg-white">
@@ -76,33 +113,28 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
           <DialogTitle>Nuevas vacaciones</DialogTitle>
         </DialogHeader>
 
-        <form className="space-y-8">
-          {/* Sección del select para empleados */}
+        <form className="space-y-8" onSubmit={handleSubmit}>
           <section className="flex gap-2 items-center">
-            <label
-              htmlFor="employee"
-              className="uppercase font-semibold text-sm"
-            >
+            <label htmlFor="employee" className="uppercase font-semibold text-sm">
               Empleado
             </label>
             <select
               id="employee"
               className="max-w-xl border focus:outline-none border-gray-300 rounded-md p-3"
               value={selectedEmployee}
-              onChange={(e) => setSelectedEmployee(e.target.value)}
+              onChange={(e) => handleEmployeeChange(e.target.value)}
             >
               <option value="" className="text-gray-400">
                 Seleccione un empleado
               </option>
               {employees.map((employee) => (
-                <option key={employee.pk} value={employee.first_name}>
+                <option key={employee.pk} value={employee.pk.toString()}>
                   {employee.first_name}
                 </option>
               ))}
             </select>
           </section>
 
-          {/* Sección de la información de vacaciones */}
           <section className="flex gap-4 bg-base-secondary w-full h-14 rounded-md items-center justify-around p-2">
             {VacationInfo.map((info, index) => (
               <div key={index} className="flex items-center gap-2">
@@ -113,13 +145,11 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
                   alt={`${info.label} icon`}
                   className="h-6 w-6"
                 />
-                <div className="flex text-white items-center gap-2 ">
-                  <span className="font-semibold uppercase text-sm">
-                    {info.label}
-                  </span>
+                <div className="flex text-white items-center gap-2">
+                  <span className="font-semibold uppercase text-sm">{info.label}</span>
                   <span className="text-xs flex gap-1">
                     <p>{info.days} </p>
-                    <p>dias</p>
+                    <p>días</p>
                   </span>
                 </div>
               </div>
@@ -128,7 +158,7 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
 
           <section>
             <header className="flex items-center gap-2 justify-center">
-              <div className="bg-gray-400 rounded-full p-2 w-8 h-8 ">
+              <div className="bg-gray-400 rounded-full p-2 w-8 h-8">
                 <Image
                   src={"/Icons/vacation-icon.svg"}
                   alt="clock icon"
@@ -137,20 +167,31 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
                   className="h-4 w-4"
                 />
               </div>
-              <h3 className="text-gray-400">
-                Seleccionar Periodo de Vacaciones
-              </h3>
+              <h3 className="text-gray-400">Seleccionar Periodo de Vacaciones</h3>
             </header>
             <div>
               <DatePickerWithRange onRangeChange={handleRangeChange} />
             </div>
           </section>
+
+          {error && <p className="text-red-500">{error}</p>}
+          {success && <p className="text-green-500">Solicitud de vacaciones enviada exitosamente.</p>}
+
           <section className="flex gap-4 justify-center">
-            <Button className=" rounded-xl border-2 text-gray-500 w-[150px]">
+            <Button
+              className="rounded-xl border-2 text-gray-500 w-[150px]"
+              onClick={onClose}
+              type="button" // Tipo button para que no envíe el formulario
+            >
               Cancelar
             </Button>
-            <Button className="bg-base-primary text-white ]">
-              Solicitar {daysSelected} dias
+
+            <Button
+              className="bg-base-primary text-white"
+              disabled={daysSelected >= maxDays}
+              type="submit" // Tipo submit para enviar el formulario
+            >
+              Solicitar {daysSelected} días
             </Button>
           </section>
         </form>

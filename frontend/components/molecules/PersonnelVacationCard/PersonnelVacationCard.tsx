@@ -1,147 +1,143 @@
-'use client'
-
-import { useState, useEffect } from 'react';
-import {
-  Skeleton,
-  Button,
-  Card,
-  CardContent,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/atoms";
-import { useToast } from '@/hooks';
-import { PersonIcon } from "@radix-ui/react-icons";
-import { SuccessIcon } from '@/components/icons';
+import { useEffect, useState } from "react";
+import { Card, CardContent } from "@/components/atoms";
+import { useToastAlerts } from "@/hooks/UseToast/useToastAlerts"; // Asegúrate de que la ruta sea correcta
+import { ProfileIcon } from "@/components/icons";
+import Image from "next/image";
+import { Employee } from "@/api";
+import { cn } from "@/lib/cn/utils";
+import { responseVacation } from "@/api/vacations/vacation.api";
 
 interface Props {
-  name: string;
-  cargo: string;
-  initialStatus: 'in-process' | 'completed'; // Cambiado a "en proceso" y "completado"
-  imageSrc?: string;
+  name: string | null | undefined;
+  email: string;
+  cargo: string | null | undefined;
+  initialStatus: "P" | "A" | "D"; // P: En proceso, A: Aceptado, D: Rechazado
+  imageSrc?: File | null;
   alt?: string;
-  periodRequested: string; // Nuevo campo: Periodo solicitado
-  totalDays: number; // Nuevo campo: Total de días
-  remainingDays: number; // Nuevo campo: Días restantes
+  pk: number;
+  employee: Employee | undefined;
+  vacation_days: number | null | undefined;
+  
+  picture_profile: File | null;
+  onSettingsClick: (pk: number) => void;
+  totalDays: number ;
+  startDay: string | null | undefined;
+  endDay: string;
+  status: "P" | "A" | "D";
 }
 
-export const VacationCard = ({ name, cargo, initialStatus, imageSrc, alt, periodRequested, totalDays, remainingDays }: Readonly<Props>) => {
-  const [status, setStatus] = useState(initialStatus);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [newStatus, setNewStatus] = useState<'in-process' | 'completed'>(initialStatus);
-  const { toast } = useToast();
+export const VacationCard = ({
+  name,
+  cargo,
+  imageSrc,
+  alt,
+  totalDays,
+  startDay,
+  endDay,
+  status,
+  pk,
+}: Readonly<Props>) => {
+  const [remainingDays, setRemainingDays] = useState(0);
+  const { toastSuccess, toastError } = useToastAlerts(); // Utiliza el hook aquí
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
+    if (startDay && endDay) {
+      const startDate = new Date(startDay);
+      const endDate = new Date(endDay);
 
-    return () => clearTimeout(timer);
-  }, []);
+      startDate.setHours(0, 0, 0, 0);
+      endDate.setHours(0, 0, 0, 0);
 
-  const handleStatusChange = () => {
-    setNewStatus(status === 'in-process' ? 'completed' : 'in-process');
-    setIsConfirmOpen(true);
+      const timeDifference = endDate.getTime() - startDate.getTime();
+      const totalVacationDays = Math.ceil(timeDifference / (1000 * 60 * 60 * 24)) + 1; // +1 para incluir el día de inicio
+
+      const calculatedRemainingDays = totalDays - totalVacationDays;
+      setRemainingDays(calculatedRemainingDays > 0 ? calculatedRemainingDays : 0);
+    }
+  }, [startDay, endDay, totalDays]); // Añadimos startDay y endDay como dependencias
+
+  const handleStatusChange = async (newStatus: "A" | "D" | "P") => {
+    // Definir el mensaje según el nuevo estado
+    const message = newStatus === "A" ? "Vacaciones aceptadas." : "Vacaciones rechazadas.";
+  
+    // Crea el objeto con la estructura que necesita el backend
+  
+  
+    try {
+      // Realiza la llamada al backend
+      const response = await responseVacation({
+        vacation: pk, // El estado actual de la solicitud
+        status: newStatus === "A", // Aquí se usa el nuevo estado (A o D)
+        message: message, // Mensaje a enviar
+      });
+  
+      // Muestra el mensaje de éxito
+      toastSuccess("Éxito", response?.message); // Asumiendo que la respuesta tiene un mensaje
+    } catch (error) {
+      // Maneja el error correctamente
+      const errorMessage = error instanceof Error ? error.message : "Error al cambiar el estado de la petición";
+      toastError("Error", errorMessage);
+    }
   };
-
-  const confirmStatusChange = () => {
-    setStatus(newStatus);
-    setIsConfirmOpen(false);
-    toast({
-      title: "Estado actualizado",
-      description: `El estado de la solicitud de ${name} ahora es ${newStatus === 'in-process' ? 'en proceso' : 'completado'}.`,
-      className: "bg-green-500 text-white",
-    });
-  };
-
-  const cancelStatusChange = () => {
-    setIsConfirmOpen(false);
-    toast({
-      children: <SuccessIcon />,
-      title: "Cambio cancelado",
-      description: `El estado de la solicitud de ${name} no ha sido modificado.`,
-      className: "bg-yellow-500 text-white",
-    });
-  };
+  
 
   return (
-    <>
-      {isLoading ? (
-        <Card className="w-full mx-auto px-5 mb-4 overflow-hidden">
-          <CardContent className="flex items-center p-4">
-            <Skeleton className="h-12 w-12 rounded-full mr-4" />
-            <div className="flex-grow">
-              <Skeleton className="h-4 w-3/4 mb-2" />
-              <Skeleton className="h-3 w-1/2" />
-            </div>
-            <Skeleton className="h-8 w-20 ml-2" />
-          </CardContent>
-        </Card>
-      ) : (
-        <Card className={`w-full mx-auto px-5 mb-4 overflow-hidden ${
-          status === 'in-process' ? 'border-l-8 border-l-yellow-500' : 'border-l-8 border-l-green-500'
-        } ${isConfirmOpen ? 'blur-sm' : ''}`}>
-          <CardContent className="flex items-center p-4">
+    <section className="">
+      <Card
+        className={cn(
+          "w-full mx-auto px-5 mb-4 overflow-hidden",
+          status === "P" ? "border-l-8 border-l-yellow-500" :
+          status === "A" ? "border-l-8 border-l-green-500" :
+          "border-l-8 border-l-red-500"
+        )}
+      >
+        <CardContent className="flex items-center justify-between p-4">
+          <section className="flex w-64 gap-3">
             {!imageSrc ? (
-              <div className="w-12 h-12 rounded-full bg-base-primary flex items-center justify-center mr-4">
-                <PersonIcon className="w-8 h-8 text-base-secondary" />
+              <div className="w-12 h-12 rounded-full flex items-center justify-center mr-5">
+                <ProfileIcon />
               </div>
             ) : (
-              <img
-                className="rounded-full mr-4"
-                src={imageSrc}
+              <Image
+                className="rounded-full"
+                src={imageSrc ? `http://localhost:8000${imageSrc}` : "http://i.pravatar.cc/304"}
                 alt={alt ?? `Profile picture of ${name}`}
                 width={50}
                 height={50}
               />
             )}
-            <div className="flex-grow">
+            <div>
               <h3 className="font-semibold text-lg">{name}</h3>
               <p className="text-sm text-gray-600">{cargo}</p>
             </div>
-            <div  className="flex-grow">
-              <p className="text-sm text-gray-600">{periodRequested}</p>
-            </div>
-            <div  className="flex-grow">
-              <p className="text-sm text-gray-600">{totalDays}</p>
-            </div>
-            <div  className="flex-grow">
-              <p className="text-sm text-gray-600">{remainingDays}</p>
-            </div>    
+          </section>
+          <div>
+            <p>{startDay} - {endDay}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">{totalDays} días</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">{remainingDays} días</p>
+          </div>
 
-            <Button
-              onClick={handleStatusChange}
-              className={`ml-2 w-24 h-10 text-white ${
-                status === 'in-process'
-                  ? 'bg-yellow-500 hover:bg-yellow-600'
-                  : 'bg-green-500 hover:bg-green-600'
-              }`}
-            >
-              {status === 'in-process' ? 'En proceso' : 'Completado'}
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-      <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirmar cambio de estado</AlertDialogTitle>
-            <AlertDialogDescription>
-              ¿Estás seguro de que quieres cambiar el estado de la solicitud de {name} a {newStatus === 'in-process' ? 'en proceso' : 'completado'}?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={cancelStatusChange}>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmStatusChange}>Confirmar</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+          <select
+            className={cn(
+              "ml-2 w-24 h-10 text-white appearance-none rounded-md py-2 px-3 leading-tight focus:outline-none focus:shadow-outline",
+              status === "P" ? "bg-yellow-500 cursor-pointer" :
+              status === "A" ? "bg-green-500 cursor-not-allowed" :
+              "bg-red-500 cursor-not-allowed"
+            )}
+            value={status}
+            onChange={(e) => handleStatusChange(e.target.value as "A" | "D" | "P")}
+            disabled={status === "A" || status === "D"}
+          >
+            <option value="P">En proceso</option>
+            <option value="A">Aceptado</option>
+            <option value="D">Rechazado</option>
+          </select>
+        </CardContent>
+      </Card>
+    </section>
   );
 };

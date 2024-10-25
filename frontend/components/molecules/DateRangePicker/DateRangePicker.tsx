@@ -17,15 +17,21 @@ export function DatePickerWithRange({
   onRangeChange,
   className,
 }: DatePickerWithRangeProps) {
+  const today = new Date(); // Obtenemos la fecha actual
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2022, 0, 20),
-    to: addDays(new Date(2022, 0, 20), 20),
+    from: today,
+    to: addDays(today, 1), // Asignamos el segundo día como el día siguiente
   });
-  
+
   const [daysSelected, setDaysSelected] = React.useState<number>(0);
   const maxDays = 15; // Puedes ajustar esto según tus necesidades
 
   const handleSelect = (selectedDate: DateRange | undefined) => {
+    if (selectedDate?.from && selectedDate.from < today) {
+      // No permitir seleccionar fechas anteriores a hoy
+      return;
+    }
+
     setDate(selectedDate);
     if (selectedDate?.from && selectedDate?.to) {
       const days = differenceInDays(selectedDate.to, selectedDate.from) + 1; // Sumar 1 para incluir el día final
@@ -49,19 +55,24 @@ export function DatePickerWithRange({
       <Calendar
         initialFocus
         mode="range"
-        defaultMonth={date?.from}
+        defaultMonth={today} // Mostrar el mes actual
         selected={date}
         onSelect={handleSelect}  // Actualizamos el rango al seleccionar
         numberOfMonths={2}  // Mostrar dos meses
         locale={es}
         classNames={{
-            months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
-            month: "space-y-4 p-5 rounded border border-2",
-            caption: "flex justify-center pt-1 relative items-center text-xs",
-            table: "w-full border-collapse space-y-1",
-            head_cell: "text-muted-foreground w-8 font-normal text-[0.6rem]",
-            day: "h-6 w-8 p-0 text-[0.8rem] font-normal",
-          }}  
+          months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+          month: "space-y-4 p-5 rounded border border-2",
+          caption: "flex justify-center pt-1 relative items-center text-xs",
+          table: "w-full border-collapse space-y-1",
+          head_cell: "text-muted-foreground w-8 font-normal text-[0.6rem]",
+          day: "h-6 w-8 p-0 text-[0.8rem] font-normal",
+          day_selected: "bg-blue-500 text-white", // Cambia el color de los días seleccionados
+          day_disabled: "text-gray-400", // Estilo para días deshabilitados (anterior al actual)
+        }}  
+        modifiers={{
+          disabled: (day) => day < today, // Deshabilitar días anteriores al día actual
+        }}
       />
       <div>
         <p className='text-gray-500'>
