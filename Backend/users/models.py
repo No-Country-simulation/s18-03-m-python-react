@@ -48,7 +48,7 @@ class Person(AbstractUser):
     bank_account_number = models.PositiveIntegerField(null=True, blank=True)
 
 class Employee(models.Model):
-    person = models.ForeignKey(Person, on_delete=models.CASCADE, null=True, blank=True)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE, null=True, blank=True, unique=True)
     active_employee = models.BooleanField(default=False, blank=True)
     start_date = models.DateField(default=date.today, blank=True)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, null=True, blank=True)
