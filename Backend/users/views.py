@@ -111,8 +111,8 @@ class ProfilePictureView(APIView):
 class ActiveEmployeeView(APIView):
     def post(self, request, pk):
         try:
-            obj = Employee.objects.get(person=Person.objects.get(pk=pk))
-        except (Person.DoesNotExist, Employee.DoesNotExist):
+            obj = Employee.objects.get(pk=pk)
+        except (Employee.DoesNotExist):
             return Response({"message": "Employee not found"}, status=status.HTTP_404_NOT_FOUND)
         
         obj.active_employee = not obj.active_employee
