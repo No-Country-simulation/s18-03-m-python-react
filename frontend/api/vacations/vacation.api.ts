@@ -24,11 +24,6 @@ export const createVacationRequest = async (vacation: vacation)=>{
     }
 }
 
-//interface must have the following structure 
-//{
-//     
-//     }
-
 export const responseVacation = async(vacationResponse: vacationresponse)=> {
     try {
         const response = await axios.post(`${API_URL}/vacationresponse/`,
