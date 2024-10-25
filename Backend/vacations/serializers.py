@@ -33,7 +33,8 @@ class VacationRequestSerializer(serializers.ModelSerializer):
                 "first_name": instance.employee.person.first_name,
                 "last_name": instance.employee.person.last_name,
                 "role": instance.employee.role.title,
-                "profile_picture": instance.employee.person.profile_picture.url
+                "profile_picture": instance.employee.person.profile_picture.url,
+                "vacation_days": instance.employee.vacation_days
             }
         }
         return data
