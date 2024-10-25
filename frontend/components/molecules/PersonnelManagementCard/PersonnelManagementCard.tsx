@@ -23,12 +23,13 @@ import { ProfileIcon } from "@/components/icons/Profile/ProfileIcon";
 import Image from "next/image";
 import CircularMenuUser from "../CircularMenu/CircularMenuUser";
 import { Employee } from "@/interface/Person/Person";
+import { changeEmployeeStatus } from "@/api";
 
 interface Props {
   name: string;
   email: string;
   cargo: string;
-  initialStatus: "active" | "inactive";
+  initialStatus: boolean;
   imageSrc?: File | null;
   alt?: string;
   pk: number;
@@ -52,7 +53,7 @@ export const PersonnelManagementCard = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [newStatus, setNewStatus] = useState<"active" | "inactive">(
-    initialStatus
+    initialStatus ? "active" : "inactive"
   );
   const [isCircularMenuVisible, setIsCircularMenuVisible] = useState(false);
   const { toast } = useToast();
@@ -61,20 +62,30 @@ export const PersonnelManagementCard = ({
     setIsCircularMenuVisible(false);
   };
   const handleStatusChange = () => {
-    setNewStatus(status === "active" ? "inactive" : "active");
     setIsConfirmOpen(true);
   };
 
-  const confirmStatusChange = () => {
-    setStatus(newStatus);
-    setIsConfirmOpen(false);
-    toast({
-      title: "Estado actualizado",
-      description: `El usuario ${name} ahora está ${
-        newStatus === "active" ? "activo" : "inactivo"
-      }.`,
-      className: "bg-green-500 text-white",
-    });
+  const confirmStatusChange = async() => {
+    try{
+      await changeEmployeeStatus(pk);
+      
+      setStatus(!status);
+      setNewStatus(status === true ? "inactive" : "active");
+      setIsConfirmOpen(false);
+      toast({
+        title: "Estado actualizado",
+        description: `El usuario ${name} ahora está ${
+          status === true ? "activo" : "inactivo"
+        }.`,
+        className: "bg-green-500 text-white",
+      });
+    }catch(error){
+      toast({
+        title:"Error",
+        description:`Ocurrio un error al cambiar el estado ${status ? "activo": "inactivo"}`,
+        className: "bg-red-500 text-white"
+      })
+    }
   };
 
   const cancelStatusChange = () => {
@@ -103,7 +114,7 @@ export const PersonnelManagementCard = ({
       ) : (
         <Card
           className={`w-full mx-auto px-5 mb-4  ${
-            status === "active"
+            status === true
               ? "border-l-8 border-l-green-500"
               : "border-l-8 border-l-red-500"
           } ${isConfirmOpen ? "blur-sm" : ""}`}
@@ -135,12 +146,12 @@ export const PersonnelManagementCard = ({
               <Button
                 onClick={handleStatusChange}
                 className={`w-24 h-10 text-white ${
-                  status === "active"
+                  status === true
                     ? "bg-green-500 hover:bg-green-600"
                     : "bg-red-500 hover:bg-red-600"
                 }`}
               >
-                {status === "active" ? "Activo" : "Inactivo"}
+                {status === true ? "Activo" : "Inactivo"}
               </Button>
               <div className="relative">
                 <button

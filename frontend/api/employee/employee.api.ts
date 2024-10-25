@@ -89,3 +89,16 @@ export const deleteEmployee = async (pk: number): Promise<string> => {
     throw new Error("Error al borrar el empleado");
   }
 };
+
+
+export const changeEmployeeStatus = async (id: number)=>{
+    try {
+        const response = await axios.post(`${API_URL}/activeemployee/${id}/`);
+        if (response.status === 200){
+            return "Estado de empleado cambiado con éxito!"
+        }
+    } catch (error) {
+        console.error( 'Error al cambiar el estado del empleado', error);
+        throw new Error('Error al cambiar el estado del empleado');
+    }
+}

@@ -1,6 +1,7 @@
 import axios from "axios"
-import { API_URL } from './../base';
+
 import { vacation, vacationresponse } from "@/interface";
+import { API_URL } from "../base/base";
 
 export const getVacationList = async ()=>{
     try {
@@ -23,11 +24,6 @@ export const createVacationRequest = async (vacation: vacation)=>{
         throw new Error('Ocurrio un error al obtener la lista de vacaciones');
     }
 }
-
-//interface must have the following structure 
-//{
-//     
-//     }
 
 export const responseVacation = async(vacationResponse: vacationresponse)=> {
     try {
