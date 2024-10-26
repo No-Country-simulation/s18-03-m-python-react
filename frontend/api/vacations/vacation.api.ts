@@ -24,14 +24,18 @@ export const createVacationRequest = async (vacation: vacation)=>{
     }
 }
 
-export const responseVacation = async(vacationResponse: vacationresponse)=> {
+export const responseVacation = async (vacationResponse: vacationresponse): Promise<{ message: string }> => {
     try {
-        const response = await axios.post(`${API_URL}/vacationresponse/`,
-            {...vacationResponse}
-        )
-        if(response.status === 200) return "Exito!"
+        const response = await axios.post(`${API_URL}/vacationresponse/`, {
+            ...vacationResponse
+        });
+        if (response.status === 200) {
+            return { message: "Exito!" };
+        } else {
+            throw new Error("Error desconocido al cambiar el estado");
+        }
     } catch (error) {
         console.error("Error al cambiar el estado de la petición", error);
         throw new Error("Error al cambiar el estado de la petición");
     }
-}
+};

@@ -7,6 +7,7 @@ export interface Employee {
     salary: number ;       // Salario del empleado
     working_day: string;
     vacation_days: string;
+    active_employee: boolean;
     // Descripción del horario laboral
   }
   

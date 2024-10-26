@@ -20,7 +20,7 @@ interface Props {
   
   picture_profile: File | null;
   onSettingsClick: (pk: number) => void;
-  totalDays: number ;
+  totalDays: number | null | undefined;
   startDay: string | null | undefined;
   endDay: string;
   status: "P" | "A" | "D";
@@ -51,7 +51,7 @@ export const VacationCard = ({
       const timeDifference = endDate.getTime() - startDate.getTime();
       const totalVacationDays = Math.ceil(timeDifference / (1000 * 60 * 60 * 24)) + 1; // +1 para incluir el día de inicio
 
-      const calculatedRemainingDays = totalDays - totalVacationDays;
+      const calculatedRemainingDays = totalDays != null ? totalDays - totalVacationDays :  0;
       setRemainingDays(calculatedRemainingDays > 0 ? calculatedRemainingDays : 0);
     }
   }, [startDay, endDay, totalDays]); // Añadimos startDay y endDay como dependencias

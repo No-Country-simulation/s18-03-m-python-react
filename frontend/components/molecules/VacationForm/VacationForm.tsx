@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/atoms/dialog";
-import { Person } from "@/interface";
+import { Person, vacation } from "@/interface";
 import Image from "next/image";
 import { DatePickerWithRange } from "../DateRangePicker/DateRangePicker";
 import { differenceInDays } from "date-fns";
@@ -62,25 +62,27 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
     }
   };
 
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (selectedEmployee && selectedRange.from && selectedRange.to) {
-      const vacationData = {
+      const vacationData: vacation = {
         employee: parseInt(selectedEmployee),
         start: selectedRange.from.toISOString().split("T")[0],
         end: selectedRange.to.toISOString().split("T")[0],
+        pk: 0, // Valor predeterminado para pk si es necesario
+        status: "pending", // Estado predeterminado o cualquier valor necesario
       };
 
-      console.log(vacationData)
 
       try {
         await createVacationRequest(vacationData);
         setSuccess(true);
         setError(null);
         onClose();
-      } catch (error) {
-        setError(error.message);
+      } catch (error ) {
+        setError((error as Error).message);
         setSuccess(false);
       }
     } else {

@@ -1,8 +1,8 @@
 export interface vacation {
   pk: number;
   employee: number;
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
   status: string;
   message?: string | null;
 }
