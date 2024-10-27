@@ -7,8 +7,8 @@ interface Props { };
 
 export const PersonnelManagementContainer = () => {
   return (
-    <div className="container">
-      <HeaderContainer titlePage="Gestión de Empleados" />
+    <div className="container px-0">
+      <HeaderContainer titlePage="Gestión Empleados" />
       <PersonnelManagementCardList />
     </div>
   )

@@ -13,13 +13,13 @@ import { ThemeSelector } from "../ThemeSelector/ThemeSelector";
 
 export const HeaderDropdown = () => {
   return (
-    <div className="flex items-center">
-      <Avatar className="w-10 h-10 rounded-full mr-2">
+    <div className="flex items-center gap-3">
+      <Avatar className="w-10 h-10 rounded-full">
         <img src="https://i.pravatar.cc/300" alt="Usuario" />
       </Avatar>
-      <p>Usuario</p>
+      <p className="max-lg:hidden">Usuario</p>
       <DropdownMenu>
-        <DropdownMenuTrigger className="flex items-center ml-2">
+        <DropdownMenuTrigger className="flex items-center">
           <ChevronDownIcon className="w-4 h-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>

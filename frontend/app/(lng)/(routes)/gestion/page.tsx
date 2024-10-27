@@ -3,8 +3,8 @@ import PlatformGestion from "@/components/organisms/PlatformGestion/PlatformGest
 
 export default function GestionPlatformPage() {
   return (
-    <div className="container mb-10 ">
-      <HeaderContainer titlePage="Gestion de la Plataforma" />
+    <div className="container mb-10 px-0">
+      <HeaderContainer titlePage="Gestion Plataforma" />
       <PlatformGestion />
     </div>
   )

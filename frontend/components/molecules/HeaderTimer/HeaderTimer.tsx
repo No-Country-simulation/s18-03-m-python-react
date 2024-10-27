@@ -33,9 +33,9 @@ export const HeaderTimer = () => {
   };
 
   return (
-    <div className="flex items-center p-4 ">
+    <div className="flex items-center p-4 max-md:p-0 max-md:py-4">
       <div className="flex items-center text-x">
-        <p>{formatTime(time)}</p>
+        <p className="max-md:hidden">{formatTime(time)}</p>
         <button onClick={handlePlayPause} className="ml-2">
           {isRunning ? (
             <span className="flex items-center">
