@@ -11,7 +11,7 @@ import { DatePickerWithRange } from "../DateRangePicker/DateRangePicker";
 import { differenceInDays } from "date-fns";
 import { Button } from "@/components/atoms";
 import { createVacationRequest } from "@/api/vacations/vacation.api";
-// Ajusta la ruta según corresponda
+import { useToastAlerts } from "@/hooks/UseToast/useToastAlerts";
 
 interface VacationFormProps {
   readonly isOpen: boolean;
@@ -29,6 +29,8 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
   const [maxDays, setMaxDays] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+
+  const { toastSuccess, toastError } = useToastAlerts();
 
   useEffect(() => {
     if (isOpen) {
@@ -80,10 +82,13 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
         await createVacationRequest(vacationData);
         setSuccess(true);
         setError(null);
+        toastSuccess("Solicitud enviada", "La solicitud de vacaciones fue enviada exitosamente.");
         onClose();
       } catch (error ) {
+        const errorMessage = (error as Error).message;
         setError((error as Error).message);
         setSuccess(false);
+        toastError("Error en la solicitud", errorMessage);
       }
     } else {
       setError("Por favor, completa todos los campos antes de enviar.");
