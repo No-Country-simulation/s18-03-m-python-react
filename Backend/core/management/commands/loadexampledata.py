@@ -1,9 +1,13 @@
+from datetime import datetime
 from json import load
 from django.db import IntegrityError
+from django.utils import timezone
 from django.core.management.base import BaseCommand
 from users.models import Bank, BankAccountType, Country, Province, City, Employee, Person
 from workgroups.models import Department, Role
 from vacations.models import VacationRequest, Vacation
+from assistances.models import Assistance
+
 
 class Command(BaseCommand):
     help = 'Create an admin user'
@@ -11,6 +15,22 @@ class Command(BaseCommand):
     def load_data(self, Model, data):
         for item_data in data:
             _, created = Model.objects.get_or_create(**item_data)
+            
+    def get_working_days_current_month(self):
+        today = datetime.now()
+        current_year = today.year
+        current_month = today.month
+        current_day = today.day
+        
+        working_days = []
+        
+        for day in range(1, current_day+ 1):
+            date = datetime(current_year, current_month, day)
+            
+            if date.weekday() < 5:
+                working_days.append(date)
+    
+        return working_days
 
     def handle(self, *args, **kwargs):
         data_dir = "core/exampledata/"
@@ -58,6 +78,7 @@ class Command(BaseCommand):
             
         with open((data_dir + "employees.json"), "r") as file:
             data = load(file)
+            employees = []
 
             for employee_data in data:
                 try:
@@ -96,6 +117,8 @@ class Command(BaseCommand):
                         salary=employee_data['employee']['salary'],
                         working_day=employee_data['employee']['working_day'],
                     )
+                    
+                    employees.append(employee)
                 except IntegrityError:
                     pass
                 
@@ -118,6 +141,16 @@ class Command(BaseCommand):
                 created = self.load_data(Vacation, [vacation])
                 if created:
                     return
+                
+        
+        working_days = self.get_working_days_current_month()
+        for employee in employees:
+            for i, day in enumerate(working_days):
+                if i % employee.id != 0:
+                    _, created = Assistance.objects.get_or_create(employee=employee, entry=timezone.make_aware(day.replace(hour=8, minute=0)), exit=timezone.make_aware(day.replace(hour=16, minute=0)))
+                    if not created:
+                        return
+        
                 
             
         self.stdout.write(self.style.SUCCESS("Example data created succesfully"))    
