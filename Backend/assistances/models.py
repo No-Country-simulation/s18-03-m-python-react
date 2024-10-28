@@ -51,7 +51,7 @@ class Assistance(models.Model):
             total_worked_time = timedelta()
             
             for assistance in month_asistance:
-                if assistance.exit:  # Asegurarse de que haya un valor de salida
+                if assistance.exit:
                     worked_time = assistance.exit - assistance.entry
                     total_worked_time += worked_time
             
@@ -66,10 +66,17 @@ class Assistance(models.Model):
                 date(today.year, today.month, day) for day in days_without_assistance
             ]
             
+            employee = Employee.objects.get(id=id)
+            
             data[id] = {
                 "inassistances": dates_without_assistance,
                 "hours_worked": total_worked_time.total_seconds() // 3600,
                 "days_worked": len(month_asistance),
+                "employee_id": id,
+                "first_name": employee.person.first_name,
+                "last_name": employee.person.last_name,
+                "role": employee.role.title,
+                "profile_picture": employee.person.profile_picture.url,
                 } 
         
         return data
