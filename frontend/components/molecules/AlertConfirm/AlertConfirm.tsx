@@ -1,4 +1,5 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/atoms'
+import { useToastAlerts } from '@/hooks';
 import React from 'react'
 
 interface Props{
@@ -12,13 +13,16 @@ interface Props{
 }
 
 export default function AlertConfirm({open, onOpenChange, title, description, btnCancelTitle, btnAcceptTitle, action}: Props) {
+  const  {toastWarning} = useToastAlerts();
+  
   const handleCancel = ()=>{
+    toastWarning('Cancelado', 'Cancelaste la acción, no se aplicarán cambios');
     onOpenChange(false);
   }
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-        <AlertDialogContent className="bg-white">
+        <AlertDialogContent className="bg-white max-md:max-w-[350px]">
           <AlertDialogHeader>
             <AlertDialogTitle>{title}</AlertDialogTitle>
             <AlertDialogDescription>

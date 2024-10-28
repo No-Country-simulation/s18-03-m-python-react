@@ -1,3 +1,4 @@
+"use client"
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/atoms";
 import { useToastAlerts } from "@/hooks/UseToast/useToastAlerts"; // Asegúrate de que la ruta sea correcta
