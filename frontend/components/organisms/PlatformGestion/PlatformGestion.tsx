@@ -135,7 +135,7 @@ export default function PlatformGestion() {
   return (
     <>
       <section className="flex-col justify-between items-center p-4 bg-white shadow">
-        <div className="grid grid-cols-3 gap-8 p-8">
+        <div className="grid grid-cols-3 gap-4 p-8 max-md:flex max-md: flex-col">
           {cardData.map(
             ({ id, title, icon, list, create, edit, delete: del, nameAtr }) => (
               <button

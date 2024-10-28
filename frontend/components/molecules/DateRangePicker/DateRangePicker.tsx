@@ -74,7 +74,7 @@ export function DatePickerWithRange({
           disabled: (day) => day < today, // Deshabilitar días anteriores al día actual
         }}
       />
-      <div>
+      <div className=''>
         <p className='text-gray-500'>
           El periodo de vacaciones debe cumplir los siguientes requisitos:
         </p>

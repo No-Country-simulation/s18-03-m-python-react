@@ -1,14 +1,19 @@
 import type { SVGProps } from "react";
 
-interface Props {
-  size?: number;
-  SVGProps?: SVGProps<SVGSVGElement>;
-};
+interface Props extends SVGProps<SVGSVGElement> {
+  size?: string;
+  fill?: string;
+}
 
-
-export const LogoIcon = ({ fill = "#4F7BB8" }) => {
+export const LogoIcon = ({ size = "40", fill = "#4F7BB8", ...props }: Props) => {
   return (
-    <svg width="84" height="84" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 80 80" // Ajustamos el viewBox para que escale correctamente
+      xmlns="http://www.w3.org/2000/svg"
+      {...props} // Pasamos cualquier otro prop adicional
+    >
       <path
         d="M23.368 38.946c1.343.7 2.524 2.145 3.107 4.222 1.52 5.471 2.872 4.872 4.24 1.516 1.368-3.188 2.363-9.68 6.186-10.295 6.593-1.062 14.804 20.348 17.539 19.782 1.367-.176 1.627-2.835 1.553-6.238-.074-3.446-.848-7.963-1.286-12.172-.825-7.904-.113-13.903 3.134-18.077a28.554 28.554 0 00-12.785-3.002c-14.175 0-25.947 10.284-28.263 23.798 2.179-.522 4.577-.615 6.575.466z"
         fill={fill}
@@ -23,4 +28,3 @@ export const LogoIcon = ({ fill = "#4F7BB8" }) => {
     </svg>
   );
 };
-

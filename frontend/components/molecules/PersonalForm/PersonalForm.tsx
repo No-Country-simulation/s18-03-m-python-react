@@ -150,12 +150,12 @@ export function PersonalForm({ onCancel, onNext }: PersonalFormProps) {
       
       {/* Fecha de Nacimiento */}
       <div className="flex flex-col">
-        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 justify-between">
           <Label htmlFor="birth" className="w-1/4">Fecha de nacimiento</Label>
           <Popover>
             <PopoverTrigger asChild>
-              <button className="w-full border-slate-400 text-actions-disable flex items-center">
-                <CalendarDays className="bg-actions-disable text-white rounded-full p-1 mr-2 h-7 w-7" />
+              <button className="flex items-center border justify-evenly  p-1 border-actions-disable rounded-lg text-actions-disable w-full max-md:w-48">
+                <CalendarDays className="bg-actions-disable text-white rounded-full p-1 mr-2 h-7 w-7 max-md:mr-0" />
                 {selectedDate ? format(selectedDate, "PPP") : "Seleccione una fecha"}
                 <ChevronDown className="text-actions-disable rounded-full p-1 ml-2 h-7 w-7" />
               </button>
@@ -176,7 +176,7 @@ export function PersonalForm({ onCancel, onNext }: PersonalFormProps) {
               />
             </PopoverContent>
           </Popover>
-        </div>
+          </div>
         {errors.birth && <span className="text-red-500 text-xs lowercase">{errors.birth.message}</span>}
       </div>
 

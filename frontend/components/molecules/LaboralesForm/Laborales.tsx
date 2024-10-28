@@ -76,13 +76,13 @@ export function FormularioLaborales({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-full flex flex-col gap-3 font-sans"
+      className="flex flex-col gap-3 font-sans"
     >
       {/* Fecha de Ingreso */}
       <section>
-        <div className="flex items-center">
+        <div className="flex items-center max-md:flex-col max-md:items-start">
           <label
-            className="w-1/4 text-sm uppercase font-medium"
+            className="w-1/4 text-sm uppercase font-medium max-md:w-full"
             htmlFor="start_date"
           >
             Fecha de Ingreso
@@ -96,7 +96,7 @@ export function FormularioLaborales({
                 setValue("start_date", formattedDate,); // Pasa la fecha formateada como string
               }
             }}
-            className="w-[355px] px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-[355px] px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300 max-md:w-full"
             placeholderText="Seleccione una fecha"
           />
         </div>
@@ -107,14 +107,14 @@ export function FormularioLaborales({
 
       {/* Cargo */}
       <section>
-        <div className="flex items-center">
-          <label className="w-1/4 text-sm uppercase font-medium" htmlFor="role">
+        <div className="flex items-center max-md:flex-col max-md:items-start">
+          <label className="w-1/4 text-sm uppercase font-medium max-md:w-full" htmlFor="role">
             Cargo
           </label>
           <select
             id="cargo"
             {...register("role")}
-            className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300  max-md:w-full"
           >
             <option value="">Seleccione un cargo</option>
             {roleList.map((role) => (
@@ -131,9 +131,9 @@ export function FormularioLaborales({
 
       {/* Departamento */}
       <section>
-        <div className="flex items-center">
+        <div className="flex items-center max-md:flex-col max-md:items-start">
           <label
-            className="w-1/4 text-sm uppercase font-medium"
+            className="w-1/4 text-sm uppercase font-medium max-md:w-full"
             htmlFor="departament"
           >
             Departamento
@@ -141,7 +141,7 @@ export function FormularioLaborales({
           <select
             id="departamento"
             {...register("department")}
-            className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300 max-md:w-full"
           >
             <option value="">Seleccione un departamento</option>
             {departmentList.map((department) => (
@@ -158,9 +158,9 @@ export function FormularioLaborales({
 
       {/* Jornada de Trabajo */}
       <section>
-        <div className="flex items-center">
+        <div className="flex items-center max-md:flex-col max-md:items-start">
           <label
-            className="w-1/4 text-sm uppercase font-medium"
+            className="w-1/4 text-sm uppercase font-medium max-md:w-full"
             htmlFor="working_day"
           >
             Jornada de Trabajo
@@ -168,7 +168,7 @@ export function FormularioLaborales({
           <select
             id="jornada"
             {...register("working_day")}
-            className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300 max-md:w-full"
           >
             <option value="">Seleccione una jornada</option>
             {laborales.jornadasTrabajo.map((jornada) => (
@@ -185,9 +185,9 @@ export function FormularioLaborales({
 
       {/* Salario */}
       <section>
-        <div className="flex items-center">
+        <div className="flex items-center max-md:flex-col max-md:items-start">
           <label
-            className="w-1/4 text-sm uppercase font-medium"
+            className="w-1/4 text-sm uppercase font-medium max-md:w-full"
             htmlFor="salary"
           >
             Salario
@@ -196,7 +196,7 @@ export function FormularioLaborales({
             type="number"
             id="salario"
             {...register("salary", { valueAsNumber: true })}
-            className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300 max-md:w-full"
             placeholder="Salario"
           />
         </div>

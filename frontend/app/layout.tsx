@@ -50,11 +50,9 @@ export default function RootLayout({
           enableColorScheme
           disableTransitionOnChange
         > */}
-          <section className="flex h-screen flex-col md:flex-row md:overflow-hidden">
-            <div className="w-full flex-none md:w-64">
+          <section className="flex h-screen flex-col max-lg::overflow-hidden">
               <Sidebar />
-            </div>
-            <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
+            <div className="flex-grow pl-60 md:overflow-y-auto max-lg:pl-14">
               {children}
             </div>
           </section>

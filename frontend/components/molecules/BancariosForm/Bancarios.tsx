@@ -106,14 +106,14 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
     >
       {/* Banco (select) */}
       <section>
-        <div className="flex items-center">
-          <label className="w-1/4 text-sm uppercase font-medium" htmlFor="bank">
+        <div className="flex items-center max-md:flex-col max-md:items-start">
+          <label className="w-1/4 text-sm uppercase font-medium max-md:w-full" htmlFor="bank">
             Banco
           </label>
           <select
             id="bank"
             {...register("bank")}
-            className="w-3/4 px-3 py-2 border text-black rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-3/4 px-3 py-2 border text-black rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300 max-md:w-full"
           >
             <option value="">Selecciona un banco</option>
             {bankList.map((banco) => (
@@ -130,9 +130,9 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
 
       {/* Tipo de Cuenta (select) */}
       <section>
-        <div className="flex items-center">
+        <div className="flex items-center max-md:flex-col max-md:items-start">
           <label
-            className="w-1/4 text-sm uppercase font-medium"
+            className="w-1/4 text-sm uppercase font-medium max-md:w-full"
             htmlFor="bank_account_type"
           >
             Tipo de Cuenta
@@ -140,7 +140,7 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
           <select
             id="bank_account_type"
             {...register("bank_account_type")}
-            className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300 max-md:w-full"
           >
             <option value="">Selecciona el tipo de cuenta</option>
             {bankAccountTypeList.map((tipo) => (
@@ -159,9 +159,9 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
 
       {/* Número de Cuenta */}
       <section>
-        <div className="flex items-center">
+        <div className="flex items-center max-md:flex-col max-md:items-start">
           <label
-            className="w-1/4 text-sm uppercase font-medium"
+            className="w-1/4 text-sm uppercase font-medium max-md:w-full"
             htmlFor="bank_account_number"
           >
             Número de Cuenta
@@ -170,7 +170,7 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
             type="text"
             id="numeroCuenta"
             {...register("bank_account_number")}
-            className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-3/4 px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-300 max-md:w-full"
             placeholder="Número de cuenta"
           />
         </div>
