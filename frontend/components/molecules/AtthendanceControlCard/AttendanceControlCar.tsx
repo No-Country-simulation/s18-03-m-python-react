@@ -5,7 +5,6 @@ import { Skeleton, Card, CardContent } from "@/components/atoms";
 import { PersonIcon } from "@radix-ui/react-icons";
 import AttendanceForm from '../AtthendanceForm/AtthendanceForm';
 
-
 interface Props {
   name: string;
   cargo: string;
@@ -29,6 +28,7 @@ export const AttendanceCard = ({
 }: Readonly<Props>) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedAbsences, setSelectedAbsences] = useState(absences);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1500);
@@ -92,12 +92,25 @@ export const AttendanceCard = ({
       <AttendanceForm
         isOpen={isModalOpen}
         setOpen={setIsModalOpen}
-        title="justificar Inacistencia"
-        confirmText="justificar"
-        onConfirm={() => console.log("Confirmación de ausencias")}
+        title="Justificar Inasistencia"
+        confirmText="Justificar"
+        onConfirm={() => console.log(`Confirmación de ${selectedAbsences} inasistencias`)}
       >
         {/* Contenido personalizado del modal */}
         <p>Detalles adicionales sobre las ausencias de {name}.</p>
+        <label htmlFor="absences" className="block text-sm font-medium text-gray-700">Inasistencias</label>
+        <select
+          id="absences"
+          value={selectedAbsences}
+          onChange={(e) => setSelectedAbsences(Number(e.target.value))}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+        >
+          {[0, 1, 2, 3, 4].map((num) => (
+            <option key={num} value={num}>
+              {num}
+            </option>
+          ))}
+        </select>
       </AttendanceForm>
     </>
   );
