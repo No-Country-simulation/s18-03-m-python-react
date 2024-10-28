@@ -8,7 +8,7 @@ from users.models import Employee
 # Create your models here.
 class Assistance(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    entry = models.DateTimeField(auto_now_add=True)
+    entry = models.DateTimeField(default=datetime.now)
     exit = models.DateTimeField(null=True, blank=True)
         
     def clean(self):

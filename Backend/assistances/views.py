@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from django.utils import timezone
 from django.shortcuts import render
 from django.core.exceptions import ValidationError
@@ -54,5 +54,36 @@ class EndAssistanceView(APIView):
             return Response({"message": f"Validation error: {e}"}, status=status.HTTP_400_BAD_REQUEST)
         
         assistance.save()
+        
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
+class JustifyAssistanceView(APIView):
+    def post(self, request, *args, **kwargs):
+        if not (employee_id := request.data.get('employee_id', None)):
+            return Response({'message': 'Employee id required'}, status=status.HTTP_400_BAD_REQUEST)
+        if not (employee := Employee.objects.filter(id=employee_id).first()):
+            return Response({'message': f'Employee with id {employee_id} not found'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not (date_parameter := request.data.get('date', None)):
+            return Response({'message': 'Date is required'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            date.fromisoformat(date_parameter)
+        except ValueError:
+            return Response({'message': 'Invalid date format'})
+         
+        if Assistance.objects.filter(employee=employee_id, entry__date=date_parameter).exists():
+            return Response({'message': 'Assistance already exist in that date'})
+        
+        date_parameter_formated_to_entry = datetime.strptime((date_parameter + ' 08:00'), "%Y-%m-%d %H:%M")
+        date_parameter_formated_to_exit = datetime.strptime((date_parameter + ' 16:00'), "%Y-%m-%d %H:%M")
+       
+       
+        assistance_obj = Assistance(employee=employee, entry=date_parameter_formated_to_entry, exit=date_parameter_formated_to_exit)
+        try:
+            assistance_obj.full_clean()
+        except ValidationError as e:
+            return Response({'message': f'Validation error: {e}'}, status=status.HTTP_400_BAD_REQUEST)
+        assistance_obj.save()
         
         return Response(status=status.HTTP_204_NO_CONTENT)
