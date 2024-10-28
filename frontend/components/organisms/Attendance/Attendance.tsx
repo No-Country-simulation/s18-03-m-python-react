@@ -1,15 +1,11 @@
-import { HeaderContainer } from "@/components/molecules"
-import { PersonnelAttendanceCardList } from "@/components/molecules/AtthendanceControlCardList/AttendanceControlCardList"
-
+import { PersonnelAttendanceCardList } from "@/components/molecules/AtthendanceControlCardList/AttendanceControlCardList";
 
 function Attendance() {
   return (
     <div>
-       <HeaderContainer titlePage="Control de asistencias" />
-      <PersonnelAttendanceCardList   />  
-      
+      <PersonnelAttendanceCardList />
     </div>
-  )
+  );
 }
 
-export default Attendance
+export default Attendance;
