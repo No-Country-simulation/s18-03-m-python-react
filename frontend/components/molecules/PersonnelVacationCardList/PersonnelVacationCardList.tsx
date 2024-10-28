@@ -106,6 +106,7 @@ export const PersonnelVacationCardList = () => {
       )}
 
       <div className="bg-white p-4 rounded-lg">
+        {/* Titulos de la tabla */}
         <section>
           <div className={`w-full mx-auto px-5 overflow-hidden`}>
             <div className="flex items-center justify-between">
