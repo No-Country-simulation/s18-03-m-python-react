@@ -1,3 +1,4 @@
+export * from './assistance/assistance.api';
 export * from './bank/bank.api';
 export * from './bankaccount/bankaccount.api';
 export * from './base';
@@ -9,3 +10,4 @@ export * from './entitiesAmount/entitiesAmount.api';
 export * from './province/province.api';
 export * from './role/role.api';
 export * from './team/team.api';
+export * from './vacations/vacation.api';
