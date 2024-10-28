@@ -89,7 +89,7 @@ cd s18-03-m-python-react
 ### 3. Execute the container
 
 ```sh
-docker-compose up --build
+docker-compose up -d --build
 ```
 
 ### 4. Open your browser and navigate to [http://localhost:3000](http://localhost:3000)
