@@ -73,7 +73,7 @@ export const DashboardContainer = () => {
     fetchData(); // Llamar a la función para obtener los datos
   }, []); // El array vacío asegura que se ejecuta solo una vez al montarse
   return (
-    <div className="container mb-10 ">
+    <div className="container mb-10 px-0 ">
       <HeaderContainer titlePage="Panel" />
       <DashboardCardList />
     </div>

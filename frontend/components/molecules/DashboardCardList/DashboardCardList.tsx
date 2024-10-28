@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from "@/components/atoms";
 import Link from "next/link";
+import IconSpan from "@/components/atoms/IconSpan";
 
 const cardData = [
   { id: "1", title: "Gestión de Personal", icon: <GroupIcon />, route:"/management" },
@@ -24,11 +25,12 @@ const cardData = [
   { id: "5", title: "Mis Datos", icon: <PersonIcon />, route:"/profile" },
 ];
 const WelcomeCard = () => (
-  <Card className="h-40 bg-slate-700 text-white w-full max-w-sm rounded-lg">
-    <CardContent className="flex flex-col p-4 justify-between">
-      <CardTitle className="flex flex-row gap-2 text-2xl font-bold">
+  <Card className="h-40 bg-slate-700 text-white w-full max-w-sm rounded-lg max-md:h-36">
+    <CardContent className="flex flex-col py-6 px-12 justify-between max-lg:p-2">
+      <CardTitle className="flex w-full gap-1 justify-between text-wrap text-2xl font-bold 
+      max-lg:text-xl max-md:text-sm">
         Hola Usuario, Bienvenido!
-        <div className="justify-center flex-shrink-0">
+        <div>
           <HeartIcon />
         </div>
       </CardTitle>
@@ -53,7 +55,8 @@ const MsnCard = () => (
 export const DashboardCardList = () => {
   return (
     <div className="flex-col justify-between items-center p-4 bg-white shadow">
-      <div className="grid grid-cols-3 gap-8 p-8">
+      <div className="grid grid-cols-3 gap-8 p-8 
+      max-md:flex max-md:flex-col">
         <WelcomeCard />
         {cardData.map(({ id, title, icon, route }) => (
           <Link href={route} key={id}>

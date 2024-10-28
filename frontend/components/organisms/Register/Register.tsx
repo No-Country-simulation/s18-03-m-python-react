@@ -48,7 +48,7 @@ export default function Register({ isOpen, setOpen }: { isOpen: boolean; setOpen
     <div>
       <div className="flex justify-center items-center h-screen">
         <Dialog open={isOpen} onOpenChange={setOpen}>
-          <DialogContent className="p-5 w-[600px] bg-white">
+          <DialogContent className="p-5 w-[600px] bg-white max-md:max-w-[350px]">
             <DialogHeader className="flex items-center">
               {/* Título dinámico basado en el paso */}
               <DialogTitle>{stepTitles[step - 1]}</DialogTitle>

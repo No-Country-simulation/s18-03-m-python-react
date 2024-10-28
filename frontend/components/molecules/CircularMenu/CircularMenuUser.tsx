@@ -7,6 +7,7 @@ import { Button, CircularMenuUserProps } from "@/interface/menuCircular/menuCirc
 import { useRouter } from "next/navigation";
 import { deleteEmployee } from "@/api";
 import { useToast } from "@/hooks";
+import { dataEmployee } from "@/components/organisms/PersonnelManagement/utils/dataEmployee";
 
 
 
@@ -19,6 +20,9 @@ export default function CircularMenuUser({ pk, toggleMenu }: CircularMenuUserPro
   const handleDeleteEmployee = async () => {
     try {
       await deleteEmployee(pk);
+      await dataEmployee();
+      window.location.reload();
+
       toast({
         title: "Empleado eliminado",
         description: `El usuario fue creado éxitosamente`,

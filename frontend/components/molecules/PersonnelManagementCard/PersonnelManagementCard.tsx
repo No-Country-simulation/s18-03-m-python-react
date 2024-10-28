@@ -1,29 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-
 import { useState } from "react";
 import {
   Skeleton,
   Button,
   Card,
   CardContent,
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
 } from "@/components/atoms";
 import { useToast } from "@/hooks";
-import { GearIcon, PersonIcon } from "@radix-ui/react-icons";
-import { SuccessIcon } from "@/components/icons";
-import { ProfileIcon } from "@/components/icons/Profile/ProfileIcon";
+import { GearIcon } from "@radix-ui/react-icons";
+import { SuccessIcon,
+  ProfileIcon
+ } from "@/components/icons";
 import Image from "next/image";
 import CircularMenuUser from "../CircularMenu/CircularMenuUser";
 import { Employee } from "@/interface/Person/Person";
 import { changeEmployeeStatus } from "@/api";
+import AlertConfirm from "../AlertConfirm/AlertConfirm";
+import IconSpan from "@/components/atoms/IconSpan";
 
 interface Props {
   name: string;
@@ -34,7 +28,7 @@ interface Props {
   alt?: string;
   pk: number;
   employee: Employee | undefined;
-  picture_profile:File | null;
+  picture_profile: File | null;
   onSettingsClick: (pk: number) => void;
   isMenuOpen: boolean;
 }
@@ -65,10 +59,10 @@ export const PersonnelManagementCard = ({
     setIsConfirmOpen(true);
   };
 
-  const confirmStatusChange = async() => {
-    try{
+  const confirmStatusChange = async () => {
+    try {
       await changeEmployeeStatus(pk);
-      
+
       setStatus(!status);
       setNewStatus(status === true ? "inactive" : "active");
       setIsConfirmOpen(false);
@@ -79,12 +73,14 @@ export const PersonnelManagementCard = ({
         }.`,
         className: "bg-green-500 text-white",
       });
-    }catch(error){
+    } catch (error) {
       toast({
-        title:"Error",
-        description:`Ocurrio un error al cambiar el estado ${status ? "activo": "inactivo"}`,
-        className: "bg-red-500 text-white"
-      })
+        title: "Error",
+        description: `Ocurrio un error al cambiar el estado ${
+          status ? "activo" : "inactivo"
+        }`,
+        className: "bg-red-500 text-white",
+      });
     }
   };
 
@@ -119,78 +115,78 @@ export const PersonnelManagementCard = ({
               : "border-l-8 border-l-red-500"
           } ${isConfirmOpen ? "blur-sm" : ""}`}
         >
-          <CardContent className="flex items-center p-4">
-            {/* volver a poner !imageSrc cuando se integre la imagen a backend */}
-            {!imageSrc ? (
-              <div className="w-12 h-12 rounded-ful flex items-center justify-center mr-5">
-                <ProfileIcon />
-              </div>
-            ) : (
-              <Image
-                className="rounded-full mr-4"
-                src={imageSrc ? `http://localhost:8000${imageSrc}` : "http://i.pravatar.cc/304"}
-                alt={alt ?? `Profile picture of ${name}`}
-                width={50}
-                height={50}
-              />
-            )}
-            <div className="flex-grow">
-              <h3 className="font-semibold text-lg">{name}</h3>
-              <p className="text-sm text-gray-600 max-w-40">{cargo}</p>
-            </div>
-            <div className="flex-grow max-w-64">
-              <p className="font-semibold text-lg">{email}</p>
-            </div>
-
-            <div className="flex items-center gap-2 justify-center">
-              <Button
-                onClick={handleStatusChange}
-                className={`w-24 h-10 text-white ${
-                  status === true
-                    ? "bg-green-500 hover:bg-green-600"
-                    : "bg-red-500 hover:bg-red-600"
-                }`}
-              >
-                {status === true ? "Activo" : "Inactivo"}
-              </Button>
-              <div className="relative">
-                <button
-                  onClick={() =>
-                    setIsCircularMenuVisible(!isCircularMenuVisible)
+          <CardContent className="flex items-center justify-between gap-4 p-4 max-lg:px-0">
+            <IconSpan>
+              {!imageSrc ? (
+                <div className="w-12 h-12 rounded-ful flex items-center justify-center mr-5">
+                  <ProfileIcon />
+                </div>
+              ) : (
+                <Image
+                  className="rounded-full mr-4"
+                  src={
+                    imageSrc
+                      ? `http://localhost:8000${imageSrc}`
+                      : "http://i.pravatar.cc/304"
                   }
-                  className="bg-base-primary rounded-full p-2"
+                  alt={alt ?? `Profile picture of ${name}`}
+                  width={50}
+                  height={50}
+                />
+              )}
+              <div className="flex flex-col max-md:max-w-16 max-lg:max-h-16">
+                <h3 className="font-semibold text-lg overflow-hidden whitespace-nowrap text-ellipsis">
+                  {name}
+                </h3>
+                <p className="text-sm text-gray-600 overflow-hidden whitespace-nowrap text-ellipsis">
+                  {cargo}
+                </p>
+              </div>
+            </IconSpan>
+            <div className="flex flex-grow justify-end gap-4 items-center">
+              <p className="font-semibold text-lg max-lg:text-md max-md:hidden">
+                {email}
+              </p>
+              <div className="flex items-center gap-2 justify-center max-md:flex-col">
+                <Button
+                  onClick={handleStatusChange}
+                  className={`w-24 h-10 text-white ${
+                    status === true
+                      ? "bg-green-500 hover:bg-green-600"
+                      : "bg-red-500 hover:bg-red-600"
+                  } max-lg:w-16`}
                 >
-                  <GearIcon className="w-4 h-4 text-white" />
-                </button>
-                {isCircularMenuVisible && (
-                  <div className="absolute -right-8 -top-8 z-10">
-                    <CircularMenuUser pk={pk} toggleMenu={closeMenu} />
-                  </div>
-                )}
+                  {status === true ? "Activo" : "Inactivo"}
+                </Button>
+                <div className="relative">
+                  <button
+                    onClick={() =>
+                      setIsCircularMenuVisible(!isCircularMenuVisible)
+                    }
+                    className="bg-base-primary rounded-full p-2"
+                  >
+                    <GearIcon className="w-4 h-4 text-white" />
+                  </button>
+                  {isCircularMenuVisible && (
+                    <div className="absolute -right-8 -top-8 z-10">
+                      <CircularMenuUser pk={pk} toggleMenu={closeMenu} />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
       )}
-      <AlertDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
-        <AlertDialogContent className="bg-white">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirmar cambio de estado</AlertDialogTitle>
-            <AlertDialogDescription>
-              ¿Estás seguro de que quieres cambiar el estado del usuario a{" "}
-              {newStatus === "active" ? "activo" : "inactivo"}?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="bg-base-secondary text-white" onClick={cancelStatusChange}>
-              Cancelar
-            </AlertDialogCancel>
-            <AlertDialogAction className="bg-base-primary text-white" onClick={confirmStatusChange}>
-              Confirmar
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <AlertConfirm 
+      open={isConfirmOpen} 
+      onOpenChange={setIsConfirmOpen}
+      title="Confirmar cambio de estado"
+      description={`¿Estás seguro de que quieres cambiar el estado del usuario a ${newStatus === "active" ? "activo" : "inactivo"}?`}
+      btnCancelTitle="Cancelar"
+      btnAcceptTitle="Confirmar"
+      action={confirmStatusChange}
+       />
     </>
   );
 };
