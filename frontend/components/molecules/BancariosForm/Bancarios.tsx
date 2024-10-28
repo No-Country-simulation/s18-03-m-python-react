@@ -71,11 +71,10 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
       first_name: formData.first_name || '', // ya está en el formato correcto
       last_name: formData.last_name || '', // ya está en el formato correcto
       employee: {
-        start_date: formData.start_date || '', // formatear fecha como YYYY-MM-DD
-        department: formData.departament || '', // debe ser un ID, asegúrate de que este dato sea correcto
-        role: formData.role, // asumiendo que es un array de IDs
-        salary: String(formData.salary) || '', // convertir a string
-        working_day: formData.working_day || '', // ya está en el formato correcto
+        start_date: formData.employee?.start_date || '', // formatear fecha como YYYY-MM-DD
+        department: formData.employee?.department || '', // debe ser un ID, asegúrate de que este dato sea correcto
+        role: Array.isArray(formData.employee?.role) ? formData.employee.role[0] : formData.employee?.role || '',        salary: String(formData.employee?.salary) || '', // convertir a string
+        working_day: formData.employee?.working_day || '', // ya está en el formato correcto
       },
       // ya está en el formato correcto
     };
@@ -117,7 +116,7 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
           >
             <option value="">Selecciona un banco</option>
             {bankList.map((banco) => (
-              <option key={banco.pk} value={banco.name}>
+              <option key={banco.pk} value={banco.name}> 
                 {banco.name}
               </option>
             ))}
