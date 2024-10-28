@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { Skeleton, Card, CardContent } from "@/components/atoms";
 import { PersonIcon } from "@radix-ui/react-icons";
+import AttendanceForm from '../AtthendanceForm/AtthendanceForm';
+
 
 interface Props {
   name: string;
@@ -26,6 +28,7 @@ export const AttendanceCard = ({
   theoreticalHours 
 }: Readonly<Props>) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1500);
@@ -65,24 +68,37 @@ export const AttendanceCard = ({
               <p className="text-sm text-gray-600">{cargo}</p>
             </div>
             <div className="flex-grow">
-              <p className="text-sm text-gray-600">{attendances}  Asistencias</p>
+              <p className="text-sm text-gray-600">{attendances} Asistencias</p>
             </div>
             <div className="flex-grow">
-              <p className="text-sm text-gray-600 translate-x-1">{absences}  Ausencias </p>
+              <p 
+                className="text-sm text-gray-600 translate-x-1 hover:text-red-500 cursor-pointer" 
+                onClick={() => setIsModalOpen(true)}
+              >
+                {absences} Ausencias
+              </p>
             </div>
             <div className="flex-grow">
-              <p className="text-sm text-gray-600 translate-x-1">{workedHours}  Horas</p>
+              <p className="text-sm text-gray-600 translate-x-1">{workedHours} Horas</p>
             </div>
             <div className="flex-grow">
-              <p className="text-sm text-gray-600 translate-x-1">{theoreticalHours}  Horas</p>
+              <p className="text-sm text-gray-600 translate-x-1">{theoreticalHours} Horas</p>
             </div>
-
           </CardContent>
         </Card>
       )}
+
+      {/* AttendanceForm modal */}
+      <AttendanceForm
+        isOpen={isModalOpen}
+        setOpen={setIsModalOpen}
+        title="justificar Inacistencia"
+        confirmText="justificar"
+        onConfirm={() => console.log("Confirmación de ausencias")}
+      >
+        {/* Contenido personalizado del modal */}
+        <p>Detalles adicionales sobre las ausencias de {name}.</p>
+      </AttendanceForm>
     </>
   );
 };
-
-
-
