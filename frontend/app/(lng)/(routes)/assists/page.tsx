@@ -1,10 +1,11 @@
+import { AttendanceCard } from "@/components/molecules/AtthendanceControlCard/AttendanceControlCar"
+import { PersonnelAttendanceCardList } from "@/components/molecules/AtthendanceControlCardList/AttendanceControlCardList"
+import Attendance from "@/components/organisms/Attendance/Attendance"
 
 
 function PageAssists() {
   return (
-    <div className='flex justify-center items-center h-screen'>
-      <h1>control de asistencia</h1>
-    </div>
+    <Attendance />
   )
 }
 
