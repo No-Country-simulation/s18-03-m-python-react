@@ -115,13 +115,13 @@ console.log('imagen', imageSrc)
       <Card
         className={cn(
           "w-full mx-auto px-5 mb-4 overflow-hidden",
-          status === "P" ? "border-l-8 border-l-yellow-500" :
-          status === "A" ? "border-l-8 border-l-green-500" :
-          "border-l-8 border-l-red-500"
+          status === "P" ? "border-l-8 border-l-yellow-500 max-md:border-l-0 max-md:border-t-8 max-md:border-t-yellow-500" :
+          status === "A" ? "border-l-8 border-l-green-500 max-md:border-l-0 max-md:border-t-8 max-md:border-t-green-500" :
+          "border-l-8 border-l-red-500 max-md:border-l-0 max-md:border-t-8 max-md:border-t-red-500"
         )}
       >
-        <CardContent className="flex items-center justify-between p-4">
-          <section className="flex w-64 gap-3">
+        <CardContent className="flex items-center justify-between p-4 max-lg:px-0 max-md:flex-col max-md:gap-4">
+          <section className="flex w-64 gap-3 max-md:justify-center">
             {!imageSrc ? (
               <div className="w-12 h-12 rounded-full flex items-center justify-center mr-5">
                 <ProfileIcon />
@@ -141,12 +141,13 @@ console.log('imagen', imageSrc)
             </div>
           </section>
           <div>
+            <h4 className="md:hidden text-center text-base-secondary font-semibold">Período solicitado</h4>
             <p>{startDay} - {endDay}</p>
           </div>
-          <div>
+          <div className="max-md:hidden">
             <p className="text-sm text-gray-600">{totalDays} días</p>
           </div>
-          <div>
+          <div className="max-md:hidden">
             <p className="text-sm text-gray-600">{remainingDays} días</p>
           </div>
           <Button
@@ -167,9 +168,9 @@ console.log('imagen', imageSrc)
       {/* Modal */}
       {modalVisible && (
         <Modal isOpen={modalVisible} setOpen={setModalVisible} title={"Aprobación del Gestor"}>
-          <section className="flex flex-col gap-4">
+          <section className="flex flex-col gap-4 max-md:max-h-screen max-md:overflow-hidden max-md:overflow-y-scroll">
 
-          <section className="flex gap-4 bg-base-secondary w-full h-14 rounded-md items-center justify-around p-2">
+          <section className="flex gap-4 bg-base-secondary w-full h-14 rounded-md items-center justify-around p-2 max-md:flex-col">
             {VacationInfo.map((info, index) => (
               <div key={index} className="flex items-center gap-2">
                 <div
@@ -209,13 +210,13 @@ console.log('imagen', imageSrc)
           <Card
         className={cn(
           "w-full mx-auto px-5 mb-4 overflow-hidden",
-          status === "P" ? "border-l-8 border-l-yellow-500" :
-          status === "A" ? "border-l-8 border-l-green-500" :
-          "border-l-8 border-l-red-500"
+          status === "P" ? "border-l-8 border-l-yellow-500 max-md:border-l-0 max-md:border-t-8 max-md:border-t-yellow-500" :
+          status === "A" ? "border-l-8 border-l-green-500 max-md:border-l-0 max-md:border-t-8 max-md:border-t-green-500" :
+          "border-l-8 border-l-red-500 max-md:border-l-0 max-md:border-t-8 max-md:border-t-red-500"
         )}
       >
-        <CardContent className="flex items-center justify-between p-4">
-          <section className="flex w-64 gap-3">
+        <CardContent className="flex items-center justify-between p-4 max-lg:px-0 max-md:flex-col max-md:gap-4">
+          <section className="flex w-64 gap-3 max-md:justify-center">
             {!imageSrc ? (
               <div className="w-12 h-12 rounded-full flex items-center justify-center mr-5">
                 <ProfileIcon />

@@ -53,7 +53,7 @@ const SearchBar = ({
       placeholder="Buscar por Empleado o Cargo"
       value={searchQuery}
       onChange={(e) => setSearchQuery(e.target.value)}
-      className="pl-4 pr-10 py-2 w-full h-12 border-2 border-black-800 focus:border-base-primary text-xl rounded-xl"
+      className="pl-4 pr-10 py-2 w-full h-12 border-2 border-black-800 focus:border-base-primary text-xl rounded-xl max-md:text-md max-md:placeholder:text-sm"
     />
     <span className="absolute right-3 size-6 top-1/2 transform -translate-y-1/2 text-base-primary">
       <SearchIcon size={24} />
@@ -86,13 +86,14 @@ export const PersonnelVacationCardList = () => {
   }, []);
 
   return (
-    <div className="container mx-auto p-4 shadow">
-      <div className="flex flex-row justify-between px-4 items-center space-x-4">
+    <div className="container mx-auto p-4 shadow max-md:px-0">
+      <div className="flex flex-row justify-between px-4 items-center space-x-4
+      max-md:flex-col max-md:gap-4">
         <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-        <span className="pr-12">
+        <span className="pr-12  max-md:w-full max-md:p-0">
           <Button
             onClick={() => setIsOpen(!isOpen)}
-            className="bg-base-primary text-white"
+            className="bg-base-primary text-white max-md:w-full"
           >
             Agregar Vacación
           </Button>
@@ -107,7 +108,7 @@ export const PersonnelVacationCardList = () => {
 
       <div className="bg-white p-4 rounded-lg">
         {/* Titulos de la tabla */}
-        <section>
+        <section className="max-md:hidden">
           <div className={`w-full mx-auto px-5 overflow-hidden`}>
             <div className="flex items-center justify-between">
               <section className="flex w-64 gap-3">
