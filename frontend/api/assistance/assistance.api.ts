@@ -20,6 +20,7 @@ export const openAssistance = async (assistance: any) => {
         return response.data;
     } catch (error) {
         console.error(error);
+        throw new Error('Ocurrio un error al registrar la entrada')
     }
 }
 
@@ -32,5 +33,6 @@ export const closeAssistance = async (assistance: any) => {
         return response.data;
     } catch (error) {
         console.error(error);
+        throw new Error('Ocurrio un error al registrar la salida')
     }
 }
