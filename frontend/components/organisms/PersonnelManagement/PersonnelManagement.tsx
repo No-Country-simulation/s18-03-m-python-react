@@ -3,7 +3,7 @@ import {
   PersonnelManagementCardList
 } from '@/components/molecules';
 
-interface Props { };
+
 
 export const PersonnelManagementContainer = () => {
   return (

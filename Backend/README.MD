@@ -37,7 +37,7 @@ Elegimos utilizar Python junto con PostgreSQL para el backend de nuestra aplicac
 
 ## 🧰 Technology Stack [🔝](#-backend-for-app)
 
-[![Python Link](https://img.shields.io/badge/Python-%20%233776AB?style=for-the-badge&logo=Python&logoColor=%23FFFFFF 'Python Link')](https://www.python.org/)
+[![Python Link](https://img.shields.io/badge/Python-%20%233776AB?style=for-the-badge&logo=Python&logoColor=%23FFFFFF 'Python Link')](https://www.python.org/) [![Postgres](https://img.shields.io/badge/Postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)](#) [![Django](https://img.shields.io/badge/Django-%23092E20.svg?logo=django&logoColor=white&style=for-the-badge)](#) [![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff&style=for-the-badge)](#)
 
 ## 🤵‍♂️ Team communication channels [🔝](#-backend-for-app)
 
@@ -45,10 +45,10 @@ Elegimos utilizar Python junto con PostgreSQL para el backend de nuestra aplicac
 
 ## 🧑‍💻 Developer Teams [🔝](#-backend-for-app)
 
-| ![Avatar](https://avatars.githubusercontent.com/u/139293883?s=96&v=4) | ![Avatar](https://avatars.githubusercontent.com/u/146007178?s=96&v=4) | ![Avatar](https://avatars.githubusercontent.com/u/162047014?s=96&v=4) |
-|:-:|:-:|:-:|
-| **Anthony Bañon** | **Yuneido Chacin**  | **Juan Novas**  |
-| [![Github Link](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white 'Github Link')](https://github.com/anthonybanion)[![LinkedIn Link](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white 'LinkedIn Link')](https://www.linkedin.com/in/anthonybanion/) | [![Github Link](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white 'Github Link')](https://github.com/yjchf)[![LinkedIn Link](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white 'LinkedIn Link')](https://www.linkedin.com/in/yuneidochacin/) | [![Github Link](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white 'Github Link')](https://github.com/JuanNovas)[![LinkedIn Link](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white 'LinkedIn Link')](https://www.linkedin.com/in/juan-novas/) |
+| ![Avatar](https://avatars.githubusercontent.com/u/139293883?s=96&v=4) |![Avatar](https://avatars.githubusercontent.com/u/162047014?s=96&v=4) |
+|:-:|:-:|
+| **Anthony Bañon** | **Juan Novas**  |
+| [![Github Link](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white 'Github Link')](https://github.com/anthonybanion)[![LinkedIn Link](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white 'LinkedIn Link')](https://www.linkedin.com/in/anthonybanion/) | [![Github Link](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white 'Github Link')](https://github.com/JuanNovas)[![LinkedIn Link](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white 'LinkedIn Link')](https://www.linkedin.com/in/juan-novas/) |
 
 ## 🗃️ Project info [🔝](#-backend-for-app)
 
@@ -72,58 +72,32 @@ Elegimos utilizar Python junto con PostgreSQL para el backend de nuestra aplicac
 
 ## 🛠️ Requirements [🔝](#-backend-for-app)
 
-👉🏻 To use the front end locally for the Restify app, you need to:
+Make sure you have **Docker** installed. If you don't have it, click [here](https://www.docker.com) to go to the official site and download it.
 
 ### 1. Clone the repository from GitHub
 
 ```sh
-git clone https://github.com/No-Country/c17-29-n-node.git
+git clone https://github.com/No-Country-simulation/s18-03-m-python-react.git
 ```
 
 ### 2. Navigate to the backend folder
 
 ```sh
-cd Backend
+cd s18-03-m-python-react
 ```
 
-### 3. Install the necessary dependencies
+### 3. Execute the container
 
 ```sh
-npm install
+docker-compose up -d --build
 ```
 
-### 4 In the backend folder, create a .env file
+### 4. Open your browser and navigate to [http://localhost:3000](http://localhost:3000)
 
-```sh
-touch .env
-```
-
-### 5. Add the following keys to the .env file
-
-```sh
-poner en env.example
-```
-
-### 6. Run the following command to start the server
-
-```sh
-npm run dev
-```
-
-### 7. Open your browser and navigate to [http://localhost:3001/api/v1/docs](http://localhost:3001/api/v1/docs)
-
-## 🎚️ Scripts [🔝](#-backend-for-app)
-
-- `npm rum start`: Run the application development server with node
-- `npm rum dev`: Run the application development server with nodemon.
-
-## 🩻 Progress Report on Router Development [🔝](#-backend-for-app)
-
-Ejemplo de como documentar las rutas
 
 ### ✨ Root Base
 
-[http://localhost:3001/api/v1/docs](http://localhost:3001/api/v1/docs)
+[http://localhost:3000](http://localhost:3000)
 
 ### ✨ Start Route [🔝](#-backend-for-app)
 

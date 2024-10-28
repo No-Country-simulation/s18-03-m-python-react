@@ -11,6 +11,7 @@ import useFormStore from "@/store/useFormStore";
 import { BancariosValidations } from "@/validations/auth/register/bancariosValidations";
 import { Employee, registerEmployee } from "@/api";
 import { useToast } from "@/hooks";
+import { dataEmployee } from "@/components/organisms/PersonnelManagement/utils/dataEmployee";
 
 
 type FormData = Employee
@@ -85,6 +86,8 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
         description: `El usuario fue creado éxitosamente`,
         className: "bg-green-500 text-white",
       });
+      await dataEmployee();
+      window.location.reload();
     } catch(error) {
       toast({
         title: "Error",

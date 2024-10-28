@@ -7,6 +7,7 @@ import CircularMenu from "../CircularMenu/CircularMenu";
 import Register from "@/components/organisms/Register/Register";
 import { Person } from "@/interface/Person/Person";
 
+
 const filterUsers = (users: Person[], query: string) => {
   if (!query) return users;
   return users.filter(
@@ -47,6 +48,8 @@ export const PersonnelManagementCardList = () => {
   );
   const [isCircularMenuVisible, setIsCircularMenuVisible] = useState(false);
 
+
+
 //declare useEffect
 useEffect(() => {
   const empList = JSON.parse(
@@ -54,6 +57,8 @@ useEffect(() => {
   ) as Person[];
   setEmployeesList(empList);
 }, []);
+
+
 
 const filteredUsers = useMemo(
   () => filterUsers(employeesList, searchQuery),
