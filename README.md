@@ -80,7 +80,7 @@ Elegimos desarrollar una aplicación de recursos humanos porque creemos en la im
 
 | ![Avatar](https://avatars.githubusercontent.com/u/139293883?s=96&v=4) |![Avatar](https://avatars.githubusercontent.com/u/162047014?s=96&v=4) |
 |:-:|:-:|
-| **Anthony Bañon** | **Yuneido Chacin**  | **Juan Novas**  |
+| **Anthony Bañon** | **Juan Novas**  |
 | [![Github Link](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white 'Github Link')](https://github.com/anthonybanion)[![LinkedIn Link](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white 'LinkedIn Link')](https://www.linkedin.com/in/anthonybanion/) | [![Github Link](https://img.shields.io/badge/github-%23121011.svg?&style=for-the-badge&logo=github&logoColor=white 'Github Link')](https://github.com/JuanNovas)[![LinkedIn Link](https://img.shields.io/badge/linkedin%20-%230077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white 'LinkedIn Link')](https://www.linkedin.com/in/juan-novas/) |
 
 ## 🗃️ Project info [🔝](#-readme-for-app-)
