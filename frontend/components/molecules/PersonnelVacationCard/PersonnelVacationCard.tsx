@@ -76,7 +76,7 @@ export const VacationCard = ({
     setSelectedStatus(newStatus);
     setModalVisible(true);
   };
-
+console.log('imagen', imageSrc)
   const handleConfirm = async () => {
     if (!selectedStatus) return;
 

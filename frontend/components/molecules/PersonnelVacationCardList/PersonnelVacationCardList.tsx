@@ -19,11 +19,11 @@ interface Vacation {
   remainingDays: number;
   startDay: string;
   endDay: string;
-  profile_picture: File;
   end: string;
   start: string;
   message?: string | null;
   employee?: {
+    profile_picture: File;
     first_name: string;
     last_name: string;
     role: string;
@@ -149,12 +149,12 @@ export const PersonnelVacationCardList = () => {
 
         {vacationsList.length > 0 ? (
           vacationsList.map(
-            ({ pk, employee, profile_picture, alt, end, start, status }) => (
+            ({ pk, employee,alt, end, start, status }) => (
               <VacationCard
                 key={pk}
                 name={employee?.first_name}
                 cargo={employee?.role}
-                imageSrc={profile_picture}
+                imageSrc={employee?.profile_picture}
                 alt={alt}
                 startDay={start}
                 endDay={end}
