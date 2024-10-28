@@ -89,6 +89,7 @@ console.log('imagen', imageSrc)
       });
       toastSuccess("Éxito", response?.message);
       setModalVisible(false); // Cierra el modal
+      window.location.reload();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error al cambiar el estado de la petición";
       toastError("Error", errorMessage);

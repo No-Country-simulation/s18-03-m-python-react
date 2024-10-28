@@ -85,6 +85,7 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
         description: `El usuario fue creado éxitosamente`,
         className: "bg-green-500 text-white",
       });
+      window.location.reload();
     } catch(error) {
       toast({
         title: "Error",

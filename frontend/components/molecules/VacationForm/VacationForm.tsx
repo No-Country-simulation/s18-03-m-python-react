@@ -83,6 +83,7 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
         setSuccess(true);
         setError(null);
         toastSuccess("Solicitud enviada", "La solicitud de vacaciones fue enviada exitosamente.");
+        window.location.reload();
         onClose();
       } catch (error ) {
         const errorMessage = (error as Error).message;
