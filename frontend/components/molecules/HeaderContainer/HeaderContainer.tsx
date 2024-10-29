@@ -13,16 +13,17 @@ export const HeaderContainer = () => {
     management: "Gestión Empleados",
     vacation: "Vacaciones",
     assists: "Control de Asistencia",
-    gestion: "Gestion Plataforma"
+    gestion: "Gestion Plataforma",
+    profile: "Perfil",
   };
 
   // Obtiene el título en español basado en el pathname
   const titlePage =
-    pathname
-      .split("/")
-      .filter(Boolean)
-      .map((word) => routeTranslations[word] || word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ") || "WorkWise";
+  pathname
+    .split("/")
+    .filter((segment) => Boolean(segment) && isNaN(Number(segment))) // Filtra segmentos no vacíos y no numéricos
+    .map((word) => routeTranslations[word] || word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ") || "WorkWise";
 
   return (
     <div className="flex flex-row w-full items-center justify-between bg-white shadow py-4 px-20 border-2 border-b-8 border-x-base-primary-200 max-lg:px-6">
