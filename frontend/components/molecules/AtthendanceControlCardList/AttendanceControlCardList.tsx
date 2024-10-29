@@ -1,9 +1,10 @@
 'use client'
 import { SearchIcon, CalendarIcon } from '@/components/icons';
 import { Input } from '@/components/atoms';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AttendanceCard } from '../AtthendanceControlCard/AttendanceControlCar';
 import AttendanceForm from '../AtthendanceForm/AtthendanceForm';
+import { getAllAssistances } from '@/api';
 
 interface Attendance {
   id: string;
@@ -13,25 +14,18 @@ interface Attendance {
   imageSrc?: string;
   alt?: string;
   attendances: number;
-  absences: number;
+  absences: string[];
   workedHours: number;
   theoreticalHours: number;
 }
 
-const attendanceRecords: Attendance[] = [
-  { id: "1", name: 'conrado 1', cargo: "Front-End", status: 'in-process', imageSrc: "https://i.pravatar.cc/300", alt: "asistencia 1", attendances: 20, absences: 2, workedHours: 160, theoreticalHours: 180 },
-  { id: "2", name: 'conrado 2', cargo: "Back-End", status: 'completed', imageSrc: "https://i.pravatar.cc/301", alt: "asistencia 2", attendances: 18, absences: 4, workedHours: 150, theoreticalHours: 180 },
-  { id: "3", name: 'alejandro 3', cargo: "Front-End", status: 'in-process', imageSrc: "https://i.pravatar.cc/302", alt: "asistencia 3", attendances: 22, absences: 1, workedHours: 170, theoreticalHours: 180 },
-];
-
-const filterAttendance = (attendanceRecords: Attendance[], query: string) => {
+const filterAttendance = (attendanceRecords: any[], query: string) => {
   if (!query) return attendanceRecords;
   return attendanceRecords.filter(record =>
     record.name.toLowerCase().includes(query.toLowerCase()) ||
     record.cargo.toLowerCase().includes(query.toLowerCase())
   );
 };
-
 const SearchBar = ({ searchQuery, setSearchQuery }: { searchQuery: string, setSearchQuery: (query: string) => void }) => (
   <div className="relative w-full max-w-md">
     <Input
@@ -51,13 +45,46 @@ export const PersonnelAttendanceCardList = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState("");
+  const[attendanceList, setAttendanceList] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchAssistances = async () => {
+      try {
+        const getList = await getAllAssistances();
+        // Convertir el objeto de objetos en un array de objetos
+        const attendanceArray = Object.values(getList.message).map((entry: any) => ({
+          id: entry.employee_id,
+          name: `${entry.first_name} ${entry.last_name}`,
+          cargo: entry.role,
+          imageSrc: `http://localhost:8000${entry.profile_picture}`, // Ruta para la imagen
+          alt: `${entry.first_name} ${entry.last_name}`,
+          attendances: entry.days_worked,
+          absences: entry.inassistances,
+          workedHours: entry.hours_worked,
+          theoreticalHours: entry.days_worked * 8, // Suponiendo jornada teórica de 8 horas por día trabajado
+        }));
+  
+        sessionStorage.setItem("attendance", JSON.stringify(attendanceArray));
+        setAttendanceList(attendanceArray); // Actualiza el estado con los datos directamente
+      } catch (error) {
+        console.error("Error fetching assistances:", error);
+      }
+    };
+  
+    fetchAssistances();
+  }, []);
+  
+  // Este useEffect se ejecutará cuando attendanceList cambie
+  useEffect(() => {
+    console.log("attendanceList actualizado:", attendanceList);
+  }, [attendanceList]);
 
   const handleConfirm = () => {
     console.log("Mes seleccionado:", selectedMonth);
     setIsOpen(false); // Cierra el modal después de confirmar
   };
 
-  const filteredAttendance = useMemo(() => filterAttendance(attendanceRecords, searchQuery), [searchQuery]);
+  const filteredAttendance = useMemo(() => filterAttendance(attendanceList, searchQuery), [attendanceList, searchQuery]);
 
   return (
     <div className="container mx-auto p-4 shadow">
@@ -101,6 +128,7 @@ export const PersonnelAttendanceCardList = () => {
           filteredAttendance.map(({ id, name, cargo, imageSrc, alt, attendances, absences, workedHours, theoreticalHours }) => (
             <AttendanceCard
               key={id}
+              id={id}
               name={name}
               cargo={cargo}
               imageSrc={imageSrc}

@@ -1,39 +1,53 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import { Skeleton, Card, CardContent } from "@/components/atoms";
 import { PersonIcon } from "@radix-ui/react-icons";
-import AttendanceForm from '../AtthendanceForm/AtthendanceForm';
+import AttendanceForm from "../AtthendanceForm/AtthendanceForm";
+import { justifyAssistance } from "@/api";
+import { useToastAlerts } from "@/hooks";
 
 interface Props {
+  id: number;
   name: string;
   cargo: string;
   imageSrc?: string;
   alt?: string;
   attendances: number;
-  absences: number;
+  absences: string[];
   workedHours: number;
   theoreticalHours: number;
 }
 
-export const AttendanceCard = ({ 
-  name, 
-  cargo, 
-  imageSrc, 
-  alt, 
-  attendances, 
-  absences, 
-  workedHours, 
-  theoreticalHours 
+export const AttendanceCard = ({
+  id,
+  name,
+  cargo,
+  imageSrc,
+  alt,
+  attendances,
+  absences,
+  workedHours,
+  theoreticalHours,
 }: Readonly<Props>) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedAbsences, setSelectedAbsences] = useState(absences);
-
+  const [selectedAbsences, setSelectedAbsences] = useState("");
+  const{toastSuccess, toastError} = useToastAlerts();
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
+
+  const handleJustify = async()=>{
+    try {
+      await justifyAssistance({employee_id: id, date: selectedAbsences});
+      toastSuccess("Exito!", "inasistencia justificada");
+      window.location.reload();
+    } catch (error) {
+      toastError("Error!", "no se pudo justificar la inasistencia");
+    }
+  }
 
   return (
     <>
@@ -71,18 +85,22 @@ export const AttendanceCard = ({
               <p className="text-sm text-gray-600">{attendances} Asistencias</p>
             </div>
             <div className="flex-grow">
-              <p 
-                className="text-sm text-gray-600 translate-x-1 hover:text-red-500 cursor-pointer" 
+              <p
+                className="text-sm text-gray-600 translate-x-1 hover:text-red-500 cursor-pointer"
                 onClick={() => setIsModalOpen(true)}
               >
-                {absences} Ausencias
+                {absences.length} Ausencias
               </p>
             </div>
             <div className="flex-grow">
-              <p className="text-sm text-gray-600 translate-x-1">{workedHours} Horas</p>
+              <p className="text-sm text-gray-600 translate-x-1">
+                {workedHours} Horas
+              </p>
             </div>
             <div className="flex-grow">
-              <p className="text-sm text-gray-600 translate-x-1">{theoreticalHours} Horas</p>
+              <p className="text-sm text-gray-600 translate-x-1">
+                {theoreticalHours} Horas
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -94,22 +112,31 @@ export const AttendanceCard = ({
         setOpen={setIsModalOpen}
         title="Justificar Inasistencia"
         confirmText="Justificar"
-        onConfirm={() => console.log(`Confirmación de ${selectedAbsences} inasistencias`)}
+        onConfirm={handleJustify}
       >
         {/* Contenido personalizado del modal */}
         <p>Detalles adicionales sobre las ausencias de {name}.</p>
-        <label htmlFor="absences" className="block text-sm font-medium text-gray-700">Inasistencias</label>
+        <label
+          htmlFor="absences"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Inasistencias
+        </label>
         <select
           id="absences"
           value={selectedAbsences}
-          onChange={(e) => setSelectedAbsences(Number(e.target.value))}
+          onChange={(e) => setSelectedAbsences(e.target.value)}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
         >
-          {[0, 1, 2, 3, 4].map((num) => (
-            <option key={num} value={num}>
-              {num}
-            </option>
-          ))}
+           <option value="">
+      Selecciona Asistencia a Justificar
+    </option>
+    
+    {absences.map((absence, index) => (
+      <option key={index} value={absence}>
+        {absence}
+      </option>
+    ))}
         </select>
       </AttendanceForm>
     </>
