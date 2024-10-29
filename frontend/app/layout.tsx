@@ -6,6 +6,7 @@ import "./styles/globals.css";
 import { ThemeProvider } from "@/components/providers";
 import Sidebar from "@/components/organisms/SideBar/SideBar";
 import { Toaster } from "@/components/atoms";
+import { HeaderContainer } from "@/components/molecules";
 
 const geistSans = localFont({
   src: "./assets/fonts/GeistVF.woff",
@@ -51,8 +52,10 @@ export default function RootLayout({
           disableTransitionOnChange
         > */}
           <section className="flex h-screen flex-col max-lg::overflow-hidden">
+
               <Sidebar />
             <div className="flex-grow pl-60 md:overflow-y-auto max-lg:pl-14">
+              <HeaderContainer  />
               {children}
             </div>
           </section>

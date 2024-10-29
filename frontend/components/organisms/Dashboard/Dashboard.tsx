@@ -1,9 +1,15 @@
-"use client"
-import { getAccountTypes, getAllRoles, getBankList, getCityList, getCountryList, getDepartmentList, getEmployees, getProvinceList } from "@/api";
+"use client";
 import {
-  DashboardCardList,
-  HeaderContainer
-} from "@/components/molecules"
+  getAccountTypes,
+  getAllRoles,
+  getBankList,
+  getCityList,
+  getCountryList,
+  getDepartmentList,
+  getEmployees,
+  getProvinceList,
+} from "@/api";
+import { DashboardCardList } from "@/components/molecules";
 import { useEffect } from "react";
 
 export const DashboardContainer = () => {
@@ -74,8 +80,8 @@ export const DashboardContainer = () => {
   }, []); // El array vacío asegura que se ejecuta solo una vez al montarse
   return (
     <div className="container mb-10 px-0 ">
-      <HeaderContainer titlePage="Panel" />
+      {/* <HeaderContainer titlePage="Panel" /> */}
       <DashboardCardList />
     </div>
-  )
-}
+  );
+};
