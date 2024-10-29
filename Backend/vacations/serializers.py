@@ -30,11 +30,11 @@ class VacationRequestSerializer(serializers.ModelSerializer):
             "message": instance.message,
             "employee": {
                 "pk": instance.employee.pk,
-                "first_name": instance.employee.person.first_name,
-                "last_name": instance.employee.person.last_name,
-                "role": instance.employee.role.title,
-                "profile_picture": instance.employee.person.profile_picture.url,
-                "vacation_days": instance.employee.vacation_days
+                "first_name": instance.employee.person.first_name if instance.employee.person.first_name else None,
+                "last_name": instance.employee.person.last_name if instance.employee.person.last_name else None,
+                "role": instance.employee.role.title if instance.employee.role.title else None,
+                "profile_picture": instance.employee.person.profile_picture.url if instance.employee.person.profile_picture else None,
+                "vacation_days": instance.employee.vacation_days if instance.employee.vacation_days else None
             }
         }
         return data
