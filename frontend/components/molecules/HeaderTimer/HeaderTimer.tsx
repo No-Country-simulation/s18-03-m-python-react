@@ -3,14 +3,13 @@ import { useState, useEffect } from "react";
 import { PauseIcon, PlayIcon, StopIcon } from "@/components/icons";
 import { closeAssistance, openAssistance } from "@/api";
 import { useToastAlerts } from "@/hooks";
-
-const PK = {employee_id: "1"}
+import { activeUser } from '@/mocks';
 
 export const HeaderTimer = () => {
   const [time, setTime] = useState(0); // Tiempo en segundos
   const [isRunning, setIsRunning] = useState(false);
   const{toastSuccess, toastWarning, toastError} = useToastAlerts();
-
+  const{pk} = activeUser;
   // Efecto para manejar el tiempo
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -31,7 +30,7 @@ export const HeaderTimer = () => {
   // Controles del cronómetro
   const handlePlayPause = async() => {
     try{
-      await openAssistance(PK);
+      await openAssistance({employee_id: pk});
       toastSuccess("Entrada!", "Marcaste tu horario de ingreso")
       setIsRunning(true);
     }catch(error){
@@ -41,7 +40,7 @@ export const HeaderTimer = () => {
 
   const handleReset = async() => {
     try{
-      await closeAssistance(PK);
+      await closeAssistance({employee_id: pk});
       console.log("Salida!");
       toastWarning("Salida!", "Finalizaste tu turno")
       setIsRunning(false); // Detenemos el cronómetro

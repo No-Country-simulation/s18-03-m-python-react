@@ -3,16 +3,17 @@
 import { usePathname } from "next/navigation";
 import { HeaderDropdown } from "../HeaderDropdown/HeaderDropdown";
 import { HeaderTimer } from "../HeaderTimer/HeaderTimer";
+import { activeUser } from "@/mocks";
 
 export const HeaderContainer = () => {
   const pathname = usePathname();
-
   // Diccionario de traducción de rutas
   const routeTranslations: { [key: string]: string } = {
     dashboard: "Panel",
     management: "Gestión Empleados",
     vacation: "Vacaciones",
     assists: "Control de Asistencia",
+    gestion: "Gestion Plataforma"
   };
 
   // Obtiene el título en español basado en el pathname
