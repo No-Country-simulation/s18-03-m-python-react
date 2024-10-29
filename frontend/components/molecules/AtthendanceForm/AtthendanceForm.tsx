@@ -25,7 +25,7 @@ export default function AttendanceForm({
   confirmText = "Confirmar",
 }: ModalProps) {
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex justify-center items-center">
       <Dialog open={isOpen} onOpenChange={setOpen}>
         <DialogContent className="p-5 w-[400px] max-h-[600px] bg-white rounded-md shadow-lg">
           <DialogHeader className="flex items-center">
