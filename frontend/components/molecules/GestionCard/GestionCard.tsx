@@ -1,14 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
   Card,
   CardContent,
   Skeleton,
@@ -24,8 +16,10 @@ interface Props {
   title: string;
   imageSrc?: string;
   alt?: string;
+  setModalOpen: (open: boolean) =>void;
   edit: (id: string, data: any) => Promise<void>; // Función opcional para editar
   delete: (id: string) => Promise<string>; // Función opcional para eliminar
+  updateData: ()=> Promise<void>,
   isName: boolean;
 }
 
@@ -34,8 +28,10 @@ export default function GestionCard({
   title,
   imageSrc,
   alt,
+  setModalOpen,
   edit,
   delete: del,
+  updateData,
   isName,
 }: Props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -61,6 +57,9 @@ export default function GestionCard({
       await del(id); // Ejecuta la función de eliminación si está disponible
       toastSuccess("Exito!", "Entrada borrada exitosamente");
       setIsConfirmOpen(false);
+      setModalOpen(false);
+      await updateData();
+      window.dispatchEvent(new Event("gestionUpdated"));
     } catch (error) {
       toastError("Error", "Ocurrió un error al borrar la entrada");
     }
@@ -118,7 +117,9 @@ export default function GestionCard({
         <GestionEditForm
           isOpen={formOpen}
           setOpen={setFormOpen}
+          setModalOpen={setModalOpen}
           action={edit} // Pasamos correctamente la acción de crear
+          updateData = {updateData}
           modalTitle={"Modificar"}
           isName={isName}
           id={id}
