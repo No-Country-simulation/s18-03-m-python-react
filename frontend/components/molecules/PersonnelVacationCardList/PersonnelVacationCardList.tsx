@@ -67,22 +67,19 @@ export const PersonnelVacationCardList = () => {
   const [vacationsList, setVacationsList] = useState<Vacation[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const vacationList = await getVacationList();
-        if (Array.isArray(vacationList)) {
-          sessionStorage.setItem("vacationList", JSON.stringify(vacationList));
-          setVacationsList(vacationList);
-        }
-      } catch (error) {
-        console.error(
-          "Ocurrió un error al obtener la lista de vacaciones",
-          error
-        );
+      const loadVacation = ()=>{
+        const storageList = JSON.parse(
+          sessionStorage.getItem("vacationList") ?? "[]"
+        ) as Vacation[]
+        setVacationsList(storageList);
       }
-    };
+      loadVacation();
+      const handleListUpdate = () => loadVacation();
+      window.addEventListener("vacationListUpdated", handleListUpdate);
+      return()=>{
+        window.removeEventListener("vacationListUpdated", handleListUpdate);
+      }
 
-    fetchData();
   }, []);
 
   return (

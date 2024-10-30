@@ -8,6 +8,7 @@ import { Employee } from "@/api";
 import { cn } from "@/lib/cn/utils";
 import { responseVacation } from "@/api/vacations/vacation.api";
 import Modal from "../Modal/Modal";
+import { dataVacation } from "@/components/organisms/Vacation/utils/dataVacation";
 
 interface Props {
   name: string | null | undefined;
@@ -77,7 +78,9 @@ export const VacationCard = ({
     setSelectedStatus(newStatus);
     setModalVisible(true);
   };
+
 console.log('imagen', imageSrc)
+
   const handleConfirm = async () => {
     if (!selectedStatus) return;
 
@@ -90,7 +93,8 @@ console.log('imagen', imageSrc)
       });
       toastSuccess("Éxito", response?.message);
       setModalVisible(false); // Cierra el modal
-      window.location.reload();
+      await dataVacation();
+      window.dispatchEvent(new Event("vacationListUpdated"));
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error al cambiar el estado de la petición";
       toastError("Error", errorMessage);

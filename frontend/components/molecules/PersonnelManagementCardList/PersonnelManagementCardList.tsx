@@ -50,14 +50,26 @@ export const PersonnelManagementCardList = () => {
 
 
 
-//declare useEffect
-useEffect(() => {
-  const empList = JSON.parse(
-    sessionStorage.getItem("employees") ?? "[]"
-  ) as Person[];
-  setEmployeesList(empList);
-}, []);
-
+  useEffect(() => {
+    const loadEmployees = () => {
+      const empList = JSON.parse(
+        sessionStorage.getItem("employees") ?? "[]"
+      ) as Person[];
+      setEmployeesList(empList);
+    };
+  
+    // Cargar lista al montar el componente
+    loadEmployees();
+  
+    // Escuchar cambios en `employeeListUpdated` y volver a cargar la lista
+    const handleEmployeeListUpdate = () => loadEmployees();
+    window.addEventListener("employeeListUpdated", handleEmployeeListUpdate);
+  
+    // Limpia el listener cuando el componente se desmonte
+    return () => {
+      window.removeEventListener("employeeListUpdated", handleEmployeeListUpdate);
+    };
+  }, []);
 
 
 const filteredUsers = useMemo(

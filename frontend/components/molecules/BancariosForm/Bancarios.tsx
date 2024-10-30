@@ -86,7 +86,7 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
         className: "bg-green-500 text-white",
       });
       await dataEmployee();
-      window.location.reload();
+      window.dispatchEvent(new Event("employeeListUpdated"));
     } catch(error) {
       toast({
         title: "Error",
