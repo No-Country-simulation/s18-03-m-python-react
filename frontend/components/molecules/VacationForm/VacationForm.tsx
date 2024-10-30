@@ -77,7 +77,6 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
         employee: parseInt(selectedEmployee),
         start: selectedRange.from.toISOString().split("T")[0],
         end: selectedRange.to.toISOString().split("T")[0],
-        pk: 0, // Valor predeterminado para pk si es necesario
         status: "pending", // Estado predeterminado o cualquier valor necesario
       };
 
