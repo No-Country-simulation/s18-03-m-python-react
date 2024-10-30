@@ -8,9 +8,11 @@ import { Employee } from "@/api";
 import { cn } from "@/lib/cn/utils";
 import { responseVacation } from "@/api/vacations/vacation.api";
 import Modal from "../Modal/Modal";
+import { dataVacation } from "@/components/organisms/Vacation/utils/dataVacation";
 
 interface Props {
   name: string | null | undefined;
+  lastName: string | null | undefined;
   email: string;
   cargo: string | null | undefined;
   initialStatus: "P" | "A" | "D";
@@ -29,6 +31,7 @@ interface Props {
 
 export const VacationCard = ({
   name,
+  lastName,
   cargo,
   imageSrc,
   alt,
@@ -77,7 +80,9 @@ export const VacationCard = ({
     setSelectedStatus(newStatus);
     setModalVisible(true);
   };
+
 console.log('imagen', imageSrc)
+
   const handleConfirm = async () => {
     if (!selectedStatus) return;
 
@@ -90,7 +95,8 @@ console.log('imagen', imageSrc)
       });
       toastSuccess("Éxito", response?.message);
       setModalVisible(false); // Cierra el modal
-      window.location.reload();
+      await dataVacation();
+      window.dispatchEvent(new Event("vacationListUpdated"));
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Error al cambiar el estado de la petición";
       toastError("Error", errorMessage);
@@ -130,13 +136,13 @@ console.log('imagen', imageSrc)
               <Image
                 className="rounded-full"
                 src={imageSrc ? `http://localhost:8000${imageSrc}` : "http://i.pravatar.cc/304"}
-                alt={alt ?? `Profile picture of ${name}`}
+                alt={alt ?? `Profile picture of ${name} ${lastName}`}
                 width={50}
                 height={50}
               />
             )}
             <div>
-              <h3 className="font-semibold text-lg">{name}</h3>
+              <h3 className="font-semibold text-lg">{name} {lastName}</h3>
               <p className="text-sm text-gray-600">{cargo}</p>
             </div>
           </section>

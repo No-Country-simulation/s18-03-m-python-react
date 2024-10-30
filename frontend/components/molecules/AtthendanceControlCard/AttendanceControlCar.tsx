@@ -7,6 +7,7 @@ import AttendanceForm from "../AtthendanceForm/AtthendanceForm";
 import { justifyAssistance } from "@/api";
 import { useToastAlerts } from "@/hooks";
 import Image from "next/image";
+import { getAttendanceList } from './../../organisms/Attendance/utils/dataAttendance';
 
 interface Props {
   id: number;
@@ -41,13 +42,14 @@ export const AttendanceCard = ({
   }, []);
 
   const handleJustify = async()=>{
-    try {
+    // try {
       await justifyAssistance({employee_id: id, date: selectedAbsences});
       toastSuccess("Exito!", "inasistencia justificada");
-      window.location.reload();
-    } catch (error) {
-      toastError("Error!", "no se pudo justificar la inasistencia");
-    }
+      await getAttendanceList();
+      window.dispatchEvent(new Event("attendanceListUpdated"));
+    // } catch (error) {
+    //   toastError("Error!", "no se pudo justificar la inasistencia");
+    // }
   }
 
   return (

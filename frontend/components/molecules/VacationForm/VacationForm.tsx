@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 import {
   Dialog,
@@ -13,6 +13,7 @@ import { differenceInDays } from "date-fns";
 import { Button } from "@/components/atoms";
 import { createVacationRequest } from "@/api/vacations/vacation.api";
 import { useToastAlerts } from "@/hooks/UseToast/useToastAlerts";
+import { dataVacation } from "@/components/organisms/Vacation/utils/dataVacation";
 
 interface VacationFormProps {
   readonly isOpen: boolean;
@@ -45,7 +46,10 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
   const handleEmployeeChange = (employeeId: string) => {
     setSelectedEmployee(employeeId);
     const employee = employees.find((emp) => emp.pk === parseInt(employeeId));
-    if (employee?.employee && typeof employee.employee.vacation_days === "number") {
+    if (
+      employee?.employee &&
+      typeof employee.employee.vacation_days === "number"
+    ) {
       setMaxDays(employee.employee.vacation_days);
     } else {
       setMaxDays(0);
@@ -65,7 +69,6 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
     }
   };
 
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -77,15 +80,18 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
         status: "pending", // Estado predeterminado o cualquier valor necesario
       };
 
-
       try {
         await createVacationRequest(vacationData);
         setSuccess(true);
         setError(null);
-        toastSuccess("Solicitud enviada", "La solicitud de vacaciones fue enviada exitosamente.");
-        window.location.reload();
+        toastSuccess(
+          "Solicitud enviada",
+          "La solicitud de vacaciones fue enviada exitosamente."
+        );
+        await dataVacation();
+        window.dispatchEvent(new Event("vacationListUpdated"));
         onClose();
-      } catch (error ) {
+      } catch (error) {
         const errorMessage = (error as Error).message;
         setError((error as Error).message);
         setSuccess(false);
@@ -121,9 +127,15 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
           <DialogTitle>Nuevas vacaciones</DialogTitle>
         </DialogHeader>
 
-        <form className="space-y-8 max-md:flex max-md:flex-col" onSubmit={handleSubmit}>
+        <form
+          className="space-y-8 max-md:flex max-md:flex-col"
+          onSubmit={handleSubmit}
+        >
           <section className="flex gap-2 items-center max-md:flex-col max-md:items-start">
-            <label htmlFor="employee" className="uppercase font-semibold text-sm max-md:w-full">
+            <label
+              htmlFor="employee"
+              className="uppercase font-semibold text-sm max-md:w-full"
+            >
               Empleado
             </label>
             <select
@@ -143,10 +155,15 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
             </select>
           </section>
 
-          <section className="flex gap-4 bg-base-secondary w-full h-14 rounded-md items-center justify-around p-2 
-          max-md:flex-col max-md:items-start max-md:h-auto">
+          <section
+            className="flex gap-4 bg-base-secondary w-full h-14 rounded-md items-center justify-around p-2 
+          max-md:flex-col max-md:items-start max-md:h-auto"
+          >
             {VacationInfo.map((info, index) => (
-              <div key={index} className="flex items-center gap-2 max-md:w-full">
+              <div
+                key={index}
+                className="flex items-center gap-2 max-md:w-full"
+              >
                 <Image
                   width={0}
                   height={0}
@@ -155,7 +172,9 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
                   className="h-6 w-6"
                 />
                 <div className="flex text-white items-center gap-2 max-md:w-full">
-                  <span className="font-semibold uppercase text-sm">{info.label}</span>
+                  <span className="font-semibold uppercase text-sm">
+                    {info.label}
+                  </span>
                   <span className="text-xs flex gap-1">
                     <p>{info.days} </p>
                     <p>días</p>
@@ -176,15 +195,24 @@ export function VacationForm({ isOpen, onClose }: VacationFormProps) {
                   className="h-4 w-4"
                 />
               </div>
-              <h3 className="text-gray-400">Seleccionar Periodo de Vacaciones</h3>
+              <h3 className="text-gray-400">
+                Seleccionar Periodo de Vacaciones
+              </h3>
             </header>
             <div>
-              <DatePickerWithRange className="" onRangeChange={handleRangeChange} />
+              <DatePickerWithRange
+                className=""
+                onRangeChange={handleRangeChange}
+              />
             </div>
           </section>
 
           {error && <p className="text-red-500">{error}</p>}
-          {success && <p className="text-green-500">Solicitud de vacaciones enviada exitosamente.</p>}
+          {success && (
+            <p className="text-green-500">
+              Solicitud de vacaciones enviada exitosamente.
+            </p>
+          )}
 
           <section className="flex gap-4 justify-center">
             <Button

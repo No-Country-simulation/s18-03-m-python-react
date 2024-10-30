@@ -21,6 +21,7 @@ import IconSpan from "@/components/atoms/IconSpan";
 
 interface Props {
   name: string;
+  lastName: string;
   email: string;
   cargo: string;
   initialStatus: boolean;
@@ -35,6 +36,7 @@ interface Props {
 
 export const PersonnelManagementCard = ({
   name,
+  lastName,
   cargo,
   email,
   initialStatus,
@@ -136,7 +138,7 @@ export const PersonnelManagementCard = ({
               )}
               <div className="flex flex-col max-md:max-w-16 max-lg:max-h-16">
                 <h3 className="font-semibold text-lg overflow-hidden whitespace-nowrap text-ellipsis">
-                  {name}
+                  {name} {lastName}
                 </h3>
                 <p className="text-sm text-gray-600 overflow-hidden whitespace-nowrap text-ellipsis">
                   {cargo}

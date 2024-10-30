@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 import { VacationCard } from "../PersonnelVacationCard/PersonnelVacationCard";
 import { VacationForm } from "../VacationForm/VacationForm";
 import { getVacationList } from "@/api/vacations/vacation.api";
+import { dataVacation } from "@/components/organisms/Vacation/utils/dataVacation";
 
 interface Vacation {
   pk: number;
   id: string;
   name: string;
+  lastName: string;
   cargo: string;
   status: "P" | "A" | "D";
   imageSrc?: string;
@@ -66,23 +68,27 @@ export const PersonnelVacationCardList = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [vacationsList, setVacationsList] = useState<Vacation[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const vacationList = await getVacationList();
-        if (Array.isArray(vacationList)) {
-          sessionStorage.setItem("vacationList", JSON.stringify(vacationList));
-          setVacationsList(vacationList);
-        }
-      } catch (error) {
-        console.error(
-          "Ocurrió un error al obtener la lista de vacaciones",
-          error
-        );
-      }
-    };
+useEffect(()=>{
+  const getData = async()=>{
+    dataVacation();
+  }
+  getData();
+},[])
 
-    fetchData();
+  useEffect(() => {
+      const loadVacation = ()=>{
+        const storageList = JSON.parse(
+          sessionStorage.getItem("vacationList") ?? "[]"
+        ) as Vacation[]
+        setVacationsList(storageList);
+      }
+      loadVacation();
+      const handleListUpdate = () => loadVacation();
+      window.addEventListener("vacationListUpdated", handleListUpdate);
+      return()=>{
+        window.removeEventListener("vacationListUpdated", handleListUpdate);
+      }
+
   }, []);
 
   return (
@@ -154,6 +160,7 @@ export const PersonnelVacationCardList = () => {
               <VacationCard
                 key={pk}
                 name={employee?.first_name}
+                lastName={employee?.last_name}
                 cargo={employee?.role}
                 imageSrc={employee?.profile_picture}
                 alt={alt}

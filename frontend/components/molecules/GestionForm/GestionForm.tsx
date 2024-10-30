@@ -12,8 +12,10 @@ const schema = GestionValidations;
 interface Props {
   isOpen: boolean;
   setOpen: (open: boolean) => void;
+  setModalOpen?:(open: boolean) =>void;
   modalTitle: string;
   action:(data: any) => Promise<void>;
+  updateData: ()=> Promise<void>;
   isName: boolean
 }
 
@@ -21,7 +23,7 @@ type FormData ={
   title: string;
 }
 
-export default function GestionForm({ isOpen, setOpen, modalTitle, action, isName }: Props) {
+export default function GestionForm({ isOpen, setOpen, setModalOpen, modalTitle, action, updateData, isName }: Props) {
   const { toastSuccess, toastError } = useToastAlerts();
   // Usar el resolutor de zod con react-hook-form
   const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<FormData>({
@@ -43,7 +45,10 @@ export default function GestionForm({ isOpen, setOpen, modalTitle, action, isNam
       await action(dataToSend);
       reset();
       toastSuccess('Exito!', 'El registro se creo Exitosamente');
+      await updateData();
+      window.dispatchEvent(new Event("gestionUpdated"));
       setOpen(!isOpen);
+      setModalOpen(false);
     }catch (error){
       toastError('Error', 'Error al crear');
     }

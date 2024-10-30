@@ -21,7 +21,7 @@ const cardData = [
   { id: "1", title: "Gestión de Personal", icon: <GroupIcon />, route:"/management" },
   { id: "2", title: "Vacaciones y Licencias", icon: <CalendarIcon />, route:"/vacation" },
   { id: "3", title: "Control de Asistencia", icon: <ClipboardIcon />, route:"/assists" },
-  { id: "4", title: "Reportes", icon: <GraphIcon />, route:"/payrolls" },
+  { id: "4", title: "Gestion", icon: <GraphIcon />, route:"/gestion" },
   { id: "5", title: "Mis Datos", icon: <PersonIcon />, route:"/profile" },
 ];
 const WelcomeCard = () => (

@@ -20,16 +20,18 @@ export default function CircularMenuUser({ pk, toggleMenu }: CircularMenuUserPro
   const handleDeleteEmployee = async () => {
     try {
       await deleteEmployee(pk);
-      await dataEmployee();
-      window.location.reload();
-
+      await dataEmployee(); // Esto actualizará `sessionStorage`
+  
+      // Emitir evento personalizado
+      window.dispatchEvent(new Event("employeeListUpdated"));
+  
       toast({
         title: "Empleado eliminado",
-        description: `El usuario fue creado éxitosamente`,
+        description: "El usuario fue eliminado exitosamente",
         className: "bg-red-500 text-white",
       });
     } catch (error) {
-      console.error('Error al eliminar el empleado', error);
+      console.error("Error al eliminar el empleado", error);
     }
   };
 
