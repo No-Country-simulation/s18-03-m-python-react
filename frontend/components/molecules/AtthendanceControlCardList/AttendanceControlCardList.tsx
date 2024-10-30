@@ -101,11 +101,7 @@ export const PersonnelAttendanceCardList = () => {
       <section className="my-4">
         <div className="w-full mx-auto px-5 overflow-hidden">
           <div className="flex items-center justify-between">
-            <section className="flex w-44 gap-1">
-              <div className="opacity-0">
-                <h3 className="font-semibold text-lg">dasdasd</h3>
-                <p className="text-sm text-gray-600">dasdasd</p>
-              </div>
+            <section className="flex w-[320px] gap-1 opacity-0">
             </section>
             <div className="">
               <p className="text-sm text-black font-semibold uppercase">Asistencias</p>

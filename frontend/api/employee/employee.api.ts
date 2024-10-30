@@ -107,3 +107,27 @@ export const changeEmployeeStatus = async (id: number)=>{
         throw new Error('Error al cambiar el estado del empleado');
     }
 }
+
+
+export const updatePicture = async (id: string, picture: File) => {
+    try {
+        // Crear instancia de FormData y añadir la imagen
+        const formData = new FormData();
+        formData.append('profile_picture', picture);
+
+        const response = await axios.post(`${API_URL}/profilepicture/${id}/`, formData);
+
+        if (response.status === 200) {
+            return 'Foto actualizada con éxito';
+        }
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.error('Axios error:', error.response?.data || error.message);
+        } else {
+            console.error('Unexpected error:', error);
+        }
+        throw new Error('Error al actualizar la foto');
+    }
+};
+
+        

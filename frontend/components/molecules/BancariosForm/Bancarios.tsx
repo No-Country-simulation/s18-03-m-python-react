@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import useFormStore from "@/store/useFormStore";
 import { BancariosValidations } from "@/validations/auth/register/bancariosValidations";
-import { Employee, registerEmployee } from "@/api";
+import { Employee, registerEmployee,updatePicture } from "@/api";
 import { useToast } from "@/hooks";
 import { dataEmployee } from "@/components/organisms/PersonnelManagement/utils/dataEmployee";
 
@@ -79,7 +79,11 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
       // ya está en el formato correcto
     };
     try {
-      await registerEmployee(finalData);
+      const register = await registerEmployee(finalData);
+      if(register) {
+        const {pk} = register
+        await updatePicture(pk, formData.profile_picture)
+      }
       toast({
         title: "Éxito",
         description: `El usuario fue creado éxitosamente`,
