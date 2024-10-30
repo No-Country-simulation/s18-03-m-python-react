@@ -29,7 +29,7 @@ export default function CircularMenu({
     }else if (button.label === "Panel") {
       router.push("/dashboard"); // Navegar a la ruta del calendario
     }else if (button.label === "Config") {
-      router.push("/settings"); // Navegar a la ruta del calendario
+      router.push("/gestion"); // Navegar a la ruta del calendario
     }
   };
 

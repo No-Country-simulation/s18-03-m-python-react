@@ -1,5 +1,18 @@
 "use client";
-import { bankRegister, createNewRole, deleteAccount, deleteBank, deleteDepartment, deleteRole, registerAccount, registerDepartment, updateAccount, updateBank, updateDepartment, updateNewRole } from "@/api";
+import {
+  bankRegister,
+  createNewRole,
+  deleteAccount,
+  deleteBank,
+  deleteDepartment,
+  deleteRole,
+  registerAccount,
+  registerDepartment,
+  updateAccount,
+  updateBank,
+  updateDepartment,
+  updateNewRole,
+} from "@/api";
 import { Button } from "@/components/atoms";
 import {
   AccountIcon,
@@ -15,6 +28,7 @@ import GestionForm from "@/components/molecules/GestionForm/GestionForm";
 import Modal from "@/components/molecules/Modal/Modal";
 import { AccountType, Bank, Department, Role } from "@/interface";
 import { useEffect, useState } from "react";
+import { getAccountsData, getBankData, getDepartmentData, getRoleData } from "./utils/dataGestion";
 
 export default function PlatformGestion() {
   //modal status
@@ -33,27 +47,41 @@ export default function PlatformGestion() {
   // State to hold the selected list of entities
   const [selectedList, setSelectedList] = useState<any[]>([]);
   //crud api functions handling
-  const [createAction, setCreateAction] = useState<(data: any) => Promise<void>>(async () => {});
-  const [editAction, setEditAction] = useState<(id: string, data: any) => Promise<void>>(async () => {});
-  const [deleteAction, setDeleteAction] = useState<(id: string) => Promise<string>>(async () => "");
-  
+  const [createAction, setCreateAction] = useState<
+    (data: any) => Promise<void>
+  >(async () => {});
+  const [editAction, setEditAction] = useState<
+    (id: string, data: any) => Promise<void>
+  >(async () => {});
+  const [deleteAction, setDeleteAction] = useState<
+    (id: string) => Promise<string>
+  >(async () => "");
+  const [updateDataAction, setUpdateDataAction] = useState<() => Promise<void>>(() => Promise.resolve());
   useEffect(() => {
-    setBankList(
-      JSON.parse(sessionStorage.getItem("bankList") || "[]") as Bank[]
-    );
-    setAccountList(
-      JSON.parse(
-        sessionStorage.getItem("accountTypeList") || "[]"
-      ) as AccountType[]
-    );
-    setDepartmentList(
-      JSON.parse(
-        sessionStorage.getItem("departmentList") || "[]"
-      ) as Department[]
-    );
-    setRoleList(
-      JSON.parse(sessionStorage.getItem("roleList") || "[]") as Role[]
-    );
+    const setGestionData = () => {
+      setBankList(
+        JSON.parse(sessionStorage.getItem("bankList") || "[]") as Bank[]
+      );
+      setAccountList(
+        JSON.parse(
+          sessionStorage.getItem("accountTypeList") || "[]"
+        ) as AccountType[]
+      );
+      setDepartmentList(
+        JSON.parse(
+          sessionStorage.getItem("departmentList") || "[]"
+        ) as Department[]
+      );
+      setRoleList(
+        JSON.parse(sessionStorage.getItem("roleList") || "[]") as Role[]
+      );
+    };
+    setGestionData();
+    const handleListUpdate = () => setGestionData();
+    window.addEventListener("gestionUpdated", handleListUpdate);
+    return () => {
+      window.removeEventListener("gestionUpdated", handleListUpdate);
+    };
   }, []);
 
   const cardData: {
@@ -62,8 +90,9 @@ export default function PlatformGestion() {
     icon: JSX.Element;
     list: Bank[] | Role[] | AccountType[] | Department[]; // Tipamos la lista usando las interfaces
     create: (data: any) => Promise<void>; // Aseguramos que create reciba datos
-    edit: (id:string, data: any) => Promise<void>;
+    edit: (id: string, data: any) => Promise<void>;
     delete: (id: string) => Promise<string>;
+    updateData: () => Promise<void>;
     nameAtr: boolean;
   }[] = [
     {
@@ -74,7 +103,8 @@ export default function PlatformGestion() {
       create: bankRegister,
       edit: updateBank,
       delete: deleteBank,
-      nameAtr: true
+      updateData: getBankData,
+      nameAtr: true,
     },
     {
       id: "2",
@@ -84,7 +114,8 @@ export default function PlatformGestion() {
       create: createNewRole,
       edit: updateNewRole,
       delete: deleteRole,
-      nameAtr: false
+      updateData: getRoleData,
+      nameAtr: false,
     },
     {
       id: "3",
@@ -94,7 +125,8 @@ export default function PlatformGestion() {
       create: registerAccount,
       edit: updateAccount,
       delete: deleteAccount,
-      nameAtr: true
+      updateData: getAccountsData,
+      nameAtr: true,
     },
     {
       id: "4",
@@ -104,16 +136,18 @@ export default function PlatformGestion() {
       create: registerDepartment,
       edit: updateDepartment,
       delete: deleteDepartment,
-      nameAtr: false
-    }
+      updateData: getDepartmentData,
+      nameAtr: false,
+    },
   ];
 
   const toggleForm = (
     title: string,
     list: Bank[] | Role[] | AccountType[] | Department[],
     create: (data: any) => Promise<void>, // Cambiamos para que acepte una función con `data`
-    edit: (id:string, data: any) => Promise<void>,
+    edit: (id: string, data: any) => Promise<void>,
     del: (id: string) => Promise<string>,
+    updateData: ()=> Promise<void>,
     nameAtr: boolean
   ) => {
     setModalTitle(title);
@@ -121,32 +155,34 @@ export default function PlatformGestion() {
     setCreateAction(() => create); // Almacena el callback de create
     setEditAction(() => edit);
     setDeleteAction(() => del);
+    setUpdateDataAction(()=> updateData);
     setModalOpen(true);
     setIsName(nameAtr);
   };
 
   const handleCreate = () => {
-      setFormOpen(true); // Abre el formulario
+    setFormOpen(true); // Abre el formulario
   };
 
-  const toggleGeneralData = ()=> {
+  const toggleGeneralData = () => {
     setDataOpen(!dataOpen);
-  }
+  };
   return (
     <>
       <section className="flex-col justify-between items-center p-4 bg-white shadow">
         <div className="grid grid-cols-3 gap-4 p-8 max-md:flex max-md: flex-col">
           {cardData.map(
-            ({ id, title, icon, list, create, edit, delete: del, nameAtr }) => (
+            ({ id, title, icon, list, create, edit, delete: del, updateData, nameAtr }) => (
               <button
                 key={id}
                 onClick={() =>
                   toggleForm(
                     title,
                     list,
-                    create,  // Pasamos correctamente el `create` con su firma
+                    create, // Pasamos correctamente el `create` con su firma
                     edit,
                     del,
+                    updateData,
                     nameAtr
                   )
                 }
@@ -170,8 +206,10 @@ export default function PlatformGestion() {
                 id={item.pk}
                 title={item.name || item.title}
                 alt={item.name || item.title}
+                setModalOpen={setModalOpen}
                 edit={editAction}
                 delete={deleteAction}
+                updateData={updateDataAction}
                 isName={isName}
               />
             ))}
@@ -189,14 +227,14 @@ export default function PlatformGestion() {
         <GestionForm
           isOpen={formOpen}
           setOpen={setFormOpen}
+          setModalOpen={setModalOpen}
           action={createAction ?? (() => {})} // Pasamos correctamente la acción de crear
+          updateData={updateDataAction}
           modalTitle={modalTitle}
           isName={isName}
         />
       )}
-      {dataOpen && (
-        <GeneralData isOpen={dataOpen} setOpen={setDataOpen} />
-      )}
+      {dataOpen && <GeneralData isOpen={dataOpen} setOpen={setDataOpen} />}
     </>
   );
 }

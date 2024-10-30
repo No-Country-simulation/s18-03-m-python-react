@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 import { VacationCard } from "../PersonnelVacationCard/PersonnelVacationCard";
 import { VacationForm } from "../VacationForm/VacationForm";
 import { getVacationList } from "@/api/vacations/vacation.api";
+import { dataVacation } from "@/components/organisms/Vacation/utils/dataVacation";
 
 interface Vacation {
   pk: number;
   id: string;
   name: string;
+  lastName: string;
   cargo: string;
   status: "P" | "A" | "D";
   imageSrc?: string;
@@ -65,6 +67,13 @@ export const PersonnelVacationCardList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [vacationsList, setVacationsList] = useState<Vacation[]>([]);
+
+useEffect(()=>{
+  const getData = async()=>{
+    dataVacation();
+  }
+  getData();
+},[])
 
   useEffect(() => {
       const loadVacation = ()=>{
@@ -151,6 +160,7 @@ export const PersonnelVacationCardList = () => {
               <VacationCard
                 key={pk}
                 name={employee?.first_name}
+                lastName={employee?.last_name}
                 cargo={employee?.role}
                 imageSrc={employee?.profile_picture}
                 alt={alt}

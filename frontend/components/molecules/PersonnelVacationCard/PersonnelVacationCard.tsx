@@ -12,6 +12,7 @@ import { dataVacation } from "@/components/organisms/Vacation/utils/dataVacation
 
 interface Props {
   name: string | null | undefined;
+  lastName: string | null | undefined;
   email: string;
   cargo: string | null | undefined;
   initialStatus: "P" | "A" | "D";
@@ -30,6 +31,7 @@ interface Props {
 
 export const VacationCard = ({
   name,
+  lastName,
   cargo,
   imageSrc,
   alt,
@@ -134,13 +136,13 @@ console.log('imagen', imageSrc)
               <Image
                 className="rounded-full"
                 src={imageSrc ? `http://localhost:8000${imageSrc}` : "http://i.pravatar.cc/304"}
-                alt={alt ?? `Profile picture of ${name}`}
+                alt={alt ?? `Profile picture of ${name} ${lastName}`}
                 width={50}
                 height={50}
               />
             )}
             <div>
-              <h3 className="font-semibold text-lg">{name}</h3>
+              <h3 className="font-semibold text-lg">{name} {lastName}</h3>
               <p className="text-sm text-gray-600">{cargo}</p>
             </div>
           </section>

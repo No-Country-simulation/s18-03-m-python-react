@@ -134,13 +134,14 @@ const filteredUsers = useMemo(
       <div className="bg-white p-4 rounded overflow-y-auto">
         {employeesList.length > 0 ? (
           filteredUsers.map(
-            ({ pk, first_name, employee, email, profile_picture }) => (
+            ({ pk, first_name, last_name, employee, email, profile_picture }) => (
               <div key={pk} className="relative">
                 {/* Verificamos si employee está definido antes de acceder a sus propiedades */}
                 {employee ? (
                   <PersonnelManagementCard
                     pk={pk}
                     name={first_name}
+                    lastName={last_name}
                     cargo={employee.role} // Asegúrate de que esto no cause errores
                     email={email}
                     initialStatus={employee.active_employee}
