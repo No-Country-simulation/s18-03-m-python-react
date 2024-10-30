@@ -82,7 +82,7 @@ export default function Bancarios({ onBack, onFinalize }: BancariosProps) {
       const register = await registerEmployee(finalData);
       if(register) {
         const {pk} = register
-        await updatePicture(pk, formData.profile_picture)
+        await updatePicture(pk, formData.profile_picture as File);
       }
       toast({
         title: "Éxito",
